@@ -1,0 +1,26 @@
+{
+  "name": "trtc-js-sdk",
+  "version": "4.11.13",
+  "description": "Tencent Cloud RTC SDK for Web",
+  "main": "trtc.js",
+  "types": "index.d.ts",
+  "keywords": [
+    "webrtc",
+    "TRTC",
+    "rtc",
+    "javascript",
+    "video",
+    "audio",
+    "camera",
+    "microphone",
+    "live streaming",
+    "real-time communication"
+  ],
+  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/doc/en/index.html",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tencentyun/TRTCSDK.git"
+  },
+  "author": "Tencent Cloud Client R&D Center",
+  "license": "ISC"
+}
