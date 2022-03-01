@@ -1,0 +1,196 @@
+$default-padding: 20px;
+
+@mixin padding-bottom {
+  padding-bottom: $default-padding;
+}
+
+.page-container {
+  width: 100%;
+  height: 100%;
+}
+.content-container {
+  height: calc(100% - 60px);
+  width: calc(100% - 260px);
+  display: flex;
+  position: relative;
+  left: 260px;
+  top: 60px;
+  &.mobile-device {
+    flex-direction: column;
+    left: 0px;
+    width: 100%;
+  }
+  .control-container {
+    width: 300px;
+    overflow-y: auto;
+    // height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    // &::-webkit-scrollbar{
+    //   display: none;
+    // }
+    &.mobile-device {
+      width: 100%;
+      max-height: 60%;
+      border-bottom: 1px solid #dddddd;
+    }
+    .accordion-container {
+      box-shadow: none;
+      background: #fafafa;
+      min-height: auto !important;
+      // margin: 0 0 20px;
+      &:before {
+        display: none;
+      }
+      .accordion-summary-container {
+        padding: 0px;
+        min-height: 48px;
+        .accordion-summary-content {
+          margin: 0;
+        }
+      }
+      .accordion-details-container {
+        padding: 0px;
+        display: flex;
+        flex-direction: column;
+        .select-container {
+          margin-bottom: 16px;
+        }
+        .beauty-container {
+          display: flex;
+          align-items: center;
+          margin-top: 24px;
+          .beauty-label {
+            margin-bottom: 0px;
+            margin-right: 12px;
+            width: 60px;
+          }
+        }
+        .button-container {
+          width: 260px;
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
+          &:last-child {
+            margin-bottom: -10px;
+          }
+          &.mobile-device {
+            width: 100%;
+          }
+          button {
+            min-width: 125px;
+            height: 36px;
+            margin-bottom: 10px;
+            background-color: #006eff;
+            &:hover {
+              background-color: #006eff;
+            }
+            &.forbidden {
+              background-color: #eeeeee;
+              color: #bbbbbb;
+              cursor: auto;
+              &:hover {
+                background-color: #eeeeee;
+              }
+            }
+            &.full-width {
+              width: 100%;
+            }
+          }
+        }
+        .video-container {
+          margin-top: 16px;
+          height: 166px;
+          width: 100%;
+        }
+      }
+    }
+    .body-container {
+      padding: 10px 20px 0px;
+      // overflow-y: scroll;
+      flex: 1 1 auto;
+      .video-container {
+        width: 100%;
+        object-fit: "cover";
+        @include padding-bottom();
+      }
+      .canvas-container {
+        @include padding-bottom();
+        canvas {
+          display: block;
+        }
+      }
+      .user-list-container {
+        // @include padding-bottom();
+      }
+    }
+    .footer-container {
+      flex: 0 0 auto;
+      padding: $default-padding;
+      // align-self: flex-end;
+      canvas {
+        display: block;
+      }
+    }
+  }
+  .stream-container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    flex: 1;
+    overflow: auto;
+    padding: 10px;
+  }
+}
+
+.caption-list {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: #000;
+  color: #fff;
+  padding: 0 24px 12px;
+  .caption-item {
+    margin-bottom: 12px;
+    max-height: 40px;
+    overflow-y: scroll;
+  }
+  .caption-item::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
+}
+
+.text-minutes-wrapper {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 100%;
+  box-shadow: 4px 4px 4px gray;
+  padding: 12px 0 12px 24px;
+  background-color: #fff;
+  .text-minutes-list {
+    padding-bottom: 46px;
+    height: 100%;
+    overflow-y: scroll;
+    .userId {
+      color: blue;
+      margin-right: 24px;
+    }
+    .item {
+      margin-bottom: 12px;
+    }
+  }
+  .export-button {
+    position: sticky;
+    bottom: 0px;
+  }
+}
