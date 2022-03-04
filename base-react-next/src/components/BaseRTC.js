@@ -396,13 +396,13 @@ export default class RTC extends React.Component {
         console.log(`remote stream added: [${remoteUserID}] type: ${remoteStream.getType()}`);
         // subscribe to this remote stream
         this.handleSubscribe(remoteStream);
+        this.addStream && this.addStream(remoteStream);
       }
     });
     // fired when a remote stream has been subscribed
     this.client.on('stream-subscribed', (event) => {
       const { stream: remoteStream } = event;
       console.log('stream-subscribed userId: ', remoteStream.getUserId());
-      this.addStream && this.addStream(remoteStream);
     });
     // fired when the remote stream is removed, e.g. the remote user called Client.unpublish()
     this.client.on('stream-removed', (event) => {

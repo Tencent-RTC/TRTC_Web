@@ -182,6 +182,6 @@ export function joinRoomUpload(sdkAppId) {
 /**
  * 推流成功上报到 TAM
  */
- export function publishUpload(sdkAppId) {
+export function publishUpload(sdkAppId) {
   uploadToTAM('publish', sdkAppId);
 }
