@@ -1,6 +1,6 @@
 {
   "name": "trtc-js-sdk",
-  "version": "4.11.13",
+  "version": "4.12.0",
   "description": "Tencent Cloud RTC SDK for Web",
   "main": "trtc.js",
   "types": "index.d.ts",
@@ -19,7 +19,7 @@
   "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/doc/en/index.html",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tencentyun/TRTCSDK.git"
+    "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
   },
   "author": "Tencent Cloud Client R&D Center",
   "license": "ISC"
