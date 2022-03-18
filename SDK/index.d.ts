@@ -1,6 +1,6 @@
 // Type definitions for trtc-js-sdk
 // Npm: https://www.npmjs.com/package/trtc-js-sdk
-// Github: https://github.com/tencentyun/TRTCSDK/Web
+// Github: https://github.com/LiteAVSDK/TRTC_Web
 
 
 type Nullable<T> = T | null;
@@ -209,9 +209,11 @@ export interface Client {
    * 
    * 'small': manually switch to the small stream
    * @since 4.11.0
+   * 
+   * This method has been changed from synchronous to asynchronous since v4.12.0
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/Client.html#setRemoteVideoStreamType
    */
-  setRemoteVideoStreamType(remoteStream: RemoteStream, status: 'big' | 'small'): void;
+  setRemoteVideoStreamType(remoteStream: RemoteStream, status: 'big' | 'small'): Promise<void>;
 }
 
 export interface StreamConfig {
@@ -249,6 +251,9 @@ export interface StreamConfig {
   /** 
    * Whether to mirror the video. Default value: true. We recommend that you enable the mirror mode when using the front camera and disable it when using the rear camera.
    * Screen sharing does not support mirroring.
+   * @deprecated 4.12.1
+   * 
+   * see [play](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#play)
    */
   mirror?: boolean;
 }
@@ -652,6 +657,14 @@ export interface PlaybackOptions {
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   /** Whether to mute audio. You may want to mute the audio of local streams so that the audio captured by the mic won’t be played locally. */
   muted?: boolean;
+  /**
+   * Whether to mirror the video. Default value: true. We recommend that you enable the mirror mode when using the front camera and disable it when using the rear camera.
+   * Screen sharing does not support mirroring.
+   * @since 4.12.1
+   * 
+   * This option has been supported since v4.12.1. see [play](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/LocalStream.html#play)
+   */
+  mirror?: boolean;
 }
 
 export interface VideoProfile {

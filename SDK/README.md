@@ -10,7 +10,7 @@
 
 An object-oriented WebRTC SDK library  
 
-[![NPM version](https://img.shields.io/npm/v/trtc-js-sdk)](https://www.npmjs.com/package/trtc-js-sdk) [![NPM downloads](https://img.shields.io/npm/dw/trtc-js-sdk)](https://www.npmjs.com/package/trtc-js-sdk) [![trtc.js](https://img.shields.io/bundlephobia/min/trtc-js-sdk)](https://www.npmjs.com/package/trtc-js-sdk) [![Typescript Supported](https://img.shields.io/badge/Typescript-Supported-blue)](https://www.npmjs.com/package/trtc-js-sdk) [![Documents](https://img.shields.io/badge/-Documents-blue)](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/index.html) [![Stars](https://img.shields.io/github/stars/tencentyun/TRTCSDK?style=social)](https://github.com/tencentyun/TRTCSDK) 
+[![NPM version](https://img.shields.io/npm/v/trtc-js-sdk)](https://www.npmjs.com/package/trtc-js-sdk) [![NPM downloads](https://img.shields.io/npm/dw/trtc-js-sdk)](https://www.npmjs.com/package/trtc-js-sdk) [![trtc.js](https://img.shields.io/bundlephobia/min/trtc-js-sdk)](https://www.npmjs.com/package/trtc-js-sdk) [![Typescript Supported](https://img.shields.io/badge/Typescript-Supported-blue)](https://www.npmjs.com/package/trtc-js-sdk) [![Documents](https://img.shields.io/badge/-Documents-blue)](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/index.html) [![Stars](https://img.shields.io/github/stars/tencentyun/TRTCSDK?style=social)](https://github.com/LiteAVSDK/TRTC_Web) 
 
 </div>
 
