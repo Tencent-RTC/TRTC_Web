@@ -178,7 +178,7 @@ export default {
       en: 'Demo Download',
       'zh-CN': a18n('Demo 下载'),
     },
-    path: 'https://github.com/tencentyun/TRTCSDK/tree/master/Web',
+    path: 'https://github.com/LiteAVSDK/TRTC_Web',
   },
   SDK: {
     name: {
