@@ -17,7 +17,9 @@
 ├── README.md
 ├── SDK                     -- TRTC Web SDK 最新版文件
 ├── base-js                 -- TRTC Web 基础 Demo
-└── base-react-next         -- TRTC Web API Examples
+├── base-react-next         -- TRTC Web API Examples
+├── quick-demo-js           -- TRTC Web 快速运行 Demo (原生 Js 版本)
+└── quick-demo-vue2-js      -- TRTC Web 快速运行 Demo (Vue2 版本)
 ```
 
 **SDK**
@@ -35,6 +37,19 @@
 - 说明：`base-react-next` 文件夹下为 TRTC Web API Examples。Web API Examples 展示了 [TRTC Web SDK](https://www.npmjs.com/package/trtc-js-sdk) 中 [API 接口](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/Client.html) 的使用方法和应用场景。Web API Examples 使用 [Next.js](https://www.nextjs.cn/) 进行开发，需要您安装 Node 环境。
 - 运行：运行 TRTC Web API Examples 请参考 [运行 base-react-next](https://github.com/LiteAVSDK/TRTC_Web/tree/master/base-react-next)。
 - 在线体验：[TRTC Web API-Example 在线体验](https://web.sdk.qcloud.com/trtc/webrtc/demo/api-sample/basic-rtc.html)。
+
+**quick-demo-js**
+
+- 说明：`quick-demo-js` 文件夹下为 TRTC Web 快速运行 Demo (原生 Js 版本)。TRTC Web 快速运行 Demo (原生 Js 版本) 集成了 [TRTC Web SDK](https://www.npmjs.com/package/trtc-js-sdk) 的基础音视频通话、设备选择等功能，使用原生 Js 开发，可直接在浏览器中运行。
+- 运行：运行 TRTC Web 快速运行 Demo (原生 Js 版本) 请参考 [运行 TRTC Web 快速运行 Demo (原生 Js 版本)](https://github.com/LiteAVSDK/TRTC_Web/tree/master/quick-demo-js)。
+- 在线体验：[TRTC Web quick Demo (原生 Js 版本) 在线体验](https://web.sdk.qcloud.com/trtc/webrtc/demo/quick-demo-js/index.html)。
+
+**quick-demo-vue2-js**
+
+- 说明：`quick-demo-vue2-js` 文件夹下为 TRTC Web 快速运行 Demo (Vue2 版本)。TRTC Web 快速运行 Demo (Vue2 版本) 集成了 [TRTC Web SDK](https://www.npmjs.com/package/trtc-js-sdk) 的基础音视频通话、设备选择等功能，使用 [Vue2](https://cn.vuejs.org/index.html) 开发，需要您安装 Node 环境。
+- 运行：运行 TRTC Web 快速运行 Demo (Vue2 版本) 请参考 [运行 TRTC Web 快速运行 Demo (Vue2 版本)](https://github.com/LiteAVSDK/TRTC_Web/tree/master/quick-demo-vue2-js)。
+- 在线体验：[TRTC Web quick Demo (Vue2 版本) 在线体验](https://web.sdk.qcloud.com/trtc/webrtc/demo/quick-demo-vue2-js/index.html)。
+
 
 ## 联系我们
 
