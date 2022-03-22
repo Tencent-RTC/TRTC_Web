@@ -1,151 +1,26 @@
 本文主要介绍如何快速运行腾讯云 TRTC Web SDK Demo。
 
-## 支持的平台
+### 支持的平台
+TRTC Web SDK 基于 WebRTC 实现，目前支持桌面端和移动端的主流浏览器，详细支持度表格请参见 [支持的平台](https://cloud.tencent.com/document/product/647/17249#.E6.94.AF.E6.8C.81.E7.9A.84.E5.B9.B3.E5.8F.B0)。
+如果您的应用场景不在支持的表格里，可以打开 [TRTC Web SDK 能力检测页面](https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html) 检测当前环境是否支持 WebRTC 所有能力，例如 WebView 等环境。
 
-WebRTC 技术由 Google 最先提出，目前主要在桌面版 Chrome 浏览器、桌面版 Safari 浏览器以及移动版的 Safari 浏览器上有较为完整的支持，其他平台（例如 Android 平台的浏览器）支持情况均比较差。
-- 在移动端推荐使用 [小程序](https://cloud.tencent.com/document/product/647/32399) 解决方案，微信和手机 QQ 小程序均已支持，都是由各平台的 Native 技术实现，音视频性能更好，且针对主流手机品牌进行了定向适配。
-- 如果您的应用场景主要为教育场景，那么教师端推荐使用稳定性更好的 [Electron](https://cloud.tencent.com/document/product/647/38549) 解决方案，支持大小双路画面，更灵活的屏幕分享方案以及更强大而弱网络恢复能力。
+### URL 域名协议限制
+由于浏览器安全策略的限制，使用 WebRTC 能力对页面的访问协议有严格的要求，请参照以下表格进行开发和部署应用。
 
-<table>
-<tr>
-<th>操作系统</th>
-<th width="22%">浏览器类型</th><th>浏览器最低<br>版本要求</th><th width="16%">接收（播放）</th><th width="16%">发送（上麦）</th><th>屏幕分享</th><th>SDK 版本要求</th>
-</tr><tr>
-<td>Mac OS</td>
-<td>桌面版 Safari 浏览器</td>
-<td>11+</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持（需要 Safari13+ 版本）</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Mac OS</td>
-<td>桌面版 Chrome 浏览器</td>
-<td>56+</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持（需要 Chrome72+ 版本）</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Mac OS</td>
-<td>桌面版 Firefox 浏览器</td>
-<td>56+</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持（需要 Firefox66+ 版本）</td>
-<td>v4.7.0+</td>
-</tr>
-<tr>
-<td>Mac OS</td>
-<td>桌面版 Edge 浏览器</td>
-<td>80+</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持</td>
-<td>v4.7.0+</td>
-</tr>
-<tr>
-<td>Windows</td>
-<td>桌面版 Chrome 浏览器</td>
-<td>56+</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持（需要 Chrome72+ 版本）</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Windows</td>
-<td>桌面版 QQ 浏览器（极速内核）</td>
-<td>10.4+</td>
-<td>支持</td>
-<td>支持</td>
-<td>不支持</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Windows</td>
-<td>桌面版 Firefox 浏览器</td>
-<td>56+</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持（需要 Firefox66+ 版本）</td>
-<td>v4.7.0+</td>
-</tr>
-<tr>
-<td>Windows</td>
-<td>桌面版 Edge 浏览器</td>
-<td>80+</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持</td>
-<td>v4.7.0+</td>
-</tr>
-<tr>
-<td>iOS 11.1.2+</td>
-<td>移动版 Safari 浏览器</td>
-<td>11+</td>
-<td>支持</td>
-<td>支持</td>
-<td>不支持</td>
-<td>-</td>
-</tr>
-<tr>
-<td>iOS 12.1.4+</td>
-<td>微信内嵌网页</td>
-<td>-</td>
-<td>支持</td>
-<td>不支持</td>
-<td>不支持</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Android</td>
-<td>移动版 QQ 浏览器</td>
-<td>-</td>
-<td>不支持</td>
-<td>不支持</td>
-<td>不支持</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Android</td>
-<td>移动版 UC 浏览器</td>
-<td>-</td>
-<td>不支持</td>
-<td>不支持</td>
-<td>不支持</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Android</td>
-<td>微信内嵌网页（TBS 内核）</td>
-<td>-</td>
-<td>支持</td>
-<td>支持</td>
-<td>不支持</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Android</td>
-<td>微信内嵌网页（XWEB 内核）</td>
-<td>-</td>
-<td>支持</td>
-<td>支持</td>
-<td>不支持</td>
-<td>-</td>
-</tr>
-</table>
+| 应用场景     | 协议             | 接收（播放） | 发送（上麦） | 屏幕分享 | 备注     |
+|----------|:-----------------|:---------|----------|--------|----------|
+| 生产环境     | HTTPS 协议       | 支持       | 支持       | 支持     | **推荐** |
+| 生产环境     | HTTP 协议        | 支持       | 不支持     | 不支持   |          |
+| 本地开发环境 | http://localhost | 支持       | 支持       | 支持     | **推荐** |
+| 本地开发环境 | http://127.0.0.1 | 支持       | 支持       | 支持     |          |
+| 本地开发环境 | http://[本机IP]  | 支持       | 不支持     | 不支持   |          |
+| 本地开发环境 | file:///         | 支持       | 支持       | 支持     |          |
 
->! 
->- 您可以在浏览器中打开 [WebRTC 能力测试](https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html) 页面进行检测是否完整支持 WebRTC。例如公众号等浏览器环境。
->- 由于 H.264 版权限制，华为系统的 Chrome 浏览器和以 Chrome WebView 为内核的浏览器均不支持 TRTC 的 Web 版 SDK 的正常运行。
->
-<span id="requirements"></span>
-## 环境要求
-- 请使用最新版本的 Chrome 浏览器。
-- TRTC Web SDK 依赖以下端口进行数据传输，请将其加入防火墙白名单，参考：[WebRTC 需要配置哪些端口或域名为白名单？](https://cloud.tencent.com/document/product/647/34399#webrtc-.E9.9C.80.E8.A6.81.E9.85.8D.E7.BD.AE.E5.93.AA.E4.BA.9B.E7.AB.AF.E5.8F.A3.E6.88.96.E5.9F.9F.E5.90.8D.E4.B8.BA.E7.99.BD.E5.90.8D.E5.8D.95.EF.BC.9F) 配置完成后，您可以通过访问并体验 [官网 Demo](https://web.sdk.qcloud.com/trtc/webrtc/demo/api-sample/login.html) 检查配置是否生效。 
+### 防火墙限制
+TRTC Web SDK 依赖以下端口及域名进行数据传输，请将其加入防火墙白名单。配置完成后，您可以通过访问并体验 [官网 Demo](https://web.sdk.qcloud.com/trtc/webrtc/demo/api-sample/basic-rtc.html) 检查配置是否生效。具体请参见 [应对防火墙限制相关](https://cloud.tencent.com/document/product/647/34399)。
+- TCP 端口：8687
+- UDP 端口：8000，8080，8800，843，443，16285
+- 域名：`*.rtc.qq.com`，`yun.tim.qq.com` 
  
 ## 前提条件
 您已 [注册腾讯云](https://cloud.tencent.com/document/product/378/17985) 账号，并完成 [实名认证](https://cloud.tencent.com/document/product/378/3629)。
@@ -165,7 +40,7 @@ WebRTC 技术由 Google 最先提出，目前主要在桌面版 Chrome 浏览器
 <span id="step3"></span>
 ### 步骤3：配置 Demo 工程文件
 1. 解压 [步骤2](#step2) 中下载的源码包。
-2. 找到并打开`Web/base-js/js/debug/GenerateTestUserSig.js`文件。
+2. 找到并打开`TRTC_Web/base-js/js/debug/GenerateTestUserSig.js`文件。
 3. 设置`GenerateTestUserSig.js`文件中的相关参数：
   <ul><li>SDKAPPID：默认为0，请设置为实际的 SDKAppID。</li>
   <li>SECRETKEY：默认为空字符串，请设置为实际的密钥信息。</li></ul> 
