@@ -33,7 +33,7 @@ TRTC Web SDK 依赖以下端口及域名进行数据传输，请将其加入防�
 
 <span id="step2"></span>
 ### 步骤2：下载 SDK 和 Demo 源码
-1. 鼠标移动至对应卡片，单击【[Github](https://github.com/tencentyun/TRTCSDK/tree/master/Web)】跳转至 Github（或单击【[ZIP](https://web.sdk.qcloud.com/trtc/webrtc/download/webrtc_latest.zip)】），下载相关 SDK 及配套的 Demo 源码。
+1. 鼠标移动至对应卡片，单击【[Github](https://github.com/LiteAVSDK/TRTC_Web)】跳转至 Github（或单击【[ZIP](https://web.sdk.qcloud.com/trtc/webrtc/download/webrtc_latest.zip)】），下载相关 SDK 及配套的 Demo 源码。
  ![](https://main.qcloudimg.com/raw/0f35fe3bafe9fcdbd7cc73f991984d1a.png)
 2. 下载完成后，返回实时音视频控制台，单击【我已下载，下一步】，可以查看 SDKAppID 和密钥信息。
 
