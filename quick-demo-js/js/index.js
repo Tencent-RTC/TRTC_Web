@@ -37,12 +37,14 @@ TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.INFO);
 initDevice();
 
 // check current environment is supported TRTC or not
-let checkResult = await TRTC.checkSystemRequirements();
-if (!checkResult.result) {
-	console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
-	alert('Your browser does not supported TRTC!');
-	window.location.href = 'https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html';
-}
+TRTC.checkSystemRequirements().then((checkResult) => {
+	if (!checkResult.result) {
+		console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
+		alert('Your browser does not supported TRTC!');
+		window.location.href = 'https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html';
+	}
+})
+
 
 function initParams() {
 	sdkAppId = parseInt(document.getElementById('sdkAppId').value);

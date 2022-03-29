@@ -229,7 +229,6 @@ class Client {
 	
 	async switchDevice({videoId, audioId}) {
 		if (!this.isJoined) {
-			console.warn('switchDevice() - please join() firstly');
 			return;
 		}
 		if (videoId) {
