@@ -1,13 +1,13 @@
 <!--
  * @Description: 导航栏组件
  * @Date: 2022-03-09 16:47:13
- * @LastEditTime: 2022-03-18 12:06:18
+ * @LastEditTime: 2022-03-29 15:22:53
 -->
 <template>
   <div class="nav-container">
     <div class="right-region">
-      <img v-if="isZhLang" class="logo" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/trtc-logo-cn-w.png" />
-      <img v-if="isEnLang" class="logo" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/trtc-logo-en-w.png" />
+      <img v-if="isZhLang" :class="$isMobile ? 'logo-mobile' : 'logo'" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/trtc-logo-cn-w.png" />
+      <img v-if="isEnLang" :class="$isMobile ? 'logo-mobile' : 'logo'" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/trtc-logo-en-w.png" />
     </div>
     <div class="left-region">
       <span class="language" @click="toggleLanguage">
@@ -65,9 +65,16 @@ export default {
   display: flex;
   justify-content: space-between;
   color: #ffffff;
+  align-items: center;
   .right-region {
+    height: 100%;
+    display: flex;
+    align-items: center;
     .logo {
       height: 100%;
+    }
+    .logo-mobile {
+      height: 30px;
     }
   }
   .left-region {

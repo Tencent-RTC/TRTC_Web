@@ -1,7 +1,7 @@
 /*
  * @Description: 全局样式
  * @Date: 2022-03-09 16:42:16
- * @LastEditTime: 2022-03-18 17:46:59
+ * @LastEditTime: 2022-03-29 16:36:04
  */
 import Vue from 'vue';
 import App from './App.vue';
@@ -11,6 +11,7 @@ import '@/utils/aegis.js';
 import '@/assets/style/global.css';
 import '@/assets/icons';
 import '@/assets/style/theme/index.css';
+import { isMobile } from '@/utils/utils';
 
 import {
   Collapse,
@@ -58,6 +59,7 @@ Vue.use(Button);
 Vue.use(Tooltip);
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$message = new DonMessage();
+Vue.prototype.$isMobile = isMobile;
 
 Vue.config.productionTip = false;
 

@@ -1,18 +1,18 @@
 <!--
  * @Description: quick demo - vue2 版本页面
  * @Date: 2022-03-14 16:56:36
- * @LastEditTime: 2022-03-21 18:07:19
+ * @LastEditTime: 2022-03-29 17:01:32
 -->
 <template>
   <div id="app">
     <!-- 头部栏 -->
     <comp-nav></comp-nav>
-    <div class="content">
+    <div class="content" :class="$isMobile && 'content-mobile'">
       <!-- quick demo 使用指引 -->
       <comp-guidance></comp-guidance>
       <!-- sdkAppId、secretKey、userId、roomId 参数输入区域 -->
       <p class="label">{{ $t('Params') }}</p>
-      <div class="param-container">
+      <div class="param-container" :class="$isMobile && 'param-container-mobile'">
         <comp-info-input
           label="sdkAppId" type="number" @change="handleValueChange($event, 'sdkAppId')"></comp-info-input>
         <comp-info-input
@@ -24,7 +24,7 @@
       </div>
       <!-- 设备选择区域 -->
       <p class="label">{{ $t('Device Select') }}</p>
-      <div class="param-container">
+      <div class="param-container" :class="$isMobile && 'param-container-mobile'">
         <comp-device-select
           deviceType="camera" @change="handleValueChange($event, 'cameraId')"></comp-device-select>
         <comp-device-select
@@ -92,6 +92,10 @@ export default {
     width: 80%;
     margin: 0 auto;
     max-width: 1320px;
+    &.content-mobile {
+      width: 100%;
+      padding: 0 16px 20px;
+    }
     .label {
       margin: 14px 0 6px;
       text-align: left;
@@ -108,6 +112,12 @@ export default {
       }
       div:nth-last-child(2), div:nth-last-child(1) {
         margin-bottom: 0;
+      }
+      &.param-container-mobile {
+        div {
+          width: 100%;
+          margin-bottom: 10px;
+        }
       }
     }
   }

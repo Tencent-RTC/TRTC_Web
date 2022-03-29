@@ -1,7 +1,7 @@
 <!--
  * @Description: 指引组件
  * @Date: 2022-03-14 16:56:36
- * @LastEditTime: 2022-03-21 19:40:21
+ * @LastEditTime: 2022-03-29 15:27:22
 -->
 <template>
 	<div class="guidance-container">
@@ -111,6 +111,7 @@ export default {
 	.collapse-title {
 		font-size: 16px;
 		font-weight: bold;
+    line-height: 18px;
 	}
 	.collapse-content {
 		font-size: 14px;
