@@ -44,7 +44,7 @@ export default class RTC extends React.Component {
     this.isLeaving = false;
     this.userSig = '';
     this.privateMapKey = 255;
-    this.mirror = true;
+    this.mirror = false;
     this.dom = null;
     global.$TRTC = TRTC;
   }
