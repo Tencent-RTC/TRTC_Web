@@ -11,14 +11,13 @@ import RoomIDInput from '@components/RoomIDInput';
 import { getNavConfig } from '@api/nav';
 import { getUrlParam, startAsrUpload } from '@utils/utils';
 import { handlePageUrl, handlePageChange, getLanguage } from '@utils/common';
-import { Button, Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { Button, Accordion, AccordionSummary, AccordionDetails, Typography, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SideBar from '@components/SideBar';
 import styles from '@styles/common.module.scss';
 import DeviceSelect from '@components/DeviceSelect';
 import RelatedResources from '@components/RelatedResources';
 import Toast from '@components/Toast';
-import { getFederationToken } from '@api/http';
 import { SDKAPPID } from '@app/config';
 const mobile = require('is-mobile');
 const DynamicRtc = dynamic(import('@components/BaseRTC'), { ssr: false });
@@ -50,6 +49,7 @@ export default function BasicRtc(props) {
   const [secretId, setSecretId] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [token, setToken] = useState('');
+  const asrFormRef = React.useRef();
 
   useEffect(() => {
     const language = getLanguage();
@@ -59,9 +59,21 @@ export default function BasicRtc(props) {
     handlePageUrl();
     setUseStringRoomID(getUrlParam('useStringRoomID') === 'true');
     setIsMobile(mobile());
+
+    const param = new URLSearchParams(location.search);
+    const appId = param.get('appId');
+    const secretId = param.get('secretId');
+    const secretKey = param.get('secretKey');
+    appId && setAppId(appId);
+    secretId && setSecretId(secretId);
+    secretKey && setSecretKey(secretKey);
   }, []);
 
   const handleStartASR = () => {
+    if (!asrFormRef.current.reportValidity()) {
+      return;
+    }
+
     setEnableASR(true);
     if (localStreamConfig.stream) {
       startASR(localStreamConfig.stream);
@@ -191,17 +203,7 @@ export default function BasicRtc(props) {
     asr.OnRecognitionResultChange = () => {};
   };
 
-  const getToken = async () => {
-    const result = await getFederationToken();
-    setToken(result.Token);
-    setSecretKey(result.TmpSecretKey);
-    setSecretId(result.TmpSecretId);
-    setAppId(result.appId);
-  };
-
-
   const handleJoin = async () => {
-    await getToken();
     await RTC.handleJoin();
     await RTC.handlePublish();
   };
@@ -542,7 +544,6 @@ export default function BasicRtc(props) {
 
               <DeviceSelect deviceType="camera" onChange={value => setCameraID(value)}></DeviceSelect>
               <DeviceSelect deviceType="microphone" onChange={value => setMicrophoneID(value)}></DeviceSelect>
-
               <br/>
               <div className={clsx(styles['button-container'], isMobile && styles['mobile-device'])}>
                 <Button disabled={isJoined} id="join" variant="contained" color="primary" className={ isJoined ? styles.forbidden : ''} onClick={handleJoin}>JOIN</Button>
@@ -564,6 +565,13 @@ export default function BasicRtc(props) {
               {mountFlag && <Typography>{a18n('实时语音识别')}</Typography>}
             </AccordionSummary>
             <AccordionDetails className={styles['accordion-details-container']}>
+              <form ref={asrFormRef}>
+                <TextField required label="语音识别 appId" value={appId} onChange={event => setAppId(event.target.value)}  style={{ width: '100%' }} />
+                <TextField required label='语音识别 secretId' value={secretId} onChange={event => setSecretId(event.target.value)}  style={{ width: '100%' }} />
+                <TextField required label='语音识别 secretKey' value={secretKey} onChange={event => setSecretKey(event.target.value)}  style={{ width: '100%' }} />
+                <TextField label='语音识别 setToken' value={token} onChange={event => setToken(event.target.value)}  style={{ width: '100%' }} />
+              </form>
+              <br></br>
               <FormControl component="fieldset">
                 <FormLabel component="legend">场景</FormLabel>
                 <RadioGroup row aria-label="scene" name="row-radio-buttons-group" value={scene} onChange={e => setScene(e.target.value)}>
