@@ -1,7 +1,7 @@
 /*
  * @Description: 屏幕分享
  * @Date: 2022-03-16 10:34:54
- * @LastEditTime: 2022-03-18 22:50:13
+ * @LastEditTime: 2022-04-01 11:57:06
  */
 import TRTC from 'trtc-js-sdk';
 import LibGenerateTestUserSig from '@/utils/lib-generate-test-usersig.min.js';
@@ -61,7 +61,7 @@ export default {
             alert('屏幕分享失败，请确保系统允许当前浏览器获取屏幕内容');
             throw error;
           case 'NotAllowedError':
-            if (error.message === 'Permission denied by system') {
+            if (error.message.includes('Permission denied by system')) {
               alert('屏幕分享失败，请确保系统允许当前浏览器获取屏幕内容');
             } else {
               console.log('User refused to share the screen');

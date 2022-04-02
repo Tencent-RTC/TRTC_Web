@@ -1,10 +1,4 @@
 /* eslint-disable*/
-const aegis = new Aegis({
-	id: 'iHWefAYqvXVdajviap', // 项目ID，即上报id
-	uin: '', // 用户唯一 ID（可选）
-	reportApiSpeed: true, // 接口测速
-	reportAssetSpeed: true // 静态资源测速
-})
 // -------document events--------
 
 document.getElementById('sdkAppId').value = getQueryString('sdkAppId');
@@ -55,6 +49,14 @@ function initParams() {
 	cameraId = document.getElementById('camera-select').value;
 	microphoneId = document.getElementById('microphone-select').value;
 	
+	
+	aegis.reportEvent({
+		name: 'loaded',
+		ext1: 'loaded-success',
+		ext2: DEMOKEY,
+		ext3: sdkAppId,
+	});
+	
 	if (!(sdkAppId && secretKey && roomId && userId)) {
 		if (window.lang_ === 'zh-cn') {
 			alert('请检查参数 SDKAppId, secretKey, userId, roomId 是否输入正确！');
@@ -71,19 +73,17 @@ async function joinRoom() {
 	client = new Client({sdkAppId, userId, roomId, secretKey, cameraId, microphoneId});
 	try {
 		await client.join();
-		aegis.reportEvent({
-			name: 'JOIN_SUCCESS', // 必填
-			ext1: sdkAppId
-		})
+		reportSuccessEvent('joinRoom', sdkAppId)
 		publish();
 		refreshLink()
 		invite.style.display = 'flex';
 	} catch (error) {
 		console.log('joinRoom error', error);
-		aegis.reportEvent({
-			name: 'JOIN_FAILED', // 必填
-			ext1: sdkAppId,
-			error: error.message_
+		reportFailedEvent({
+			name: 'joinRoom', // 必填
+			sdkAppId,
+			roomId,
+			error
 		})
 	}
 }
@@ -91,7 +91,17 @@ async function joinRoom() {
 async function leaveRoom() {
 	invite.style.display = 'none';
 	if (client) {
-		await client.leave();
+		try {
+			await client.leave();
+			reportSuccessEvent('leaveRoom', sdkAppId)
+		} catch (error) {
+			reportFailedEvent({
+				name: 'leaveRoom', // 必填
+				sdkAppId,
+				roomId,
+				error,
+			})
+		}
 	}
 }
 
@@ -99,15 +109,13 @@ async function publish() {
 	if (client) {
 		try {
 			await client.publish();
-			aegis.reportEvent({
-				name: 'PUBLISH_SUCCESS', // 必填
-				ext1: sdkAppId
-			})
-		} catch (e) {
-			aegis.reportEvent({
-				name: 'PUBLISH_FAILED', // 必填
-				ext1: sdkAppId,
-				error: error.message_
+			reportSuccessEvent('publish', sdkAppId)
+		} catch (error) {
+			reportFailedEvent({
+				name: 'publish', // 必填
+				sdkAppId,
+				roomId,
+				error,
 			})
 		}
 	}
@@ -115,7 +123,17 @@ async function publish() {
 
 async function unpublish() {
 	if (client) {
-		await client.unpublish();
+		try {
+			await client.unpublish();
+			reportSuccessEvent('unpublish', sdkAppId)
+		} catch (error) {
+			reportFailedEvent({
+				name: 'unpublish', // 必填
+				sdkAppId,
+				roomId,
+				error,
+			})
+		}
 	}
 }
 
@@ -125,8 +143,16 @@ async function startShare() {
 	try {
 		await shareClient.join();
 		await shareClient.publish();
+		reportSuccessEvent('startScreenShare', sdkAppId)
 	} catch (error) {
 		console.log('startShare error', error);
+		reportFailedEvent({
+			name: 'startScreenShare', // 必填
+			sdkAppId,
+			roomId,
+			error,
+			type: 'share'
+		})
 	}
 }
 
@@ -134,8 +160,16 @@ async function stopShare() {
 	try {
 		await shareClient.unpublish();
 		await shareClient.leave();
+		reportSuccessEvent('stopScreenShare', sdkAppId)
 	} catch (error) {
 		console.log('stopShare error', error);
+		reportFailedEvent({
+			name: 'startScreenShare', // 必填
+			sdkAppId,
+			roomId,
+			error,
+			type: 'share'
+		})
 	}
 }
 

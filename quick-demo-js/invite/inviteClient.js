@@ -48,7 +48,6 @@ class Client {
         userId: this.userId,
         audio: true,
         video: true,
-        mirror: true
       });
       this.localStream.setVideoProfile('640p');
       try {
