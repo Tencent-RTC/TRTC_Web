@@ -60,7 +60,6 @@ class Client {
 				video: true,
 				cameraId: this.cameraId,
 				microphoneId: this.microphoneId,
-				mirror: true
 			});
 			this.localStream.setVideoProfile('640p');
 			try {
@@ -327,6 +326,12 @@ class Client {
 			console.log(`remote stream added: [${userId}] ID: ${id} type: ${remoteStream.getType()}`);
 			this.client.subscribe(remoteStream).catch(error => {
 				console.error('subscribe failed', error);
+				reportFailedEvent({
+					name: 'subscribe', // 必填
+					sdkAppId: this.sdkAppId,
+					roomId: this.roomId,
+					error
+				})
 				addFailedLog(`Subscribe [${userId}] failed`);
 			});
 			addSuccessLog(`RemoteStream added: [${userId}]`);
@@ -341,7 +346,7 @@ class Client {
 		console.log(`remote stream subscribed: [${userId}] ID: ${id} type: ${remoteStream.getType()}`);
 		addSuccessLog(`RemoteStream subscribed: [${userId}]`)
 		addStreamView(remoteId);
-		
+		reportSuccessEvent('subscribe', sdkAppId)
 		remoteStream.play(remoteId).then(() => {
 			console.log(`play remote stream success: [${userId}] ID: ${id} type: ${remoteStream.getType()}`);
 			addSuccessLog(`RemoteStream play success: [${userId}]`)

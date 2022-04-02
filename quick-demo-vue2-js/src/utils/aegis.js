@@ -7,7 +7,7 @@
 import Vue from 'vue';
 import Aegis from 'aegis-web-sdk';
 
-const isProd =  process.env.NODE_ENV === 'production';
+const isProd = window.location.href.includes('localhost') || window.location.href.includes('127.0.0.1');
 
 const AEGIS_ID = {
   dev: 'iHWefAYqvXVdajviap',
@@ -15,7 +15,7 @@ const AEGIS_ID = {
 };
 
 const aegis = new Aegis({
-  id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
+  id: !isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
   reportApiSpeed: true, // 接口测速
   reportAssetSpeed: true, // 静态资源测速
 });

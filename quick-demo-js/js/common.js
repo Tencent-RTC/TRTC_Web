@@ -111,3 +111,37 @@ function getQueryString(name) {
 	}
 	return null;
 }
+
+const DEMOKEY = 'webrtcQuickDemoJs';
+const isProd = window.location.href.includes('localhost') || window.location.href.includes('127.0.0.1')
+
+const AEGIS_ID = {
+	dev: 'iHWefAYqvXVdajviap',
+	prod: 'iHWefAYqpBFdmIMeDi',
+};
+
+const aegis = new Aegis({
+	id: !isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
+	uin: '', // 用户唯一 ID（可选）
+	reportApiSpeed: true, // 接口测速
+	reportAssetSpeed: true // 静态资源测速
+})
+
+
+function reportSuccessEvent(name, sdkAppId) {
+	aegis.reportEvent({
+		name,
+		ext1: `${name}-success`,
+		ext2: DEMOKEY,
+		ext3: sdkAppId,
+	});
+}
+
+function reportFailedEvent({name, error, type = 'rtc', sdkAppId, roomId}) {
+	aegis.reportEvent({
+		name,
+		ext1: `${name}-failed#${roomId}*${type}*${error.message}`,
+		ext2: DEMOKEY,
+		ext3: sdkAppId,
+	});
+}
