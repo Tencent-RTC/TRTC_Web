@@ -1,7 +1,7 @@
 <!--
  * @Description: 导航栏组件
  * @Date: 2022-03-09 16:47:13
- * @LastEditTime: 2022-03-29 15:22:53
+ * @LastEditTime: 2022-04-07 17:34:23
 -->
 <template>
   <div class="nav-container">
@@ -50,6 +50,12 @@ export default {
       document.title = this.$i18n.t('title');
     },
     goToGithub() {
+      this.$aegis.reportEvent({
+        name: 'jumpGithub',
+        ext1: 'jumpGithub',
+        ext2: 'webrtcQuickDemoVue2',
+        ext3: this.sdkAppId,
+      });
       window.open('https://github.com/LiteAVSDK/TRTC_Web', '_blank');
     },
   },

@@ -70,11 +70,11 @@
 				<ul v-if="isZhLang" class="collapse-content">
 					<li>输入 userId 和 roomId</li>
 					<li>点击【进入房间】按钮进入房间</li>
-					<li>点击【发布流】按钮发布本地流</li>
-					<li>点击【取消发布流】按钮取消发布本地流</li>
+					<li>点击【发布流】按钮发布音视频</li>
+					<li>点击【取消发布流】按钮取消发布音视频</li>
 					<li>点击【离开房间】按钮离开房间</li>
-					<li>点击【开始共享屏幕】按钮布屏幕分享流</li>
-					<li>点击【停止共享屏幕】按钮取消发布屏幕分享流</li>
+					<li>点击【开始共享屏幕】按钮布屏幕分享</li>
+					<li>点击【停止共享屏幕】按钮取消发布屏幕分享</li>
 				</ul>
 			</el-collapse-item>
 	</el-collapse>
@@ -86,7 +86,7 @@ export default {
   name: 'compGuidance',
   data() {
     return {
-      activeNames: ['1'],
+      activeNames: ['1', '4'],
     };
   },
   computed: {
