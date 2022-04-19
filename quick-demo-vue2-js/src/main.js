@@ -23,6 +23,7 @@ import {
   Message,
   MessageBox,
   Tooltip,
+  Alert,
 } from 'element-ui';
 
 import router from './router';
@@ -57,6 +58,7 @@ Vue.use(Option);
 Vue.use(Input);
 Vue.use(Button);
 Vue.use(Tooltip);
+Vue.use(Alert);
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$message = new DonMessage();
 Vue.prototype.$isMobile = isMobile;
