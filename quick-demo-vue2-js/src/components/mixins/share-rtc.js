@@ -55,7 +55,7 @@ export default {
         await this.shareLocalStream.initialize();
         this.addSuccessLog(`ShareStream [${this.shareUserId}] initialized.`);
       } catch (error) {
-        this.addFailedLog(`ShareStream failed to initialize. Error: ${error.message}}`);
+        this.addFailedLog(`ShareStream failed to initialize. Error: ${error.message}}.`);
         switch (error.name) {
           case 'NotReadableError':
             alert('屏幕分享失败，请确保系统允许当前浏览器获取屏幕内容');
@@ -94,7 +94,7 @@ export default {
         this.addSuccessLog(`ShareClient [${this.shareUserId}] join success.`);
       } catch (error) {
         console.log('shareRTC handleJoin error', error);
-        this.addFailedLog(`ShareClient [${this.shareUserId}] join failed. ${error.message}`);
+        this.addFailedLog(`ShareClient [${this.shareUserId}] join failed. ${error.message}.`);
         this.reportFailedEvent('startScreenShare', error, 'share');
       }
     },
@@ -112,7 +112,7 @@ export default {
         this.addSuccessLog('ShareStream is published successfully.');
         this.reportSuccessEvent('startScreenShare', 'share');
       } catch (error) {
-        this.addFailedLog(`ShareStream is published failed. ${error.message}`);
+        this.addFailedLog(`ShareStream is published failed. ${error.message}.`);
         this.reportFailedEvent('startScreenShare', error, 'share');
       }
     },
@@ -148,7 +148,7 @@ export default {
         this.reportSuccessEvent('stopScreenShare', 'share');
       } catch (error) {
         console.log(`ShareClient leave failed, ${error.message}`);
-        this.addFailedLog(`ShareClient leave failed, ${error.message}`);
+        this.addFailedLog(`ShareClient leave failed, ${error.message}.`);
         this.reportFailedEvent('stopScreenShare', error, 'share');
       }
     },
@@ -168,10 +168,11 @@ export default {
         console.log(`local stream ${event.type} player is ${event.state}`);
       });
       // 当用户通过浏览器自带的按钮停止屏幕分享时，会监听到 screen-sharing-stopped 事件
-      this.shareLocalStream.on('screen-sharing-stopped', () => {
-        console.log('share stream video track ended');
-        this.addSuccessLog('ScreenShare is stopped');
-        this.handleShareLeave();
+      this.shareLocalStream.on('screen-sharing-stopped', async () => {
+        console.log('share stream video track ended.');
+        this.addSuccessLog('ScreenShare is stopped.');
+        await this.handleShareUnpublish();
+        await this.handleShareLeave();
       });
     },
   },
