@@ -40,7 +40,7 @@
     </div>
 
     <!-- 显示邀请链接 -->
-    <div v-if="inviteLink" class="invite-link-container">
+    <div v-if="showInviteLink" class="invite-link-container">
       <span v-if="isEnLang">Copy the link to invite friends to join the video call, one link can invite only one person,
         the link will be updated automatically after copying.</span>
       <span v-else>复制链接邀请好友加入视频通话，一条链接仅可邀请一人，复制后自动更新链接。</span>
@@ -142,6 +142,9 @@ export default {
     isEnLang() {
       return this.$i18n.locale === 'en';
     },
+    showInviteLink() {
+      return this.isHostMode && (this.isJoined || this.isShareJoined) && this.inviteLink;
+    },
   },
   watch: {
     cameraId(val) {
@@ -223,6 +226,7 @@ export default {
       await this.initShareLocalStream();
       await this.handleShareJoin();
       await this.handleSharePublish();
+      this.generateInviteLink();
     },
 
     // 点击【停止屏幕分享按钮】
