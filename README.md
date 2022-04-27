@@ -21,7 +21,8 @@ For the changelog of the SDK, see [Release Notes (Web)](https://intl.cloud.tence
 ├── base-js                 -- The TRTC web basic demo
 ├── base-react-next         -- TRTC web API examples
 ├── quick-demo-js           -- TRTC web quick demo (native JavaScript edition)
-└── quick-demo-vue2-js      -- TRTC web quick demo (Vue.js 2 edition)
+├── quick-demo-vue2-js      -- TRTC web quick demo (Vue.js 2 edition)
+└── quick-demo-vue3-ts      -- TRTC web quick demo (Vue.js 3 edition)
 ```
 
 **SDK**
@@ -48,9 +49,15 @@ For the changelog of the SDK, see [Release Notes (Web)](https://intl.cloud.tence
 
 **quick-demo-vue2-js**
 
-- The `quick-demo-vue2-js` directory contains the TRTC web quick demo (Vue.js 2.0), which integrates capabilities including audio/video call and device selection. It was developed using [Vue.js 2.0](https://cn.vuejs.org/index.html). You need to install Node.js to use it.
+- The `quick-demo-vue2-js` directory contains the TRTC web quick demo (Vue.js 2.0), which integrates capabilities including audio/video call and device selection. It was developed using [Vue.js 2.0](https://v2.vuejs.org/). You need to install Node.js to use it.
 - For information about how to run the TRTC web quick demo (Vue.js 2.0), see [quick-demo-vue2-js](https://github.com/LiteAVSDK/TRTC_Web/tree/main/quick-demo-vue2-js).
 - Click [here](https://web.sdk.qcloud.com/trtc/webrtc/demo/quick-demo-vue2-js/index.html) to try out the Vue.js 2 edition of the quick TRTC demo for web online.
+
+**quick-demo-vue3-ts**
+
+- The `quick-demo-vue3-ts` directory contains the TRTC web quick demo (Vue.js 3.0), which integrates capabilities including audio/video call and device selection. It was developed using [Vue.js 3.0](https://vuejs.org/). You need to install Node.js to use it.
+- For information about how to run the TRTC web quick demo (Vue.js 3.0), see [quick-demo-vue3-ts](https://github.com/LiteAVSDK/TRTC_Web/tree/main/quick-demo-vue3-ts).
+- Click [here](https://web.sdk.qcloud.com/trtc/webrtc/demo/quick-demo-vue3-ts/index.html) to try out the Vue.js 3 edition of the quick TRTC demo for web online.
 
 
 ## Contact Us
