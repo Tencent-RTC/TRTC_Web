@@ -212,7 +212,7 @@ async function initDevice() {
 		}
 		await updateDevice();
 		// 设备更新
-		document.addEventListener('devicechange', async () => {
+		navigator.mediaDevices.addEventListener('devicechange', async () => {
 			await updateDevice();
 		});
 	} catch (e) {
