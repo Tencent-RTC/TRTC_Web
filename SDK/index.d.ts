@@ -214,7 +214,15 @@ export interface Client {
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/Client.html#setRemoteVideoStreamType
    */
   setRemoteVideoStreamType(remoteStream: RemoteStream, status: 'big' | 'small'): Promise<void>;
+  /**
+   * call experimental API.
+   * @param name 
+   * @param options 
+   */
+  callExperimentalAPI(name: ExperimentalAPIName, options: Object): Promise<any>;
 }
+
+type ExperimentalAPIName = 'updatePrivateMapKey'
 
 export interface StreamConfig {
   /** userId */
@@ -495,7 +503,7 @@ export interface StreamEventMap {
   'player-state-changed': {
     type: 'audio' | 'video';
     state: 'PLAYING' | 'PAUSED' | 'STOPPED';
-    reason: 'playing' | 'mute' | 'unmute' | 'ended';
+    reason: 'playing' | 'mute' | 'unmute' | 'ended' | 'pause';
   };
   /** local screen sharing stopped */
   'screen-sharing-stopped': undefined;
