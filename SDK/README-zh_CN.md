@@ -17,7 +17,7 @@
 简体中文 | [English](./README.md)
 ## 简介
 
-[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/index.html) 是腾讯云实时音视频通讯解决方案的 Web 端 SDK，它是通过 HTML 网页加载的 JavaScript 库。开发者可以使用 TRTC Web SDK 提供的 API 建立连接，控制实时音视频通话或者直播服务。
+[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/index.html) 是腾讯云实时音视频通讯解决方案的 Web 端 SDK，它是通过 HTML 网页加载的 JavaScript 库。Web 开发者可以使用 TRTC Web SDK 提供的 API，在您的业务网站上实现实时音视频通话、直播等功能。
 
 - [在线 Demo](https://web.sdk.qcloud.com/trtc/webrtc/demo/api-sample/basic-rtc.html)
 
