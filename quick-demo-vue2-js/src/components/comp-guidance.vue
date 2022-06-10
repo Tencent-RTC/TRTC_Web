@@ -19,7 +19,7 @@
         </ul>
 			</el-collapse-item>
 			<el-collapse-item name="2">
-				<template slot="title" class="">
+				<template slot="title">
 					<span v-if="isEnLang" class="collapse-title">Step 2 : Create New Application</span>
 					<span v-if="isZhLang" class="collapse-title">步骤 2 : 创建新的应用</span>
 				</template>
@@ -40,7 +40,7 @@
 				</ul>
 			</el-collapse-item>
 			<el-collapse-item name="3">
-				<template slot="title" class="">
+				<template slot="title">
 					<span v-if="isEnLang" class="collapse-title">Step 3 : Get SDKAppID and SecretKey</span>
 					<span v-if="isZhLang" class="collapse-title">步骤 3 : 获取 SDKAppID 和 密钥 SecretKey</span>
 				</template>
@@ -54,7 +54,7 @@
 				</ul>
 			</el-collapse-item>
 			<el-collapse-item name="4">
-				<template slot="title" class="">
+				<template slot="title">
           <span v-if="isEnLang" class="collapse-title">Step 4 : Start Video Call</span>
 					<span v-if="isZhLang" class="collapse-title">步骤 4 : 开始视频通话</span>
 				</template>

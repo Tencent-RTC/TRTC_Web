@@ -27,7 +27,7 @@ import CompRoom from '@/components/comp-room.vue';
 import { getUrlParam, clearUrlParam } from '@/utils/utils.js';
 
 export default {
-  name: 'invite',
+  name: 'InviteApp',
   data() {
     return {
       sdkAppId: 0,
