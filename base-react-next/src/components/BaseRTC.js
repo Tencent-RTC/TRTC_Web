@@ -327,19 +327,19 @@ export default class RTC extends React.Component {
   }
 
   muteVideo() {
-    this.localStream.muteVideo();
+    this.localStream && this.localStream.muteVideo();
   }
 
   muteAudio() {
-    this.localStream.muteAudio();
+    this.localStream && this.localStream.muteAudio();
   }
 
   unmuteVideo() {
-    this.localStream.unmuteVideo();
+    this.localStream && this.localStream.unmuteVideo();
   }
 
   unmuteAudio() {
-    this.localStream.unmuteAudio();
+    this.localStream && this.localStream.unmuteAudio();
   }
 
   startGetAudioLevel() {
