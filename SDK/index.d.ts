@@ -86,6 +86,13 @@ export interface Client {
    */
   leave(): Promise<void>;
 
+  /** 
+ * Destroy client.
+ * @since 4.13.0
+ * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#destroy
+ */
+  destroy(): void;
+
   /**
    * Publish localStream
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#publish
@@ -515,7 +522,13 @@ export interface StreamEventMap {
   'connection-state-changed': {
     prevState: ConnectionState;
     state: ConnectionState;
-  }
+  },
+  'device-auto-recovered': {
+    isCamera: boolean;
+    isMicrophone: boolean;
+    cameraId: string;
+    microphoneId: string;
+  },
   /**
    * Error event. This event is thrown when an unrecoverable error occurs.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.ERROR
@@ -995,6 +1008,12 @@ export interface StreamEvent {
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.CONNECTION_STATE_CHANGED
    */
   CONNECTION_STATE_CHANGED: 'connection-state-changed';
+  /**
+   * When the camera or microphone being used has an capture exception, SDK will try to automatically recover the capture. This event will be fired when the capture is recovered successfully. 
+   * @since 4.13.0
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.DEVICE_AUTO_RECOVERED
+   */
+  DEVICE_AUTO_RECOVERED: 'device-auto-recovered';
   /**
    * Error event. This event is thrown when an unrecoverable error occurs.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.ERROR
