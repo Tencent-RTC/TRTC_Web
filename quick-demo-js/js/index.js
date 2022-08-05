@@ -24,8 +24,7 @@ let microphoneId;
 let cameras = [];
 let microphones = [];
 
-// 输出INFO以上日志等级
-TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.INFO);
+TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.DEBUG);
 
 // init device
 initDevice();
