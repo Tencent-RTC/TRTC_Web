@@ -5,7 +5,7 @@
  */
 import Vue from 'vue';
 import App from './App.vue';
-
+import TRTC from 'trtc-js-sdk';
 import '@/utils/aegis.js';
 
 import '@/assets/style/global.css';
@@ -66,7 +66,7 @@ Vue.prototype.$isMobile = isMobile;
 Vue.config.productionTip = false;
 
 document.title = i18n.t('title');
-
+TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.DEBUG);
 new Vue({
   router,
   i18n,
