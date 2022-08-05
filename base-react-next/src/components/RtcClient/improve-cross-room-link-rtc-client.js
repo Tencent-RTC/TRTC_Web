@@ -332,9 +332,9 @@ export default class RTC extends React.Component {
       console.error(error);
       alert(error);
     });
-    this.client.on('client-banned', (error) => {
-      console.error(`client has been banned for ${error}`);
-      alert(error);
+    this.client.on('client-banned', (event) => {
+      console.error(`client has been banned for ${event.reason}`);
+      alert(event.reason);
     });
     // fired when a remote peer is joining the room
     this.client.on('peer-join', (event) => {
