@@ -123,6 +123,13 @@ export interface Client {
    */
   switchRole(role: Role): Promise<void>;
 
+  /**
+   * send SEI message
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/Client.html#sendSEIMessage
+   * @since 4.14.0
+   */
+  sendSEIMessage(buffer: ArrayBuffer): void;
+
   /** 
    * listen for client event.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#on
@@ -493,6 +500,13 @@ export interface LocalStream extends Stream {
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#replaceTrack
    */
   replaceTrack(track: MediaStreamTrack): Promise<void>;
+
+  /**
+   * Set microphone capture volume
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#setAudioCaptureVolume
+   * @since 4.14.0
+   */
+  setAudioCaptureVolume(volume: Number): Boolean;
 }
 
 export interface RemoteStream extends Stream {
