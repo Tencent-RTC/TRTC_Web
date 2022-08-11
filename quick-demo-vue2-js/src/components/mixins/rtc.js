@@ -266,13 +266,12 @@ export default {
         console.error(error);
         alert(error);
       });
-      this.client.on('client-banned', async (error) => {
-        console.error(`client has been banned for ${error}`);
+      this.client.on('client-banned', async (event) => {
+        console.warn(`client has been banned for ${event.reason}`);
 
         this.isPublished = false;
         this.localStream = null;
         await this.leave();
-        alert(error);
       });
       // fired when a remote peer is joining the room
       this.client.on('peer-join', (event) => {
