@@ -1,6 +1,6 @@
 {
   "name": "trtc-js-sdk",
-  "version": "4.14.0",
+  "version": "4.14.1",
   "description": "Tencent Cloud RTC SDK for Web",
   "main": "trtc.js",
   "types": "index.d.ts",
