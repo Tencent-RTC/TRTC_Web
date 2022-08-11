@@ -126,7 +126,7 @@ export interface Client {
   /**
    * send SEI message
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/Client.html#sendSEIMessage
-   * @since 4.14.0
+   * @since 4.14.1
    */
   sendSEIMessage(buffer: ArrayBuffer): void;
 
@@ -333,6 +333,12 @@ export interface ClientEventMap {
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.AUDIO_VOLUME
    */
   'audio-volume': UserAudioVolume;
+  /**
+   * SEI message received
+   * @since 4.14.1
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.SEI_MESSAGE
+   */
+  'sei-message': SEIMessageEvent;
   /** Error event. This event is thrown when an unrecoverable error occurs. */
   'error': RtcError;
 }
@@ -739,6 +745,15 @@ export interface UserAudioVolume {
   /** Stream */
   stream: Stream;
 }
+export interface SEIMessageEvent {
+  /** userId */
+  userId: string;
+  /** audio volume. value range 0 to 100 */
+  data: ArrayBuffer;
+  /** sei payload type */
+  seiPayloadType: 5|243
+}
+
 
 export interface MixTranscodeConfig {
   /** Stream mixing mode */
