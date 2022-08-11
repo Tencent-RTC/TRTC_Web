@@ -17,7 +17,7 @@ export default {
   },
 
   computed: {
-    shareUserId()  {
+    shareUserId() {
       return `share_${this.userId}`;
     },
     shareUserSig() {
@@ -158,8 +158,8 @@ export default {
         console.error(error);
         alert(error);
       });
-      this.shareClient.on('client-banned', (error) => {
-        console.error(`client has been banned for ${error}`);
+      this.shareClient.on('client-banned', (event) => {
+        console.warn(`client has been banned for ${event.reason}`);
       });
     },
 
