@@ -17,7 +17,7 @@
       <div id='local' style='max-width: 640px;margin-top: 20px'></div>
       <div class='remote-container'>
         <template v-for='item in store.invitedRemoteStreams' :key='item.getId()'>
-          <div :id='item.getId()' style='max-width: 50%'></div>
+          <div :id='item.getId()' style='max-width: 640px;margin-top: 20px'></div>
         </template>
       </div>
     </el-col>
@@ -55,13 +55,15 @@ async function handleJoin() {
       userId,
       roomId,
     });
-    await localClient.join();
-    await localClient.publish();
-    const localStream = localClient.getLocalStream();
     const client = localClient.getClient();
 
     client.on('stream-subscribed', handleSubscribed);
     client.on('stream-removed', handleRemoved);
+
+    await localClient.join();
+    await localClient.publish();
+    const localStream = localClient.getLocalStream();
+
     await nextTick();
     localStream.play('local');
   } catch (error: any) {

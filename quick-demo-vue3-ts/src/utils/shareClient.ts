@@ -175,8 +175,8 @@ class ShareClient {
     console.error('client error', error);
   }
 
-  handleBanned(error: any) {
-    console.error(`client has been banned for ${error}`);
+  handleBanned(event: any) {
+    console.warn(`client has been banned for ${event.reason}`);
   }
 
   handleStreamSubscribed(event: any) {

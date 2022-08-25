@@ -71,4 +71,8 @@ function goToGithub() {
   color rgb(255, 255, 255)
   fill rgb(255, 255, 255)
   padding 10px
+
+#language
+  cursor pointer
+
 </style>

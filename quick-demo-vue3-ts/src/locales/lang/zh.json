@@ -15,5 +15,6 @@
   "paramsNeed": "请检查参数 SDKAppId, secretKey, userId, roomId 是否输入正确！",
   "invite": "复制链接邀请好友加入视频通话，一条链接仅可邀请一人，复制后自动更新链接。",
   "inviteUrl": "你被邀请参加视频通话！",
-  "check": "请重新获取邀请链接！"
+  "check": "请重新获取邀请链接！",
+  "deviceHint": "PS: 进房之前请确认当前页面允许使用摄像头和麦克风"
 }

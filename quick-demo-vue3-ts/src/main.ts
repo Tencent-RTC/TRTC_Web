@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import ElementPlus from 'element-plus';
 import { createPinia } from 'pinia';
+import TRTC from 'trtc-js-sdk';
 import mitt from 'mitt';
 import VueClipboard from 'vue3-clipboard';
 import i18n from '@/locales';
@@ -12,7 +13,7 @@ import 'element-plus/dist/index.css';
 const app = createApp(App);
 
 const bus = mitt();
-
+TRTC.Logger.setLogLevel(TRTC.Logger.LogLevel.DEBUG);
 app.use(i18n);
 app.use(router);
 app.use(createPinia());
