@@ -15,5 +15,6 @@
   "paramsNeed": "Please enter the correct SDKAppId, secretKey, userId, roomId！",
   "invite": "Copy the link to invite friends to join the video call, one link can invite only one person, the link will be updated automatically after copying.",
   "inviteUrl": "You are invited to this video chat room！",
-  "check": "Please reacquire the invitation link!"
+  "check": "Please reacquire the invitation link!",
+  "deviceHint": "PS: Please confirm that cameras and microphones are allowed on the current page before entering the room"
 }

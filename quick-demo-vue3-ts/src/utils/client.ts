@@ -249,8 +249,8 @@ class LocalClient {
     console.log(`RTCError: ${error.message_}`);
   }
 
-  handleBanned(error: any) {
-    console.error(`client has been banned for ${error}`);
+  handleBanned(event: any) {
+    console.warn(`client has been banned for ${event.reason}`);
   }
 
   handlePeerJoin(event: any) {
@@ -282,7 +282,6 @@ class LocalClient {
       this.client.subscribe(remoteStream).catch(() => {
         console.log(`Subscribe [${userId}] failed`);
       });
-      console.log(`RemoteStream added: [${userId}]`);
     }
   }
 

@@ -1,9 +1,9 @@
 <template>
   <el-row style='padding: 0 10px 40px 10px'>
     <el-col :md='{span: 18, offset: 3}' :sm='{span: 24}'>
-      <Guidance />
-      <Inputs />
-      <Device @switchDevice='switchDevice' />
+      <Guidance/>
+      <Inputs/>
+      <Device @switchDevice='switchDevice'/>
       <h1 style='font-size: 14px;font-weight: 500'>{{ t('operation') }}</h1>
       <div class='btn-line'>
         <el-button type='primary' @click='handleJoin'>
@@ -53,14 +53,14 @@
           </div>
         </div>
       </div>
-      <Player />
+      <Player/>
     </el-col>
   </el-row>
 </template>
 
 <script lang='ts' setup>
 import { useI18n } from 'vue-i18n';
-import { ElMessage } from 'element-plus/es';
+import { ElMessage } from 'element-plus';
 import TRTC, { Client, LocalStream } from 'trtc-js-sdk';
 import { inject, ref } from 'vue';
 import { copyText } from 'vue3-clipboard';
@@ -135,6 +135,7 @@ async function handleStartShare() {
     addFailedLog(`Start share error: ${error.message_}`);
   }
 }
+
 async function handleStopShare() {
   try {
     await shareClient.unpublish();
@@ -369,9 +370,9 @@ function handleError(error: any) {
   addSuccessLog(`LocalClient error: ${error.message_}`);
 }
 
-function handleBanned(error: any) {
-  ElMessage({ message: `Client has been banned for ${error.message_}`, type: 'error' });
-  addSuccessLog(`Client has been banned for ${error.message_}`);
+function handleBanned(event: any) {
+  ElMessage({ message: `Client has been banned for ${event.reason}`, type: 'warning' });
+  addSuccessLog(`Client has been banned for ${event.reason}`);
 }
 
 function handlePeerJoin(event: any) {

@@ -33,7 +33,7 @@
         </el-select>
       </el-col>
     </el-row>
-    <p style='font-size: 14px'>PS: 进房之前请确认当前页面允许使用摄像头和麦克风</p>
+    <p style='font-size: 14px'>{{t('deviceHint')}}</p>
   </div>
 </template>
 
