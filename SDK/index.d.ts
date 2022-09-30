@@ -322,7 +322,10 @@ export interface ClientEventMap {
    *  - The user was kicked out of the room by the account admin.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.CLIENT_BANNED
    */
-  'client-banned': RtcError;
+  'client-banned': {
+    reason: 'kick' | 'banned' | 'room-disband';
+    message: string;
+  };
   /** 
    * Network quality statistics.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.NETWORK_QUALITY
@@ -332,7 +335,9 @@ export interface ClientEventMap {
    * Volume event
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.AUDIO_VOLUME
    */
-  'audio-volume': UserAudioVolume;
+  'audio-volume': {
+    result: UserAudioVolume[]
+  };
   /**
    * SEI message received
    * @since 4.14.1
@@ -543,6 +548,10 @@ export interface StreamEventMap {
     prevState: ConnectionState;
     state: ConnectionState;
   },
+  /**
+   * @since v4.13.0
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.DEVICE_AUTO_RECOVERED
+   */
   'device-auto-recovered': {
     isCamera: boolean;
     isMicrophone: boolean;
@@ -735,6 +744,26 @@ export interface NetworkQuality {
   uplinkNetworkQuality: 1 | 2 | 3 | 4 | 5 | 6;
   /** Downlink network quality (downlinkNetworkQuality): average network quality of all downlink connections from Tencent Cloud to SDK Enumerated values */
   downlinkNetworkQuality: 1 | 2 | 3 | 4 | 5 | 6;
+  /** 
+   * uplink rtt 
+   * @since v4.10.3
+   */
+  uplinkRTT: number;
+  /** 
+   * uplink loss 
+   * @since v4.10.3
+   */
+  uplinkLoss: number;
+  /** 
+   * downlink rtt 
+   * @since v4.10.3
+   */
+  downlinkRTT: number;
+  /** 
+   * downlink loss 
+   * @since v4.10.3
+   */
+  downlinkLoss: number;
 }
 
 export interface UserAudioVolume {
@@ -751,7 +780,7 @@ export interface SEIMessageEvent {
   /** audio volume. value range 0 to 100 */
   data: ArrayBuffer;
   /** sei payload type */
-  seiPayloadType: 5|243
+  seiPayloadType: 5 | 243
 }
 
 
