@@ -39,6 +39,7 @@ function MyApp({ Component, pageProps }) {
     }
     const language = getLanguage();
     a18n.setLocale(language);
+    Cookies.set('trtc-api-example-lang', language);
     setLanguage(language);
     setIsASRPath(location.href.includes('improve-asr'));
   }, []);
