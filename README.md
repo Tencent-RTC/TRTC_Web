@@ -67,4 +67,8 @@ For the changelog of the SDK, see [Release Notes (Web)](https://intl.cloud.tence
 - For complete API documentation, see [TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/index.html).
 - [Contact us](https://intl.cloud.tencent.com/contact-us) for technical support.
 - To report bugs in our sample code, please create an issue.
-
+- Communication & Feedback   
+Welcome to join our Telegram Group to communicate with our professional engineers! We are more than happy to hear from you~
+Click to join: [https://t.me/+EPk6TMZEZMM5OGY1](https://t.me/+EPk6TMZEZMM5OGY1)   
+Or scan the QR code   
+  <img src="https://qcloudimg.tencent-cloud.cn/raw/79cbfd13877704ff6e17f30de09002dd.jpg" width="300px">    
