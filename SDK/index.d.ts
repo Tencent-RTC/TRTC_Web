@@ -97,7 +97,7 @@ export interface Client {
    * Publish localStream
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#publish
    */
-  publish(localStream: LocalStream): Promise<void>;
+  publish(localStream: LocalStream, options?: { isAuxiliary?: boolean }): Promise<void>;
 
   /**
    * Unpublish localStream
