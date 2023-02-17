@@ -34,6 +34,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-i18next": "^11.8.15",
+    "rtc-ai-denoiser": "^1.1.3",
     "rtc-audio-mixer": "0.0.1",
     "rtc-beauty-plugin": "^0.0.7",
     "rtc-device-detector-react": "^1.0.6",
