@@ -125,7 +125,7 @@ export interface Client {
 
   /**
    * send SEI message
-   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/Client.html#sendSEIMessage
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#sendSEIMessage
    * @since 4.14.1
    */
   sendSEIMessage(buffer: ArrayBuffer): void;
@@ -225,7 +225,7 @@ export interface Client {
    * @since 4.11.0
    * 
    * This method has been changed from synchronous to asynchronous since v4.12.0
-   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/Client.html#setRemoteVideoStreamType
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#setRemoteVideoStreamType
    */
   setRemoteVideoStreamType(remoteStream: RemoteStream, status: 'big' | 'small'): Promise<void>;
   /**
@@ -501,7 +501,7 @@ export interface LocalStream extends Stream {
   addTrack(track: MediaStreamTrack): Promise<void>;
 
   /**
-   * Remove video track.
+   * Remove and audio or video track.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#removeTrack
    */
   removeTrack(track: MediaStreamTrack): Promise<void>;
@@ -734,7 +734,7 @@ export interface ScreenProfile {
 }
 
 export type AudioProfileString = 'standard' | 'high' | 'standard-stereo' | 'high-stereo';
-export type VideoProfileString = '120p' | '180p' | '240p' | '360p' | '480p' | '720p' | '1080p' | '1440p' | '4K';
+export type VideoProfileString = '120p' | '120p_2' | '180p' | '180p_2' | '240p' | '240p_2' | '360p' | '360p_2' | '480p' | '480p_2' |'720p' | '1080p' | '1440p' | '4K';
 
 export type ScreenProfileString = '480p' | '480p_2' | '720p' | '720p_2' | '1080p' | '1080p_2';
 
@@ -822,7 +822,7 @@ export interface MixTranscodeConfig {
 }
 
 /**
- * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/global.html#MixUser
+ * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/global.html#MixUser
  */
 export interface MixUser {
   /** userId */
@@ -845,7 +845,11 @@ export interface MixUser {
   /** Layer number of the user's stream in the mixed stream. The value range is [1, 15]. If `pureAudio` is `false`, `zOrder` must be passed in. */
   zOrder?: number;
   /** Remote stream type in manual mode. This parameter does not need to be set in preset layout mode. Valid values: `main` (primary stream), `auxiliary` (substream of screen sharing) */
-  streamType?: RemoteStreamType
+  streamType?: RemoteStreamType;
+  /**
+   * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/global.html#MixUser
+   */
+  renderMode: 0 | 1 | 2;
 }
 
 export interface PublishCDNStreamOptions {
@@ -1125,9 +1129,9 @@ declare namespace TRTC {
   /** Get the list of media input and output devices */
   function getDevices(): Promise<MediaDeviceInfo[]>;
   /** Get the camera list */
-  function getCameras(): Promise<MediaDeviceInfo[]>;
+  function getCameras(): Promise<InputDeviceInfo[]>;
   /** Get the mic list */
-  function getMicrophones(): Promise<MediaDeviceInfo[]>;
+  function getMicrophones(): Promise<InputDeviceInfo[]>;
   /** Get the speaker list */
   function getSpeakers(): Promise<MediaDeviceInfo[]>;
 
