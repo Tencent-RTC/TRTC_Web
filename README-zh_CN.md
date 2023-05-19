@@ -17,16 +17,21 @@
 ```
 .
 ├── README.md
-├── SDK                     -- TRTC Web SDK 最新版文件
+├── v5                      -- TRTC Web SDK 5.x 最新版文件
+├── SDK                     -- TRTC Web SDK 4.x 最新版文件
 ├── base-js                 -- TRTC Web 基础 Demo
 ├── base-react-next         -- TRTC Web API Examples
 ├── quick-demo-js           -- TRTC Web 快速运行 Demo (原生 Js 版本)
 └── quick-demo-vue2-js      -- TRTC Web 快速运行 Demo (Vue2 版本)
 ```
 
+**v5**
+
+- 说明：`v5` 文件夹下为 [TRTC Web SDK 5.x](https://www.npmjs.com/package/trtc-sdk-v5) 最新版本文件。
+
 **SDK**
 
-- 说明：`SDK` 文件夹下为 [TRTC Web SDK](https://www.npmjs.com/package/trtc-js-sdk) 最新版本文件。
+- 说明：`SDK` 文件夹下为 [TRTC Web SDK 4.x](https://www.npmjs.com/package/trtc-js-sdk) 最新版本文件。
 
 **base-js**
 

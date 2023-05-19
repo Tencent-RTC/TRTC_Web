@@ -17,7 +17,8 @@ For the changelog of the SDK, see [Release Notes (Web)](https://intl.cloud.tence
 ```
 .
 ├── README.md
-├── SDK                     -- The latest version of the TRTC web SDK
+├── v5                     -- The latest version of the TRTC web SDK 5.x
+├── SDK                     -- The latest version of the TRTC web SDK 4.x
 ├── base-js                 -- The TRTC web basic demo
 ├── base-react-next         -- TRTC web API examples
 ├── quick-demo-js           -- TRTC web quick demo (native JavaScript edition)
@@ -25,9 +26,13 @@ For the changelog of the SDK, see [Release Notes (Web)](https://intl.cloud.tence
 └── quick-demo-vue3-ts      -- TRTC web quick demo (Vue.js 3 edition)
 ```
 
+**v5**
+
+- You can find the latest version of the [TRTC web SDK 5.x](https://www.npmjs.com/package/trtc-sdk-v5) in the `SDK` directory.
+
 **SDK**
 
-- You can find the latest version of the [TRTC web SDK](https://www.npmjs.com/package/trtc-js-sdk) in the `SDK` directory.
+- You can find the latest version of the [TRTC web SDK 4.x](https://www.npmjs.com/package/trtc-js-sdk) in the `SDK` directory.
 
 **base-js**
 
