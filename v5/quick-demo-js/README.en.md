@@ -14,29 +14,11 @@ After joining a room, you can use a share link to invite others to try the audio
 
 #### Download the demo source code
 
-Download the source code of the TRTC web quick demo (Vanilla js) at [GitHub](https://github.com/LiteAVSDK/TRTC_Web) (in `TRTC_Web/quick-demo-js`).
+Download the source code of the TRTC web quick demo (Vanilla js) at [GitHub](https://github.com/LiteAVSDK/TRTC_Web/v5/) (in `TRTC_Web/v5/quick-demo-js`).
 
 #### Run the demo
 
-Note: A node environment of v14.16.0 and above is recommended.
-
-- Run the demo locally
-
-  ```shell
-  npm start
-  ```
-
-- The [http://localhost:8080/](http://localhost:8080/) address will be opened in your default browser automatically.
-
-  > !
-  >
-  > The default port number is 8080. Please use the number of the actual port used to run the demo locally.
-  >
-  > For the browsers supported by the TRTC web SDK, see [Supported Platforms](https://intl.cloud.tencent.com/document/product/647/41664#supported-platforms).
-  >
-  > For the URL protocols supported by the TRTC web SDK, see [URL Protocol Support](https://intl.cloud.tencent.com/document/product/647/41664#url-protocol-support).
-  >
-  > For information about the ports and domain names used by the TRTC web SDK, see [Dealing with Firewall Restrictions](https://intl.cloud.tencent.com/document/product/647/35164#what-ports-and-domain-names-should-i-add-to-the-allowlist-of-my-firewall-for-webrtc.3F).
+- Open the `index.html` file in the Demo root directory with Chrome browser to run the Demo.
 
 + Enter the `SDKAppID` and secret key. For detailed directions, see <a href="#getAppInfo">[Getting Application Information]</a>.
 

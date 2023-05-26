@@ -14,7 +14,7 @@
 
 #### 下载 Demo 源码
 
-通过 [GitHub](https://github.com/LiteAVSDK/TRTC_Web) 下载 TRTC_Web 源码包，TRTC Web quick demo (vue2 版本) 源码在 `TRTC_Web/quick-demo-vue2-js`目录下。
+通过 [GitHub](https://github.com/LiteAVSDK/TRTC_Web/v5) 下载 TRTC_Web 源码包，TRTC Web quick demo (vue2 版本) 源码在 `TRTC_Web/v5/quick-demo-vue2-js`目录下。
 
 #### 运行 Demo
 

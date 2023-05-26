@@ -14,7 +14,7 @@ After joining a room, you can use a share link to invite others to try the audio
 
 #### Download the demo source code
 
-Download the source code of the TRTC web quick demo (Vue.js 2.0) at [GitHub](https://github.com/LiteAVSDK/TRTC_Web) (in `TRTC_Web/quick-demo-vue2-js`).
+Download the source code of the TRTC web quick demo (Vue.js 2.0) at [GitHub](https://github.com/LiteAVSDK/TRTC_Web/v5) (in `TRTC_Web/v5/quick-demo-vue2-js`).
 
 #### Run the demo
 

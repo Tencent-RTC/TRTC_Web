@@ -14,7 +14,7 @@ After joining a room, you can use a share link to invite others to try the audio
 
 #### Download the demo source code
 
-Download the source code of the TRTC web quick demo (Vue3.x js) at [GitHub](https://github.com/LiteAVSDK/TRTC_Web) (in `TRTC_Web/quick-demo-vue3-js`).
+Download the source code of the TRTC web quick demo (Vue3.x ts) at [GitHub](https://github.com/LiteAVSDK/v5/TRTC_Web) (in `TRTC_Web/v5/quick-demo-vue3-ts`).
 
 #### Run the demo
 
@@ -26,11 +26,11 @@ Note: A node environment of v14.16.0 and above is recommended.
   npm start
   ```
 
-- The [http://localhost:8080/](http://localhost:8080/) address will be opened in your default browser automatically.
+- The [http://localhost:3000/](http://localhost:3000/) address will be opened in your default browser automatically.
 
   > !
   >
-  > The default port number is 8080. Please use the number of the actual port used to run the demo locally.
+  > The default port number is 3000. Please use the number of the actual port used to run the demo locally.
   >
   > For the browsers supported by the TRTC web SDK, see [Supported Platforms](https://intl.cloud.tencent.com/document/product/647/41664#supported-platforms).
   >
