@@ -61,12 +61,22 @@ export interface ClientConfig {
   pureAudioPushMode?: 1 | 2;
 }
 
+interface ProxyServer {
+  websocketProxy: string;
+  loggerProxy: string;
+  scheduleProxy: string;
+  /**
+   * @since v4.15.8
+   */
+  unifiedProxy: string;
+}
+
 export interface Client {
   /**
    * Set a proxy server.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#setProxyServer
    */
-  setProxyServer(url: string): void;
+  setProxyServer(proxyServer: string | ProxyServer): void;
 
   /**
    * Set TURN servers.
@@ -293,7 +303,7 @@ export interface ClientEventMap {
   /** A remote stream was removed. This notification will be received when a remote user unpublishes a stream.  */
   'stream-removed': RemoteStreamInfo;
   /** A remote stream was updated. This notification will be received when a remote user adds, removes, or replaces an audio/video track. */
-  'stream-updated': RemoteStreamInfo;
+  'stream-updated': RemoteStreamUpdatedInfo;
   /** A remote stream was successfully subscribed. This event will be triggered after [client.subscribe()](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#subscribe) is successfully called. */
   'stream-subscribed': RemoteStreamInfo;
   /** 
@@ -684,8 +694,22 @@ export interface RemoteVideoStatsMap {
   [userId: string]: RemoteVideoStats;
 }
 
+export interface MixUserItem {
+  userId: string;
+  hasAudio: boolean;
+  hasVideo: boolean;
+  hasAuxiliary: boolean;
+}
+
 export interface RemoteStreamInfo {
   stream: RemoteStream;
+}
+
+export interface RemoteStreamUpdatedInfo extends RemoteStreamInfo {
+  /**
+   * @since v4.15.8
+   */
+  mixUserList?: MixUserItem[]
 }
 
 export interface RemoteUserInfo {
