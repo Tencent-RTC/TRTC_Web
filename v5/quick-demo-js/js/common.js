@@ -128,8 +128,8 @@ function getQueryString(name) {
 const DEMOKEY = 'webrtcQuickDemoJs';
 const isProd = location.origin === 'https://web.sdk.qcloud.com';
 const AEGIS_ID = {
-	dev: 'iHWefAYqvXVdajviap',
-	prod: 'iHWefAYqpBFdmIMeDi',
+	dev: 'iHWefAYqBEHVFrSxnV',
+	prod: 'iHWefAYqVGQzlNLveU',
 };
 
 const aegis = new Aegis({
