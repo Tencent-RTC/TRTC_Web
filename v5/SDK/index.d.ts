@@ -1,5 +1,6 @@
+/// <reference path="./core.d.ts" />
 
-	export interface LocalVideoConfig {
+	declare interface LocalVideoConfig {
 	    view: string | HTMLElement | null;
 	    publish?: boolean;
 	    option?: {
@@ -9,19 +10,21 @@
 	        fillMode?: 'contain' | 'cover' | 'fill';
 	        mirror?: boolean;
 	        small?: keyof typeof videoProfileMap | VideoProfile;
+	        qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
 	        videoTrack?: MediaStreamTrack;
 	    };
 	}
-	export interface UpdateLocalVideoConfig extends Partial<LocalVideoConfig> {
+	declare interface UpdateLocalVideoConfig extends Partial<LocalVideoConfig> {
 	    mute?: boolean;
 	}
-	export interface ProxyServer {
+	declare interface ProxyServer {
 	    websocketProxy?: string;
 	    loggerProxy?: string;
 	    turnServer?: TurnServerOptions | TurnServerOptions[];
+	    iceTransportPolicy?: RTCIceTransportPolicy;
 	    webtransportProxy?: string;
 	}
-	export interface EnterRoomConfig {
+	declare interface EnterRoomConfig {
 	    sdkAppId: number;
 	    userId: string;
 	    userSig: string;
@@ -37,7 +40,7 @@
 	    streamId?: string;
 	    userDefineRecordId?: string;
 	}
-	export interface LocalScreenConfig {
+	declare interface ScreenShareConfig {
 	    view?: string | HTMLElement | null;
 	    publish?: boolean;
 	    option?: {
@@ -47,9 +50,18 @@
 	        echoCancellation?: boolean;
 	        autoGainControl?: boolean;
 	        noiseSuppression?: boolean;
+	        audioTrack?: MediaStreamTrack;
+	        videoTrack?: MediaStreamTrack;
+	        qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
 	    };
 	}
-	export interface RemoteVideoConfig {
+	declare interface UpdateScreenShareConfig extends ScreenShareConfig {
+	    option?: {
+	        fillMode?: 'contain' | 'cover' | 'fill';
+	        qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
+	    };
+	}
+	declare interface RemoteVideoConfig {
 	    view: string | HTMLElement | null;
 	    userId: string;
 	    streamType: TRTCStreamType;
@@ -59,14 +71,14 @@
 	        small?: boolean;
 	    };
 	}
-	export interface UpdateRemoteVideoConfig extends Omit<RemoteVideoConfig, 'view'> {
+	declare interface UpdateRemoteVideoConfig extends Omit<RemoteVideoConfig, 'view'> {
 	    view?: string | HTMLElement | null;
 	}
-	export interface StopRemoteVideoConfig {
+	declare interface StopRemoteVideoConfig {
 	    userId: string;
 	    streamType?: TRTCStreamType;
 	}
-	export interface LocalAudioConfig {
+	declare interface LocalAudioConfig {
 	    publish?: boolean;
 	    option?: {
 	        microphoneId?: string;
@@ -79,7 +91,7 @@
 	        noiseSuppression?: boolean;
 	    };
 	}
-	export interface UpdateLocalAudioConfig extends LocalAudioConfig {
+	declare interface UpdateLocalAudioConfig extends LocalAudioConfig {
 	    mute?: boolean;
 	    option?: {
 	        microphoneId?: string;
@@ -88,39 +100,39 @@
 	        earMonitorVolume?: number;
 	    };
 	}
-	export interface RemoteAudioConfig {
+	declare interface RemoteAudioConfig {
 	    userId: string;
 	    option?: {
 	        volume?: number;
 	    };
 	}
-	export interface StopRemoteAudioConfig {
+	declare interface StopRemoteAudioConfig {
 	    userId: string;
 	}
-	export const enum TRTCStreamType {
+	declare const enum TRTCStreamType {
 	    Main = "main",
 	    Sub = "sub"
 	}
-	export interface TRTCMixUser extends Omit<MixUser, 'streamType'> {
+	declare interface TRTCMixUser extends Omit<MixUser, 'streamType'> {
 	    streamType?: TRTCStreamType;
 	}
-	export interface TRTCMixTranscodeConfig extends Omit<MixTranscodeConfig, 'mixUsers'> {
+	declare interface TRTCMixTranscodeConfig extends Omit<MixTranscodeConfig, 'mixUsers'> {
 	    mixUsers: TRTCMixUser[];
 	}
-	export interface TRTCPublishCDNParam extends Omit<PublishCDNStreamOptions, 'streamType'> {
+	declare interface TRTCPublishCDNParam extends Omit<PublishCDNStreamOptions, 'streamType'> {
 	    streamType?: TRTCStreamType;
 	}
-	export enum TRTCDeviceType {
+	declare enum TRTCDeviceType {
 	    Camera = "camera",
 	    Microphone = "microphone",
 	    Speaker = "speaker"
 	}
-	export enum TRTCDeviceAction {
+	declare enum TRTCDeviceAction {
 	    Remove = "remove",
 	    Add = "add",
 	    Active = "active"
 	}
-	export interface RTCErrorParams {
+	declare interface RTCErrorParams {
 	    code: number;
 	    extraCode?: number;
 	    functionName?: string;
@@ -129,7 +141,7 @@
 	    messageParams?: any;
 	    originError?: Error | DOMException;
 	}
-	export interface RTCErrorInterface {
+	declare interface RTCErrorInterface {
 	    readonly name: string;
 	    readonly code: number;
 	    readonly extraCode?: number;
@@ -137,10 +149,11 @@
 	    readonly message?: string;
 	    readonly originError?: Error | DOMException;
 	}
-	export interface ErrorMessageParams {
+	declare interface ErrorMessageParams {
 	    key?: string;
 	    rule?: any;
 	    fnName?: string;
+	    fnParams?: any;
 	    value?: string | number | any;
 	    type?: string;
 	    deviceType?: string;
@@ -153,7 +166,7 @@
 	 * // 使用方式：
 	 * TRTC.TYPE.SCENE_LIVE
 	 */
-	export const TRTCType: {
+	declare const TRTCType: {
 	    /**
 	     * 直播场景
 	     * @default 'live'
@@ -202,7 +215,6 @@
 	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
 	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
 	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	    * Note: 双声道采集，需要开通白名单。请提交[腾讯云实时音视频 Web SDK 用户能力支持申请](https://cloud.tencent.com/apply/p/4ab2rutgukk)，开通双声道编码能力。
 	    * @default 'standard'
 	    * @memberof module:TYPE
 	    */
@@ -215,7 +227,6 @@
 	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
 	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
 	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	    * Note: 双声道采集，需要开通白名单。请提交[腾讯云实时音视频 Web SDK 用户能力支持申请](https://cloud.tencent.com/apply/p/4ab2rutgukk)，开通双声道编码能力。
 	    * @default 'standard-stereo'
 	    * @memberof module:TYPE
 	    */
@@ -228,7 +239,6 @@
 	     * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
 	     * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
 	     * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	     * Note: 双声道采集，需要开通白名单。请提交[腾讯云实时音视频 Web SDK 用户能力支持申请](https://cloud.tencent.com/apply/p/4ab2rutgukk)，开通双声道编码能力。
 	    * @default 'high'
 	    * @memberof module:TYPE
 	    */
@@ -241,12 +251,423 @@
 	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
 	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
 	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	    * Note: 双声道采集，需要开通白名单。请提交[腾讯云实时音视频 Web SDK 用户能力支持申请](https://cloud.tencent.com/apply/p/4ab2rutgukk)，开通双声道编码能力。
 	    * @default 'high-stereo'
 	    * @memberof module:TYPE
 	    */
 	    readonly AUDIO_PROFILE_HIGH_STEREO: "high-stereo";
+	    /**
+	     * 弱网时，视频编码策略以流畅度优先，即优先保帧率。
+	     * 摄像头默认流畅度优先，屏幕分享默认清晰度优先。
+	    * @default 'smooth'
+	    * @memberof module:TYPE
+	    */
+	    readonly QOS_PREFERENCE_SMOOTH: "smooth";
+	    /**
+	     * 弱网时，视频编码策略以清晰度优先，即优先保分辨率。
+	     * 摄像头默认流畅度优先，屏幕分享默认清晰度优先。
+	    * @default 'clear'
+	    * @memberof module:TYPE
+	    */
+	    readonly QOS_PREFERENCE_CLEAR: "clear";
 	};
+
+	/**
+	 * **TRTC事件列表**<br>
+	 * <br>
+	 * 通过 {@link TRTC#on trtc.on(TRTC.EVENT.XXX)} 监听指定的事件。您可以通过这些事件实现管理房间用户列表，以及管理用户的流状态，感知网络状态等功能，下面是事件的详细介绍。
+	 * > !
+	 * > - 事件需要在事件触发之前监听，这样才能收到相应的事件通知，因此建议在 trtc 进房前完成事件监听，这样才能确保不会漏掉事件通知。
+	 * @module EVENT
+	 * @example
+	 * // 使用方式：
+	 * trtc.on(TRTC.EVENT.ERROR, () => {});
+	 */
+	declare const TRTCEvent: {
+	    /**
+	     * 错误事件，非 API 调用错误，SDK 在运行过程中出现了不可恢复的错误时抛出。
+	     *
+	     * - 错误码(error.code)为：{@link module:ERROR_CODE.OPERATION_FAILED ErrorCode.OPERATION_FAILED}
+	     * - 可能的扩展错误码(error.extraCode)：5501, 5502
+	     * @default 'error'
+	     * @memberof module:EVENT
+	     * @see {@link RtcError RtcError}
+	     * @e
+	     * @example
+	     *
+	     * trtc.on(TRTC.EVENT.ERROR, error => {
+	     *   console.error('client error observed: ' + error);
+	     *   const errorCode = error.code;
+	     *   const extraCode = error.extraCode;
+	     * });
+	     */
+	    readonly ERROR: "error";
+	    /**
+	     * @description 自动播放失败，参考 [自动播放处理建议](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-21-advanced-auto-play-policy.html)
+	     * @default 'autoplay-failed'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.AUTOPLAY_FAILED, event => {
+	     *   // 引导用户进行页面交互
+	     * });
+	     */
+	    readonly AUTOPLAY_FAILED: "autoplay-failed";
+	    /**
+	     * @description 由于某种原因被踢出房间,包括kick:相同用户进房，banned:被管理员踢出,room_disband:房间被解散。
+	     * @default 'kicked-out'
+	     * @memberof module:EVENT
+	     * @example
+	     *
+	     * trtc.on(TRTC.EVENT.KICKED_OUT, event => {
+	     *   console.log(event.reason)
+	     * });
+	     */
+	    readonly KICKED_OUT: "kicked-out";
+	    /**
+	     * 远端用户进房事件。
+	     *
+	     * - `live` 模式下，只有主播才有进退房通知，观众没有进退房通知，观众可以收到主播的进退房通知。
+	     * @default 'remote-user-enter'
+	     * @memberof module:EVENT
+	     * @example
+	     *
+	     * trtc.on(TRTC.EVENT.REMOTE_USER_ENTER, event => {
+	     *   const userId = event.userId;
+	     * });
+	     */
+	    readonly REMOTE_USER_ENTER: "remote-user-enter";
+	    /**
+	     * 远端用户退房事件。
+	     *
+	     * - `live` 模式下，只有主播才有进退房通知，观众没有进退房通知，观众可以收到主播的进退房通知。
+	     * @default 'remote-user-exit'
+	     * @memberof module:EVENT
+	     * @example
+	     *
+	     * trtc.on(TRTC.EVENT.REMOTE_USER_EXIT, event => {
+	     *   const userId = event.userId;
+	     * });
+	     */
+	    readonly REMOTE_USER_EXIT: "remote-user-exit";
+	    /**
+	     * 远端用户发布了音频。当远端用户打开麦克风后，您会收到该通知。参考：[开关摄像头、麦克风](./tutorial-15-basic-dynamic-add-video.html)
+	     *
+	     * - 默认情况下，SDK 会自动播放远端音频，您无需调用 API 来播放远端音频。可以监听该事件及 {@link module:EVENT.REMOTE_AUDIO_UNAVAILABLE REMOTE_AUDIO_UNAVAILABLE} 来更新“远端是否开启麦克风”的 UI icon。
+	     * - 需要注意的是：如果用户在进房前没有与页面产生过交互，自动播放音频可能会因为【浏览器的自动播放策略限制】而失败，您需参考[自动播放受限处理建议](./tutorial-21-advanced-auto-play-policy.html)进行处理。
+	     * - 若您不希望 SDK 自动播放音频，您可以在 {@link TRTC#enterRoom trtc.enterRoom()} 时设置 receiveMode = {@link module:TYPE.RECEIVE_MODE_MANUAL TRTC.TYPE.RECEIVE_MODE_MANUAL} 关闭自动播放音频。
+	     * - 监听 {@link module:EVENT.REMOTE_AUDIO_AVAILABLE TRTC.EVENT.REMOTE_AUDIO_AVAILABLE} 事件，记录有远端音频的 userId，在需要播放音频时，调用 {@link TRTC#muteRemoteAudio trtc.muteRemoteAudio(userId, false)} 方法。
+	     * @default 'remote-audio-available'
+	     * @memberof module:EVENT
+	     * @example
+	     * // 在进房前监听
+	     * trtc.on(TRTC.EVENT.REMOTE_AUDIO_AVAILABLE, event => {
+	     *   const userId = event.userId;
+	     * });
+	     */
+	    readonly REMOTE_AUDIO_AVAILABLE: "remote-audio-available";
+	    /**
+	     * 远端停止发布了音频。当远端用户关闭麦克风后，您会收到该通知。
+	     *
+	     * @default 'remote-audio-unavailable'
+	     * @memberof module:EVENT
+	     * @example
+	     * // 在进房前监听
+	     * trtc.on(TRTC.EVENT.REMOTE_AUDIO_UNAVAILABLE, event => {
+	     *   const userId = event.userId;
+	     *
+	     * });
+	     */
+	    readonly REMOTE_AUDIO_UNAVAILABLE: "remote-audio-unavailable";
+	    /**
+	     * 远端用户发布了视频，当远端用户开启摄像头后，您会收到该通知。参考：[开关摄像头、麦克风](./tutorial-15-basic-dynamic-add-video.html)
+	     *
+	     * - 可以监听该事件及 {@link module:EVENT.REMOTE_VIDEO_UNAVAILABLE REMOTE_VIDEO_UNAVAILABLE} 来更新“远端是否开启摄像头”的 UI icon。
+	     * @see {@link module:TYPE.STREAM_TYPE_MAIN STREAM_TYPE_MAIN}
+	     * @see {@link module:TYPE.STREAM_TYPE_SUB STREAM_TYPE_SUB}
+	     * @default 'remote-video-available'
+	     * @memberof module:EVENT
+	     * @example
+	     * // 在进房前监听
+	     * trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, event => {
+	     *   const userId = event.userId;
+	     *   const streamType = event.streamType;
+	     *   trtc.startRemoteVideo({userId, streamType, view});
+	     * });
+	     */
+	    readonly REMOTE_VIDEO_AVAILABLE: "remote-video-available";
+	    /**
+	     * 远端用户停止发布视频，当远端用户关闭摄像头后，您会收到该通知。
+	     * @default 'remote-video-unavailable'
+	     * @memberof module:EVENT
+	     * @example
+	     * // 在进房前监听
+	     * trtc.on(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, event => {
+	     *   const userId = event.userId;
+	     *   const streamType = event.streamType;
+	     *   // 此时 SDK 会自动停止播放，无需调用 stopRemoteVideo。
+	     * });
+	     */
+	    readonly REMOTE_VIDEO_UNAVAILABLE: "remote-video-unavailable";
+	    /**
+	     * @description 音量大小事件<br>
+	     * 调用 {@link Client#enableAudioVolumeEvaluation enableAudioVolumeEvaluation} 接口开启音量大小回调后，SDK 会定时抛出该事件，通知每个 userId 的音量大小。<br>
+	     * **Note**
+	     * - 回调中包含本地麦克风音量及远端用户的音量，无论是否有人说话，都会触发该回调。
+	     * - 回调 event.result 会根据音量大小，按大到小进行排序。
+	     * - 当 userId 为空串时，代表本地麦克风音量。
+	     * - volume 取值为0-100的正整数
+	     * @default 'audio-volume'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.AUDIO_VOLUME, event => {
+	     *    event.result.forEach(({ userId, volume }) => {
+	     *        const isMe = userId === ''; // 当 userId 为空串时，代表本地麦克风音量。
+	     *        if (isMe) {
+	     *            console.log(`my volume: ${volume}`);
+	     *        } else {
+	     *            console.log(`user: ${userId} volume: ${volume}`);
+	     *        }
+	     *    })
+	     * });
+	     *
+	     * // 开启音量回调，并设置每 1000ms 触发一次事件
+	     * trtc.enableAudioVolumeEvaluation(1000);
+	     */
+	    readonly AUDIO_VOLUME: "audio-volume";
+	    /**
+	     * @description 网络质量统计数据事件，进房后开始统计，每两秒触发一次，该数据反映的是您本地的上、下行的网络质量。
+	     * - 上行网络质量（uplinkNetworkQuality）指的是您上传本地流的网络情况（SDK 到腾讯云的上行连接网络质量）
+	     * - 下行网络质量（downlinkNetworkQuality）指的是您下载所有流的平均网络情况（腾讯云到 SDK 的所有下行连接的平均网络质量）
+	     *
+	     *    其枚举值及含义如下表所示：
+	     *    | 数值 | 含义 |
+	     *    | :--- | :---- |
+	     *    | 0 | 网络状况未知，表示当前 client 实例还没有建立上行/下行连接 |
+	     *    | 1 | 网络状况极佳 |
+	     *    | 2 | 网络状况较好|
+	     *    | 3 | 网络状况一般 |
+	     *    | 4 | 网络状况差 |
+	     *    | 5 | 网络状况极差 |
+	     *    | 6 | 网络连接已断开<br/>注意：若下行网络质量为此值，则表示所有下行连接都断开了 |
+	     * - uplinkRTT，uplinkLoss 为上行 RTT(ms) 及上行丢包率。
+	     * - downlinkRTT，downlinkLoss 为所有下行连接的平均 RTT(ms) 及平均丢包率。
+	     *
+	     * **Note**
+	     * - 如果您想知道对方的上下行网络情况，需要把对方的网络质量情况通过 IM 广播出去。
+	     *
+	     * @default 'network-quality'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.NETWORK_QUALITY, event => {
+	     *    console.log(`network-quality, uplinkNetworkQuality:${event.uplinkNetworkQuality}, downlinkNetworkQuality: ${event.downlinkNetworkQuality}`)
+	     *    console.log(`uplink rtt:${event.uplinkRTT} loss:${event.uplinkLoss}`)
+	     *    console.log(`downlink rtt:${event.downlinkRTT} loss:${event.downlinkLoss}`)
+	     * })
+	     */
+	    readonly NETWORK_QUALITY: "network-quality";
+	    /**
+	     * @description SDK 和腾讯云的连接状态变更事件，您可以利用该事件从总体上监听 SDK 与腾讯云的连接状态。<br>
+	     * - 'DISCONNECTED'：连接断开
+	     * - 'CONNECTING'：正在连接中
+	     * - 'CONNECTED'：已连接
+	     *
+	     * 不同状态变更的含义：
+	     *
+	     * - DISCONNECTED -> CONNECTING: 正在尝试建立连接，调用进房接口或者 SDK 自动重连时触发。
+	     * - CONNECTING -> DISCONNECTED: 连接建立失败，当正在连接时调用退房接口中断连接或者经过 SDK 重试后任然连接失败时触发。
+	     * - CONNECTING -> CONNECTED: 连接建立成功，连接成功时触发。
+	     * - CONNECTED -> DISCONNECTED: 连接中断，调用退房接口或者当网络异常导致连接断开时触发。
+	     *
+	     * 处理建议：可以监听该事件，在不同状态显示不同的 UI，提醒用户当前的连接状态。
+	     *
+	     * @default 'connection-state-changed'
+	     * @memberof module:EVENT
+	     * @example
+	     * client.on(TRTC.CONNECTION_STATE_CHANGED, event => {
+	     *   const prevState = event.prevState;
+	     *   const curState = event.state;
+	     * });
+	     */
+	    readonly CONNECTION_STATE_CHANGED: "connection-state-changed";
+	    /**
+	     * @description 音频播放状态变更事件
+	     *
+	     * event.userId 当 userId 为空串时，代表本地用户，非空串代表远端用户。
+	     *
+	     * event.state 取值如下：
+	     * - 'PLAYING'：开始播放
+	     *   - event.reason 为 'playing' 或者 'unmute'。
+	     * - 'PAUSED'：暂停播放
+	     *   - event.reason 为 'pause' 时，由 \<audio\> element 的 pause 事件触发，如下几种情况会触发：
+	     *      - 调用 HTMLMediaElement.pause 接口。
+	     *   - event.reason 为 'mute' 时。详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     *      - 若 userId 为自己时 触发该事件，表明音频采集暂停，通常是设备异常引起，如设备被其他应用抢占，此时需引导用户重新采集。
+	     *      - 若 userId 为他人时 触发该事件，表明收到的音频数据不足以播放。通常是网络抖动引起，接入侧无需做任何处理。当收到的数据足以播放时，会自动恢复。
+	     * - 'STOPPED'：停止播放
+	     *   - event.reason 为 'ended'。
+	     *
+	     * event.reason 状态变化的原因，取值如下：
+	     * - 'playing'：开始播放，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event | HTMLMediaElement.playing_event}
+	     * - 'mute'：音频轨道暂时未能提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     * - 'unmute'：音频轨道恢复提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/unmute_event | MediaStreamTrack.unmute_event}
+	     * - 'ended'：音频轨道已被关闭
+	     * - 'pause'：播放暂停
+	     * @default 'audio-play-state-changed'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.AUDIO_PLAY_STATE_CHANGED, event => {
+	     *   console.log(`${event.userId} player is ${event.state} because of ${event.reason}`);
+	     * });
+	     */
+	    readonly AUDIO_PLAY_STATE_CHANGED: "audio-play-state-changed";
+	    /**
+	     * @description 视频播放状态变更事件
+	     *
+	     * event.userId 当 userId 为空串时，代表本地用户，非空串代表远端用户。
+	     *
+	     * event.streamType 流类型，取值：{@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN} {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}
+	     *
+	     * event.state 取值如下：
+	     * - 'PLAYING'：开始播放
+	     *   - event.reason 为 'playing' 或者 'unmute'。
+	     * - 'PAUSED'：暂停播放
+	     *   - event.reason 为 'pause' 时，由 \<video\> element 的 pause 事件触发，如下几种情况会触发：
+	     *      - 调用 HTMLMediaElement.pause 接口。
+	     *      - 在播放成功后，从 DOM 中移除了播放视频的 view 容器。
+	     *   - event.reason 为 'mute' 时。详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     *      - 若 userId 为自己时 触发该事件，表明视频采集暂停，通常是设备异常引起，如设备被其他应用抢占，此时需引导用户重新采集。
+	     *      - 若 userId 为他人时 触发该事件，表明收到的视频数据不足以播放。通常是网络抖动引起，接入侧无需做任何处理。当收到的数据足以播放时，会自动恢复。
+	     * - 'STOPPED'：停止播放
+	     *   - event.reason 为 'ended'。
+	     *
+	     * event.reason 状态变化的原因，取值如下：
+	     * - 'playing'：开始播放，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event | HTMLMediaElement.playing_event}
+	     * - 'mute'：视频轨道暂时未能提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     * - 'unmute'：视频轨道恢复提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/unmute_event | MediaStreamTrack.unmute_event}
+	     * - 'ended'：视频轨道已被关闭
+	     * - 'pause'：播放暂停
+	     * @default 'video-play-state-changed'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.VIDEO_PLAY_STATE_CHANGED, event => {
+	     *   console.log(`${event.userId} ${event.streamType} video player is ${event.state} because of ${event.reason}`);
+	     * });
+	     */
+	    readonly VIDEO_PLAY_STATE_CHANGED: "video-play-state-changed";
+	    /**
+	     * @description 本地屏幕分享停止事件通知，仅对本地屏幕分享流有效。
+	     * @default 'screen-sharing-stopped'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.SCREEN_SHARE_STOPPED, () => {
+	     *   console.log('screen sharing was stopped');
+	     * });
+	     */
+	    readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
+	    /**
+	     * @description 摄像头、麦克风等设备变化的通知事件。
+	     * - event.device 是一个 [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo) 对象，属性：
+	     *    - deviceId：设备 Id
+	     *    - label：设备描述信息
+	     *    - groupId：设备 groupId
+	     * - event.type 值：`'camera'|'microphone'|'speaker'`
+	     * - event.action 值：
+	     *    - 'add' 设备已添加。
+	     *    - 'remove' 设备已被移除。
+	     *    - 'active' 设备已启动，例如：startLocalVideo 成功后，会触发该事件。
+	     * @default 'device-changed'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.DEVICE_CHANGED, (event) => {
+	     *   console.log(`${event.type}(${event.device.label}) ${event.action}`);
+	     * });
+	     */
+	    readonly DEVICE_CHANGED: "device-changed";
+	    /**
+	     * @description 推流状态变更事件。
+	     * - event.mediaType 媒体类型，值：`'audio'|'video'|'screen'`。
+	     * - event.state 当前的推流状态，值：
+	     *    - `'starting'` 正在尝试推流
+	     *    - `'started'` 推流成功
+	     *    - `'stopped'` 推流停止，原因见 event.reason 字段
+	     * - event.prevState 上一次事件触发时的推流状态，值和 event.state 相同。
+	     * - event.reason 推流状态变为 `'stopped'` 的原因，值：
+	     *    - `'timeout'` 推流超时，一般是由于网络抖动、防火墙拦截导致。SDK 会不断进行重试，业务侧可以在此时引导用户检查网络、更换网络。
+	     *    - `'error'` 推流出错，此时可从 event.error 中获取到具体错误信息，一般是由于浏览器不支持 H264 编码导致。
+	     *    - `'api-call'` 业务侧 api 调用导致推流停止，例如在 startLocalVideo 推流成功前，调用了 stopLocalVideo 停止了推流，属于正常行为，业务侧无需关注。
+	     * - event.error event.reason 为 `'error'` 时的错误信息。
+	     * @default 'publish-state-changed'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.PUBLISH_STATE_CHANGED, (event) => {
+	     *   console.log(`${event.mediaType} ${event.state} ${event.reason}`);
+	     * });
+	     */
+	    readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
+	};
+	declare interface TRTCEventTypes {
+	    [TRTCEvent.ERROR]: [RtcError];
+	    [TRTCEvent.AUTOPLAY_FAILED]: [];
+	    [TRTCEvent.KICKED_OUT]: [{
+	        reason: Exclude<BannedReason, 'user_time_out'>;
+	    }];
+	    [TRTCEvent.REMOTE_USER_ENTER]: [{
+	        userId: string;
+	    }];
+	    [TRTCEvent.REMOTE_USER_EXIT]: [{
+	        userId: string;
+	    }];
+	    [TRTCEvent.REMOTE_AUDIO_AVAILABLE]: [{
+	        userId: string;
+	    }];
+	    [TRTCEvent.REMOTE_AUDIO_UNAVAILABLE]: [{
+	        userId: string;
+	    }];
+	    [TRTCEvent.REMOTE_VIDEO_AVAILABLE]: [{
+	        userId: string;
+	        streamType: TRTCStreamType;
+	    }];
+	    [TRTCEvent.REMOTE_VIDEO_UNAVAILABLE]: [{
+	        userId: string;
+	        streamType: TRTCStreamType;
+	    }];
+	    [TRTCEvent.AUDIO_VOLUME]: [{
+	        result: {
+	            userId: string;
+	            volume: number;
+	        }[];
+	    }];
+	    [TRTCEvent.NETWORK_QUALITY]: [NetworkQuality];
+	    [TRTCEvent.CONNECTION_STATE_CHANGED]: [{
+	        prevState: ConnectionState;
+	        state: ConnectionState;
+	    }];
+	    [TRTCEvent.AUDIO_PLAY_STATE_CHANGED]: [{
+	        userId: string;
+	        state: PlayerState;
+	        reason: string;
+	    }];
+	    [TRTCEvent.VIDEO_PLAY_STATE_CHANGED]: [{
+	        userId: string;
+	        streamType: TRTCStreamType;
+	        state: PlayerState;
+	        reason: string;
+	    }];
+	    [TRTCEvent.SCREEN_SHARE_STOPPED]: [];
+	    [TRTCEvent.DEVICE_CHANGED]: [{
+	        type: TRTCDeviceType;
+	        action: TRTCDeviceAction;
+	        device: DeviceInfo;
+	    }];
+	    [TRTCEvent.PUBLISH_STATE_CHANGED]: [
+	        {
+	            mediaType: 'audio' | 'video' | 'screen';
+	            state: 'started' | 'stopped' | 'starting';
+	            prevState: 'started' | 'stopped' | 'starting';
+	            reason?: 'timeout' | 'error' | 'api-call';
+	            error?: RtcError;
+	        }
+	    ];
+	}
  class TRTC extends EventEmitter<TRTCEventTypes> {
 	    /**
 	     * 创建一个 TRTC 对象，用于实现进房、预览、推流、拉流等功能。<br>
@@ -259,12 +680,22 @@
 	     *
 	     * @returns {TRTC} trtc对象
 	     */
-	    static create(RoomClass: {
-	        new (params: RoomOption): IRoom;
-	    }, options: any): TRTC;
-	    constructor(RoomClass: {
-	        new (params: RoomOption): IRoom;
-	    }, options: any);
+	    static create(): TRTC;
+	    /**
+	     * @typedef TurnServer
+	     * @property {string} url TURN 服务器 url
+	     * @property {string=} username TURN 服务器验证用户名
+	     * @property {string=} credential TURN 服务器验证密码
+	     * @property {string=} [credentialType=password] TURN 服务器验证密码类型
+	     */
+	    /**
+	     * @typedef ProxyServer
+	     * @property {string} [websocketProxy] websocket 信令服务代理
+	     * @property {string} [loggerProxy] 日志上报服务代理
+	     * @property {TurnServer[]} [turnServer] 音视频数据传输代理
+	     * @property {'all'|'relay'} [iceTransportPolicy='all'] 'all' 优先直连 TRTC，连不通时尝试走 turn server。<br>
+	     * 'relay' 强制走 turn server。
+	     */
 	    /**
 	     * 进入一个音视频通话房间（以下简称"进房"）。<br>
 	     * - 进房代表开始一个音视频通话会话，只有进房成功后才能和房间内的其他用户进行音视频通话。
@@ -297,7 +728,7 @@
 	     * 注意：观众角色没有发布本地音视频的权限，只有收看远端流的权限。如果观众想要连麦跟主播互动，
 	     * 请先通过 {@link TRTC#switchRole switchRole()} 切换角色到主播后再发布本地音视频。
 	     * @param {boolean} [options.autoReceiveAudio=true] 是否自动接收音频。当远端用户发布音频后，SDK 自动播放远端用户的音频。
-	     * @param {boolean} [options.autoReceiveVideo=true] 是否自动接收视频。当远端用户发布视频后，SDK 自动拉流并解码远端视频，您需要调用 {@link TRTC#startLocalVideo startLocalVideo} 播放远端视频。
+	     * @param {boolean} [options.autoReceiveVideo=true] 是否自动接收视频。当远端用户发布视频后，SDK 自动拉流并解码远端视频，您需要调用 {@link TRTC#startRemoteVideo startRemoteVideo} 播放远端视频。
 	     * @param {boolean} [options.enableAutoPlayDialog] 是否开启 SDK 自动播放失败弹窗，默认：true。
 	     * - 默认开启，当出现自动播放失败时，SDK 会弹窗引导用户点击页面，来恢复音视频播放。
 	     * - 可设置为 false 关闭，建议接入侧参考 [自动播放受限处理建议](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/tutorial-21-advanced-auto-play-policy.html) 来处理自动播放失败相关问题。
@@ -307,6 +738,7 @@
 	     * @param {string=} options.userDefineRecordId 用于设置云端录制的 userDefineRecordId(选填）。
 	     * - 【推荐取值】限制长度为64字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符。
 	     * - 【参考文档】[云端录制](https://cloud.tencent.com/document/product/647/16823)。
+	     * @param {string|ProxyServer} [options.proxy] 设置代理服务器
 	     * @throws
 	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
 	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
@@ -498,6 +930,7 @@
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `cover`。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
 	    * @param {VideoProfile} [config.option.profile] - 视频大流编码参数。
 	    * @param {VideoProfile} [config.option.small] - 视频小流编码参数。
+	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。（默认）流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
 	    * @throws
 	    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
 	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
@@ -550,6 +983,7 @@
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit| CSS object-fit} 属性
 	    * @param {VideoProfile} [config.option.profile] - 视频大流编码参数
 	    * @param {VideoProfile} [config.option.small] - 视频小流编码参数
+	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。（默认）流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_SMOOTH}）
 	    * @throws
 	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
 	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
@@ -612,6 +1046,7 @@
 	    * @param {boolean} [config.option.systemAudio] - 是否采集系统声音，默认为 false。
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `contain`，参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
 	    * @param {ScreenShareProfile} [config.option.profile] - 屏幕分享编码配置。
+	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 （默认）清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
 	    * @throws
 	    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
 	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
@@ -624,7 +1059,7 @@
 	    * await trtc.startScreenShare();
 	    * @memberof TRTC
 	    */
-	    startScreenShare(config?: LocalScreenConfig): Promise<void>;
+	    startScreenShare(config?: ScreenShareConfig): Promise<void>;
 	    /**
 	    * 更新屏幕分享配置
 	    * - 该接口需在 {@link TRTC#startScreenShare startScreenShare()} 成功后调用。
@@ -632,9 +1067,10 @@
 	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
 	    * @param {object} [config]
 	    * @param {string | HTMLElement | null} [config.view] - 屏幕分享预览的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染屏幕分享。
-	    * @param {boolean} [config.publish=true] - 是否将屏幕分享发布到房间中
+	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中
 	    * @param {object} [config.option] - 屏幕分享配置
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `contain`，参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
+	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 （默认）清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
 	    * @throws
 	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
 	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
@@ -646,7 +1082,7 @@
 	    * await trtc.updateScreenShare({publish:false});
 	    * @memberof TRTC
 	    */
-	    updateScreenShare(config: LocalScreenConfig): Promise<void>;
+	    updateScreenShare(config: UpdateScreenShareConfig): Promise<void>;
 	    /**
 	    * 停止屏幕分享。
 	    * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
@@ -817,14 +1253,14 @@
 	     * // 解除所有事件绑定
 	     * trtc.off('*');
 	     */
-	    off<T extends keyof TRTCEventTypes>(event: T | '*', handler: T extends '*' ? never : (...args: TRTCEventTypes[T]) => void, context: any): this;
+	    off<T extends keyof TRTCEventTypes>(event: T | '*', handler: T extends '*' ? never : (...args: TRTCEventTypes[T]) => void, context?: any): this;
 	    /**
 	     * 获取视频轨道
 	     *
 	     * @param {string} [config] 不传则获取本地摄像头 videoTrack
 	     * @param {string} [config.userId] 不传或传空串，代表获取本地的 videoTrack。传远端用户的 userId，代表获取远端用户的 videoTrack。
-	     * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} [config.streamType = TRTC.TYPE.STREAM_TYPE_MAIN] - 远端流类型：
-	     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）
+	     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - 远端流类型：
+	     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）（默认值）
 	     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: 辅流（远端用户的屏幕分享）
 	     * @returns {MediaStreamTrack|null} 视频轨道
 	     * @memberof TRTC
@@ -891,6 +1327,8 @@
 	        readonly AUDIO_PROFILE_STANDARD_STEREO: "standard-stereo";
 	        readonly AUDIO_PROFILE_HIGH: "high";
 	        readonly AUDIO_PROFILE_HIGH_STEREO: "high-stereo";
+	        readonly QOS_PREFERENCE_SMOOTH: "smooth";
+	        readonly QOS_PREFERENCE_CLEAR: "clear";
 	    };
 	    static frameWorkType: number;
 	    /**
@@ -984,4 +1422,4 @@
 	     */
 	    static setCurrentSpeaker(speakerId: string): Promise<void>;
 	}
-	export default TRTC;
+export default TRTC
