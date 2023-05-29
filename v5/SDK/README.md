@@ -14,7 +14,7 @@ An object-oriented WebRTC SDK library
 
 </div>
 
-English | [简体中文](https://github.com/LiteAVSDK/TRTC_Web/blob/main/SDK/README-zh_CN.md)
+English | [简体中文](https://github.com/LiteAVSDK/TRTC_Web/blob/main/v5/SDK/README-zh_CN.md)
 
 ## Introduction
 

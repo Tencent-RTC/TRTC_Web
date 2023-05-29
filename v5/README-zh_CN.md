@@ -10,7 +10,7 @@
 
 ## 更新日志
 
-版本更新历史请点击 [SDK 发布日志(Web)](https://cloud.tencent.com/document/product/647/38958)。
+版本更新历史请点击 [SDK 发布日志(Web)](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-01-info-changelog.html)。
 
 ## 目录说明
 
@@ -40,7 +40,7 @@
 - 运行：进入文件夹内参考 README。
 - 在线体验 [quick-demo-vue2-js 在线体验地址](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue2-js/index.html)。
 
-**quick-demo-vue2-js**
+**quick-demo-vue3-ts**
 
 - 说明：`quick-demo-vue3-ts` 为 TRTC Web 快速运行 Demo (Vue3 版本)，集成了 TRTC Web SDK 的基础音视频通话、设备选择等功能，使用 Vue3 + TypeScript 开发，需要您安装 Node 环境。
 - 运行：进入文件夹内参考 README。
@@ -50,7 +50,7 @@
 
 - 如果你遇到了困难，可以先参阅 [常见问题](https://cloud.tencent.com/document/product/647/43018)；
 - 如果你想了解TRTC SDK在复杂场景下的应用，可以参考[更多场景案例](https://cloud.tencent.com/document/product/647/57486)；
-- 完整的 API 文档见 [SDK 的 API 文档](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/index.html)；
+- 完整的 API 文档见 [SDK 的 API 文档](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/index.html)；
 - 如果需要售后技术支持, 你可以点击[这里](https://cloud.tencent.com/document/product/647/19906)；
 - 如果发现了示例代码的 bug，欢迎提交 issue；
 
