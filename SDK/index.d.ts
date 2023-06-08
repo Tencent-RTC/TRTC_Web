@@ -47,7 +47,7 @@ export interface ClientConfig {
    * Whether to receive remote streams automatically, supported on v4.8.0+
    */
   autoSubscribe?: boolean;
-  /** 
+  /**
    * enable autoplay dialog, since v4.11.9.
    */
   enableAutoPlayDialog?: boolean;
@@ -59,6 +59,10 @@ export interface ClientConfig {
    * Audio-only publishing mode. Include this parameter if you need to enable relayed live streaming and record the audio.
    */
   pureAudioPushMode?: 1 | 2;
+  /**
+   * Enabling SEI send and receive. supported on v4.14.1+
+   */
+  enableSEI?: boolean;
 }
 
 interface ProxyServer {
@@ -90,13 +94,13 @@ export interface Client {
    */
   join(options: JoinOptions): Promise<void>;
 
-  /** 
+  /**
    * Leave room.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#leave
    */
   leave(): Promise<void>;
 
-  /** 
+  /**
  * Destroy client.
  * @since 4.13.0
  * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#destroy
@@ -140,13 +144,13 @@ export interface Client {
    */
   sendSEIMessage(buffer: ArrayBuffer): void;
 
-  /** 
+  /**
    * listen for client event.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#on
    */
   on<K extends keyof ClientEventMap>(event: K, handler: Callback<ClientEventMap[K]>, context?: any): void;
 
-  /** 
+  /**
    * stop listen for client event.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#off
    */
@@ -173,14 +177,14 @@ export interface Client {
   /** Get video statistics of all current remote streams. */
   getRemoteVideoStats(remoteStreamType?: RemoteStreamType): Promise<RemoteVideoStatsMap>;
 
-  /** 
+  /**
    * Start mixtranscoding
    * @since 4.8.0
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#startMixTranscode
    */
   startMixTranscode(config: MixTranscodeConfig): Promise<void>;
 
-  /** 
+  /**
    * Stop mixtranscoding.
    * @since 4.8.0
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#stopMixTranscode
@@ -228,20 +232,20 @@ export interface Client {
   /**
    * Switch the big/small stream attribute.
    * @param remoteStream Remote stream subscribed
-   * @param status 
+   * @param status
    * 'big': manually switch to the big stream
-   * 
+   *
    * 'small': manually switch to the small stream
    * @since 4.11.0
-   * 
+   *
    * This method has been changed from synchronous to asynchronous since v4.12.0
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#setRemoteVideoStreamType
    */
   setRemoteVideoStreamType(remoteStream: RemoteStream, status: 'big' | 'small'): Promise<void>;
   /**
    * call experimental API.
-   * @param name 
-   * @param options 
+   * @param name
+   * @param options
    */
   callExperimentalAPI(name: ExperimentalAPIName, options: Object): Promise<any>;
 }
@@ -280,11 +284,11 @@ export interface StreamConfig {
    * - For detailed directions on screen sharing, see [Screen Sharing](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/tutorial-16-basic-screencast.html).
    */
   screenAudio?: boolean;
-  /** 
+  /**
    * Whether to mirror the video. Default value: true. We recommend that you enable the mirror mode when using the front camera and disable it when using the rear camera.
    * Screen sharing does not support mirroring.
    * @deprecated 4.12.1
-   * 
+   *
    * see [play](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#play)
    */
   mirror?: boolean;
@@ -306,7 +310,7 @@ export interface ClientEventMap {
   'stream-updated': RemoteStreamUpdatedInfo;
   /** A remote stream was successfully subscribed. This event will be triggered after [client.subscribe()](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#subscribe) is successfully called. */
   'stream-subscribed': RemoteStreamInfo;
-  /** 
+  /**
    * The connection status between the SDK and Tencent Cloud changed.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.CONNECTION_STATE_CHANGED
    */
@@ -336,12 +340,12 @@ export interface ClientEventMap {
     reason: 'kick' | 'banned' | 'room-disband';
     message: string;
   };
-  /** 
+  /**
    * Network quality statistics.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.NETWORK_QUALITY
    */
   'network-quality': NetworkQuality;
-  /** 
+  /**
    * Volume event
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.AUDIO_VOLUME
    */
@@ -361,7 +365,7 @@ export interface ClientEventMap {
 /**
  * Audio/Video stream. A stream can contain at most one audio track and one video track.
  * The `Stream` class is the base class of `LocalStream` and `RemoteStream`. It includes APIs applicable to both  * local and remote streams.
- * 
+ *
  * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Stream.html
  */
 export interface Stream {
@@ -382,10 +386,10 @@ export interface Stream {
    */
   resume(): Promise<void>;
 
-  /** 
+  /**
    * Close an audio/video stream
-   * 
-   * For local streams, this API will turn the camera off and release the camera and mic. 
+   *
+   * For local streams, this API will turn the camera off and release the camera and mic.
    */
   close(): void;
 
@@ -453,13 +457,13 @@ export interface Stream {
    */
   getVideoFrame(): Nullable<string>;
 
-  /** 
-   * Listen for stream events 
+  /**
+   * Listen for stream events
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Stream.html#on
    */
   on<K extends keyof StreamEventMap>(event: K, handler: Callback<StreamEventMap[K]>, context?: any): void;
-  /** 
-   * Stop listen for stream events 
+  /**
+   * Stop listen for stream events
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Stream.html#off
    */
   off<K extends keyof StreamEventMap>(event: K, handler: Callback<StreamEventMap[K]>, context?: any): void;
@@ -468,7 +472,7 @@ export interface Stream {
 }
 
 export interface LocalStream extends Stream {
-  /** 
+  /**
    * Initialize local audio/video stream objects.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#initialize
    */
@@ -486,7 +490,7 @@ export interface LocalStream extends Stream {
    */
   setVideoProfile(profile: VideoProfileString | VideoProfile): void;
 
-  /** 
+  /**
    * Set screen sharing profile
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#setScreenProfile
    */
@@ -504,7 +508,7 @@ export interface LocalStream extends Stream {
    */
   switchDevice(type: 'audio' | 'video', deviceId: string): Promise<void>;
 
-  /** 
+  /**
    * Add an audio or video track.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/LocalStream.html#addTrack
    */
@@ -538,7 +542,7 @@ export interface RemoteStream extends Stream {
 }
 
 export interface StreamEventMap {
-  /** 
+  /**
    * Status change of the audio/video player. You can update the UI of your application based on these callbacks
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.PLAYER_STATE_CHANGED
    */
@@ -619,7 +623,7 @@ export interface RemoteMutedState {
 export interface TransportStats {
   /** Round-trip Time (RTT) of the uplink media connection between the SDK and Tencent Video Cloud, in ms */
   rtt: number;
-  /** 
+  /**
    * RTT of the downlink media connection between the SDK and Tencent Video Cloud, in ms
    * @since 4.10.1
    */
@@ -735,7 +739,7 @@ export interface PlaybackOptions {
    * Whether to mirror the video. Default value: true. We recommend that you enable the mirror mode when using the front camera and disable it when using the rear camera.
    * Screen sharing does not support mirroring.
    * @since 4.12.1
-   * 
+   *
    * This option has been supported since v4.12.1. see [play](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/LocalStream.html#play)
    */
   mirror?: boolean;
@@ -768,23 +772,23 @@ export interface NetworkQuality {
   uplinkNetworkQuality: 1 | 2 | 3 | 4 | 5 | 6;
   /** Downlink network quality (downlinkNetworkQuality): average network quality of all downlink connections from Tencent Cloud to SDK Enumerated values */
   downlinkNetworkQuality: 1 | 2 | 3 | 4 | 5 | 6;
-  /** 
-   * uplink rtt 
+  /**
+   * uplink rtt
    * @since v4.10.3
    */
   uplinkRTT: number;
-  /** 
-   * uplink loss 
+  /**
+   * uplink loss
    * @since v4.10.3
    */
   uplinkLoss: number;
-  /** 
-   * downlink rtt 
+  /**
+   * downlink rtt
    * @since v4.10.3
    */
   downlinkRTT: number;
-  /** 
-   * downlink loss 
+  /**
+   * downlink loss
    * @since v4.10.3
    */
   downlinkLoss: number;
@@ -813,15 +817,15 @@ export interface MixTranscodeConfig {
   mode?: 'manual' | 'preset-layout';
   /** Stream ID after mixtranscoding. Default value: '' */
   streamId?: string;
-  /** 
+  /**
    * Width of the video resolution in px after transcoding. Default value: 640.
-   * 
-   * The value must be greater than or equal to 0 and is large enough so that all mixed video streams can be accommodated. 
+   *
+   * The value must be greater than or equal to 0 and is large enough so that all mixed video streams can be accommodated.
    */
   videoWidth?: number;
-  /** 
+  /**
    * Height of the video resolution in px after transcoding. Default value: 480.
-   * 
+   *
    * The value must be greater than or equal to 0 and is large enough so that all mixed video streams can be accommodated.
    */
   videoHeight?: number;
@@ -905,13 +909,13 @@ export interface ErrorCode {
   /** Invalid operation. */
   INVALID_OPERATION: 0x1001;
   /** Not supported.
-   * 
+   *
    * Note: this error is reported when an SDK API is called, indicating that the current browser does not support calling the API.
    *
    * Handling suggestion: use a browser supported by the SDK. Reference: [Check supported browsers](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/tutorial-23-advanced-support-detection.html)
    */
   NOT_SUPPORTED: 0x1002;
-  /** 
+  /**
    * User's device has not microphone or camera, but trying to capture microphone or camera.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ErrorCode.html#.DEVICE_NOT_FOUND
    */
@@ -921,12 +925,12 @@ export interface ErrorCode {
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ErrorCode.html#.INITIALIZE_FAILED
    */
   INITIALIZE_FAILED: 0x1004;
-  /** 
-   * Failed to establish the WebSocket signaling channel. 
+  /**
+   * Failed to establish the WebSocket signaling channel.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ErrorCode.html#.SIGNAL_CHANNEL_SETUP_FAILED
    */
   SIGNAL_CHANNEL_SETUP_FAILED: 0x4001;
-  /** 
+  /**
    * WebSocket signaling channel error.
    * @deprecated on v4.6.5
    */
@@ -947,33 +951,33 @@ export interface ErrorCode {
   CREATE_OFFER_FAILED: 0x4005;
   /**
    * Failed to reconnect the WebSocket signaling channel.
-   * 
+   *
    * Description: when the WebSocket is disconnected, the SDK retries the connection multiple times and throws this error if all the retries fail.
-   * 
+   *
    * Handling suggestion: remind the user to check the network and enter the room again.
    */
   SIGNAL_CHANNEL_RECONNECTION_FAILED: 0x4006;
   /**
    * uplink peer connection retries failed.
-   * 
+   *
    * Description: when the uplink peer connection is disconnected, the SDK retries the connection multiple times and throws this error if all the retries fail.
-   * 
+   *
    * Handling suggestion: remind the user to check the network and perform push again or enter the room again.
    */
   UPLINK_RECONNECTION_FAILED: 0x4007;
   /**
    * downlink peer connection retries failed.
-   * 
+   *
    * Description: when the downstream peer connection is disconnected unexpectedly, the SDK retries the connection multiple times and throws this error if all the retries fail.
-   * 
+   *
    * Handling suggestion: remind the user to check the network and enter the room again.
    */
   DOWNLINK_RECONNECTION_FAILED: 0x4008;
   /**
    * Remote stream do not exist.
-   * 
+   *
    * Description: When A tries to subscribe remoteStream published by B, B unpublish stream, causing A to fail to subscribe remoteStream from B.<br />
-   * 
+   *
    * Handling suggestion: It is a normal interaction process and does not need to be handled.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ErrorCode.html#.REMOTE_STREAM_NOT_EXIST
    */
@@ -1043,7 +1047,7 @@ export interface ClientEvent {
   STREAM_UPDATED: 'stream-updated';
   /** A remote stream was successfully subscribed. This event will be triggered after [client.subscribe()](https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#subscribe) is successfully called. */
   STREAM_SUBSCRIBED: 'stream-subscribed';
-  /** 
+  /**
    * The connection status between the SDK and Tencent Cloud changed.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.CONNECTION_STATE_CHANGED
    */
@@ -1067,12 +1071,12 @@ export interface ClientEvent {
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.CLIENT_BANNED
    */
   CLIENT_BANNED: 'client-banned';
-  /** 
+  /**
    * Network quality statistics.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.NETWORK_QUALITY
    */
   NETWORK_QUALITY: 'network-quality';
-  /** 
+  /**
    * Volume event
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-ClientEvent.html#.AUDIO_VOLUME
    */
@@ -1081,7 +1085,7 @@ export interface ClientEvent {
   ERROR: 'error';
 }
 export interface StreamEvent {
-  /** 
+  /**
    * Status change of the audio/video player. You can update the UI of your application based on these callbacks
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.PLAYER_STATE_CHANGED
    */
@@ -1095,7 +1099,7 @@ export interface StreamEvent {
    */
   CONNECTION_STATE_CHANGED: 'connection-state-changed';
   /**
-   * When the camera or microphone being used has an capture exception, SDK will try to automatically recover the capture. This event will be fired when the capture is recovered successfully. 
+   * When the camera or microphone being used has an capture exception, SDK will try to automatically recover the capture. This event will be fired when the capture is recovered successfully.
    * @since 4.13.0
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/module-StreamEvent.html#.DEVICE_AUTO_RECOVERED
    */
@@ -1110,7 +1114,7 @@ export interface StreamEvent {
 declare namespace TRTC {
   /** SDK Version */
   const VERSION: string;
-  /** 
+  /**
    * SDK Logger
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/TRTC.Logger.html
    */
@@ -1136,9 +1140,9 @@ declare namespace TRTC {
     function setLogLevel(level: 0 | 1 | 2 | 3 | 4 | 5): void;
     /** Enable log upload */
     function enableUploadLog(): void;
-    /** 
-     * Disable log upload 
-     * 
+    /**
+     * Disable log upload
+     *
      * Note: We won’t be able to identify problems for you online if you disable log upload.
      */
     function disableUploadLog(): void;
@@ -1159,12 +1163,12 @@ declare namespace TRTC {
   /** Get the speaker list */
   function getSpeakers(): Promise<MediaDeviceInfo[]>;
 
-  /** 
-   * Create a client object for real-time audio/video calls. This API needs to be called only once for each call. 
+  /**
+   * Create a client object for real-time audio/video calls. This API needs to be called only once for each call.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/TRTC.html#.createClient
    */
   function createClient(config: ClientConfig): Client;
-  /** 
+  /**
    * Create a localStream, which can use the client.publish() API to publish localStream.
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/TRTC.html#.createStream
    */
