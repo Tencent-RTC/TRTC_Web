@@ -1,7 +1,7 @@
 /// <reference path="./core.d.ts" />
 
 	declare interface LocalVideoConfig {
-	    view: string | HTMLElement | null;
+	    view: string | HTMLElement | HTMLElement[] | null;
 	    publish?: boolean;
 	    option?: {
 	        cameraId?: string;
@@ -62,7 +62,7 @@
 	    };
 	}
 	declare interface RemoteVideoConfig {
-	    view: string | HTMLElement | null;
+	    view: string | HTMLElement | HTMLElement[] | null;
 	    userId: string;
 	    streamType: TRTCStreamType;
 	    option?: {
@@ -738,7 +738,8 @@
 	     * @param {string=} options.userDefineRecordId 用于设置云端录制的 userDefineRecordId(选填）。
 	     * - 【推荐取值】限制长度为64字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符。
 	     * - 【参考文档】[云端录制](https://cloud.tencent.com/document/product/647/16823)。
-	     * @param {string|ProxyServer} [options.proxy] 设置代理服务器
+	     * @param {string|ProxyServer} [options.proxy] 设置代理服务器。参考最佳实践：{@tutorial 34-advanced-proxy}。
+	     * @param {boolean} [options.privateMapKey] 进房钥匙，若需要权限控制请携带该参数（传空或传错会导致进房失败）。<br>[privateMapKey 权限设置](https://cloud.tencent.com/document/product/647/32240)
 	     * @throws
 	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
 	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
