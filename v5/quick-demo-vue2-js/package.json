@@ -14,7 +14,7 @@
     "aegis-web-sdk": "^1.35.26",
     "core-js": "^3.8.3",
     "element-ui": "^2.15.9",
-    "trtc-sdk-v5": "latest",
+    "trtc-sdk-v5": "workspace:*",
     "vue": "^2.7.9",
     "vue-i18n": "^8.26.3",
     "vue-router": "^3.2.0"
