@@ -60,8 +60,6 @@
             <div :class="videoMuted ? 'muteVideo' : 'unmuteVideo'" @click='toggleVideo'></div>
           </div>
         </div>
-        <div class='local' id='screen-share' v-show='store.isShared'>
-        </div>
       </div>
       <Player />
     </el-col>
@@ -155,9 +153,7 @@ const toggleVideo = async () => {
 
 async function handleStartShare() {
   try {
-    await trtc.startScreenShare({
-      view: 'screen-share',
-    });
+    await trtc.startScreenShare();
     store.isShared = true;
     addSuccessLog('Start share screen success');
   } catch (error: any) {

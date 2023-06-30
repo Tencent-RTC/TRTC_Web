@@ -227,9 +227,7 @@ export default {
         return;
       }
       try {
-        await this.trtc.startScreenShare({
-          view: 'screen-share',
-        });
+        await this.trtc.startScreenShare();
         this.isShared = true;
         this.addSuccessLog('Start share screen success');
       } catch (error) {
