@@ -92,6 +92,9 @@ async function joinRoom() {
 		})
 		addFailedLog(`[${userId}] enterRoom failed.`);
 	}
+
+	startLocalVideo();
+	startLocalAudio();
 }
 
 async function leaveRoom() {
