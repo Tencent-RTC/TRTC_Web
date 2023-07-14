@@ -142,7 +142,7 @@ export interface Client {
    * @link https://web.sdk.qcloud.com/trtc/webrtc/doc/en/Client.html#sendSEIMessage
    * @since 4.14.1
    */
-  sendSEIMessage(buffer: ArrayBuffer): void;
+  sendSEIMessage(buffer: ArrayBuffer, options?: { seiPayloadType: number }): void;
 
   /**
    * listen for client event.
@@ -808,7 +808,12 @@ export interface SEIMessageEvent {
   /** audio volume. value range 0 to 100 */
   data: ArrayBuffer;
   /** sei payload type */
-  seiPayloadType: 5 | 243
+  seiPayloadType: 5 | 243;
+  /** 
+   * is the SEI received from the auxiliary stream 
+   * @since v4.15.11
+   */
+  isFromAuxiliary: boolean;
 }
 
 
