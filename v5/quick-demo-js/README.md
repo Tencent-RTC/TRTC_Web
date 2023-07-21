@@ -17,20 +17,16 @@
 
 ## 操作步骤
 
-<span id="step1"></span>
-
 ### 步骤1：创建新的应用
 
 1. 登录实时音视频控制台，选择【开发辅助】>【[快速跑通Demo](https://console.cloud.tencent.com/trtc/quickstart)】。
 2. 单击【立即开始】，输入应用名称，例如`TestTRTC`，单击【创建应用】。
 
-<span id="step2"></span>
 
 ### 步骤2：获取 SDKAppID 和 SecretKey 密钥信息
 
 在控制台查看 SDKAppID 和 SecretKey 密钥信息并复制填入输入框。
 
-<span id="step3"></span>
 
 ### 步骤3：运行 Demo
 
@@ -191,7 +187,6 @@ WebRTC 技术由 Google 最先提出，目前主要在桌面版 Chrome 浏览器
 >- 您可以在浏览器中打开 [WebRTC 能力测试](https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html) 页面进行检测是否完整支持 WebRTC。例如公众号等浏览器环境。
 >- 由于 H.264 版权限制，华为系统的 Chrome 浏览器和以 Chrome WebView 为内核的浏览器均不支持 TRTC 的 Web 版 SDK 的正常运行。
 >
-<span id="requirements"></span>
 
 ## 常见问题
 

@@ -187,7 +187,7 @@ async function handleEnter() {
 
   try {
     await trtc.enterRoom({
-      roomId: store.roomId,
+      roomId: parseInt(store.roomId, 10),
       sdkAppId: parseInt(store.sdkAppId, 10),
       userId: store.userId,
       userSig: store.getUserSig(),
