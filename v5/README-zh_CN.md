@@ -18,10 +18,9 @@
 .
 ├── README.md
 ├── SDK                     -- TRTC Web SDK 5.x 最新版文件
-├── base-js                 -- TRTC Web 基础 Demo
-├── base-react-next         -- TRTC Web API Examples
 ├── quick-demo-js           -- TRTC Web 快速运行 Demo (原生 Js 版本)
-└── quick-demo-vue2-js      -- TRTC Web 快速运行 Demo (Vue2 版本)
+├── quick-demo-vue2-js      -- TRTC Web 快速运行 Demo (Vue2 版本)
+└── quick-demo-vue3-ts      -- TRTC Web 快速运行 Demo (Vue3 版本)
 ```
 
 **SDK**
