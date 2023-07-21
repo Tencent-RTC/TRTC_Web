@@ -18,9 +18,7 @@ For the changelog of the SDK, see [Release Notes (Web)](https://web.sdk.qcloud.c
 .
 ├── README.md
 ├── SDK                     -- The latest version of the TRTC web SDK 5.x
-├── base-js                 -- The TRTC web basic demo
-├── base-react-next         -- TRTC web API examples
-├── quick-demo-js           -- TRTC web quick demo (native JavaScript edition)
+├── quick-demo-js           -- TRTC web quick demo (JavaScript edition)
 ├── quick-demo-vue2-js      -- TRTC web quick demo (Vue.js 2 edition)
 └── quick-demo-vue3-ts      -- TRTC web quick demo (Vue.js 3 edition)
 ```
