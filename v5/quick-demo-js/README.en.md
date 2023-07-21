@@ -45,8 +45,6 @@ Download the source code of the TRTC web quick demo (Vanilla js) at [GitHub](htt
   npm run lint:fix
   ```
 
-<span id="getAppInfo"></span>
-
 ## Getting Application Information
 
 #### Create an application
