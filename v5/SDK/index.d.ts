@@ -1,7 +1,7 @@
 /// <reference path="./core.d.ts" />
 
 	declare interface LocalVideoConfig {
-	    view: string | HTMLElement | HTMLElement[] | null;
+	    view?: string | HTMLElement | HTMLElement[] | null;
 	    publish?: boolean;
 	    option?: {
 	        cameraId?: string;
@@ -41,7 +41,7 @@
 	    userDefineRecordId?: string;
 	}
 	declare interface ScreenShareConfig {
-	    view?: string | HTMLElement | null;
+	    view?: string | HTMLElement | HTMLElement[] | null;
 	    publish?: boolean;
 	    option?: {
 	        profile?: keyof typeof screenProfileMap | VideoProfile;
@@ -62,7 +62,7 @@
 	    };
 	}
 	declare interface RemoteVideoConfig {
-	    view: string | HTMLElement | HTMLElement[] | null;
+	    view?: string | HTMLElement | HTMLElement[] | null;
 	    userId: string;
 	    streamType: TRTCStreamType;
 	    option?: {
@@ -70,9 +70,6 @@
 	        mirror?: boolean;
 	        small?: boolean;
 	    };
-	}
-	declare interface UpdateRemoteVideoConfig extends Omit<RemoteVideoConfig, 'view'> {
-	    view?: string | HTMLElement | null;
 	}
 	declare interface StopRemoteVideoConfig {
 	    userId: string;
@@ -603,6 +600,17 @@
 	     * });
 	     */
 	    readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
+	    /**
+	     * @private
+	     * @description 收到 SEI message<br>
+	     * @default 'sei-message'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.SEI_MESSAGE, event => {
+	     *    console.log(`收到 ${event.userId} 的 sei message: ${event.data}`)
+	     * })
+	     */
+	    readonly SEI_MESSAGE: "sei-message";
 	};
 	declare interface TRTCEventTypes {
 	    [TRTCEvent.ERROR]: [RtcError];
@@ -667,6 +675,10 @@
 	            error?: RtcError;
 	        }
 	    ];
+	    [TRTCEvent.SEI_MESSAGE]: [{
+	        data: Uint8Array;
+	        userId: string;
+	    }];
 	}
  class TRTC extends EventEmitter<TRTCEventTypes> {
 	    /**
@@ -921,7 +933,7 @@
 	    * - 一个 trtc 实例只能开启一路摄像头。若您需要在已经开启一路摄像头的情况下，再开启一路摄像头用于测试，可以创建多个 trtc 实例实现。
 	    *
 	    * @param {object} [config]
-	    * @param {string | HTMLElement | null} [config.view] - 本地视频预览的 HTMLElement 实例或者 Id， 如果不传或传入 null， 则不会播放视频。
+	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 本地视频预览的 HTMLElement 实例或者 Id， 如果不传或传入 null， 则不会播放视频。
 	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布（若 publish=true）。
 	    * @param {object} [config.option] - 本地视频配置
 	    * @param {string} [config.option.cameraId] - 指定使用哪个摄像头，用于切换摄像头。
@@ -973,7 +985,7 @@
 	    * - 该接口可以多次调用。
 	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
 	    * @param {object} [config]
-	    * @param {string | HTMLElement | null} [config.view] - 预览摄像头的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会推流消耗带宽的容器
+	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 预览摄像头的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会推流消耗带宽的容器
 	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布。
 	    * @param {boolean} [config.mute] - 是否暂停摄像头采集，参考：[开关麦克风、摄像头](./tutorial-15-basic-dynamic-add-video.html)
 	    * @param {object} [config.option] - 本地视频配置
@@ -1041,7 +1053,7 @@
 	    *
 	    * - 开启屏幕分享后，房间内其他用户会收到 {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} 事件，streamType 为 {@link module:TYPE.STREAM_TYPE_SUB STREAM_TYPE_SUB}，其他用户可以通过 {@link TRTC#startRemoteVideo startRemoteVideo} 播放屏幕分享。
 	    * @param {object} [config]
-	    * @param {string | HTMLElement | null} [config.view] - 预览本地屏幕分享的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染本地屏幕分享。
+	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 预览本地屏幕分享的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染本地屏幕分享。
 	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布。
 	    * @param {object} [config.option] - 屏幕分享配置
 	    * @param {boolean} [config.option.systemAudio] - 是否采集系统声音，默认为 false。
@@ -1067,7 +1079,7 @@
 	    * - 该接口可以多次调用。
 	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
 	    * @param {object} [config]
-	    * @param {string | HTMLElement | null} [config.view] - 屏幕分享预览的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染屏幕分享。
+	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 屏幕分享预览的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染屏幕分享。
 	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中
 	    * @param {object} [config.option] - 屏幕分享配置
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `contain`，参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
@@ -1091,16 +1103,12 @@
 	    * await trtc.stopScreenShare();
 	    * */
 	    stopScreenShare(): Promise<void>;
-	    usePlugin(): void;
-	    startPlugin(name: string, options: AudioSourceOptions): Promise<void>;
-	    updatePlugin(name: string, option: any): void;
-	    stopPlugin(name: string, options: any): Promise<void>;
 	    /**
 	    * 播放远端视频
 	    *
 	    * - 调用时机：在收到 {@link module:EVENT.REMOTE_VIDEO_AVAILABLE TRTC.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE)} 事件后调用。
 	    * @param {object} [config]
-	    * @param {string | HTMLElement | null} [config.view] - 用于播放远端视频的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会拉流消耗带宽
+	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 用于播放远端视频的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会拉流消耗带宽
 	    * @param {string} config.userId - 远端用户Id
 	    * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType - 远端流类型
 	    * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）（远端用户的摄像头）
@@ -1129,7 +1137,7 @@
 	    * - 该方法可多次调用。
 	    * - 该方法采用增量更新的方式，只需要传入需要更新的配置项即可。
 	    * @param {object} [config]
-	    * @param {string | HTMLElement | null} [config.view] - 用于播放远端视频的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会拉流消耗带宽
+	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 用于播放远端视频的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会拉流消耗带宽
 	    * @param {string} config.userId - 远端用户Id
 	    * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType - 远端流类型：
 	    * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）
@@ -1151,7 +1159,7 @@
 	    * await trtc.updateRemoteVideo(config);
 	    * @memberof TRTC
 	    */
-	    updateRemoteVideo(config: UpdateRemoteVideoConfig): Promise<void>;
+	    updateRemoteVideo(config: RemoteVideoConfig): Promise<void>;
 	    /**
 	    * 用于停止远端视频播放。<br>
 	    * @param {object} config - 远端视频配置
@@ -1306,6 +1314,7 @@
 	        readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
 	        readonly DEVICE_CHANGED: "device-changed";
 	        readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
+	        readonly SEI_MESSAGE: "sei-message";
 	    };
 	    static ERROR_CODE: {
 	        INVALID_PARAMETER: number;
