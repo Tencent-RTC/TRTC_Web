@@ -1,6 +1,6 @@
 {
   "name": "trtc-js-sdk",
-  "version": "4.15.12",
+  "version": "4.15.13",
   "description": "Tencent Cloud RTC SDK for Web",
   "main": "trtc.js",
   "types": "index.d.ts",
@@ -16,6 +16,9 @@
     "live streaming",
     "real-time communication"
   ],
+  "dependencies": {
+    "webrtc-adapter": "^8.2.3"
+  },
   "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/doc/en/index.html",
   "repository": {
     "type": "git",
