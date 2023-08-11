@@ -83,6 +83,7 @@ import TRTC from 'trtc-sdk-v5';
 ├── trtc.js // npm 包入口文件（umd 格式）
 ├── trtc.esm.js // 基于 es 模块的 sdk 包（esm 格式）
 ├── index.d.ts // 类型声明文件
+└── plugins // 插件目录
 ```
 
 ## Changelog
