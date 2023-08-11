@@ -1,0 +1,31 @@
+{
+  "name": "@rtc-plugin/cdn-streaming",
+  "version": "5.1.0",
+  "description": "TRTC Web SDK 5.x CDN streaming plugin",
+  "main": "./cdn-streaming.esm.js",
+  "author": "longyuqi <longyuqi@tencent.com>",
+  "module": "./cdn-streaming.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
+  },
+  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-26-advanced-publish-cdn-stream.html",
+  "keywords": [
+    "webrtc",
+    "TRTC",
+    "rtc",
+    "call",
+    "video call",
+    "audio call",
+    "javascript",
+    "video",
+    "audio",
+    "camera",
+    "microphone",
+    "live streaming",
+    "real-time communication",
+    "cdn",
+    "mix transcode"
+  ],
+  "types": "./cdn-streaming.esm.d.ts"
+}

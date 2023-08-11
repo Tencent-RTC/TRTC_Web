@@ -1,10 +1,16 @@
 {
   "name": "trtc-sdk-v5",
-  "version": "5.0.2",
+  "version": "5.1.0",
   "description": "Tencent Cloud RTC SDK for Web",
   "main": "trtc.js",
   "module": "trtc.esm.js",
   "types": "index.d.ts",
+  "dependencies": {
+    "afsm": "2.4.1",
+    "eventemitter3": "^4.0.7",
+    "sdp-transform": "^2.8.0",
+    "webrtc-adapter": "^8.2.3"
+  },
   "keywords": [
     "webrtc",
     "TRTC",

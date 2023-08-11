@@ -1,5 +1,10 @@
 /// <reference path="./core.d.ts" />
 
+	declare interface TRTCOptions {
+	    plugins?: Array<{
+	        new (core: Core): IPlugin;
+	    }>;
+	}
 	declare interface LocalVideoConfig {
 	    view?: string | HTMLElement | HTMLElement[] | null;
 	    publish?: boolean;
@@ -28,7 +33,8 @@
 	    sdkAppId: number;
 	    userId: string;
 	    userSig: string;
-	    roomId: number | string;
+	    roomId?: number;
+	    strRoomId?: string;
 	    role?: UserRole;
 	    autoReceiveAudio?: boolean;
 	    autoReceiveVideo?: boolean;
@@ -37,7 +43,6 @@
 	    enableAutoPlayDialog?: boolean;
 	    proxy?: ProxyServer | string;
 	    scene?: Scene;
-	    streamId?: string;
 	    userDefineRecordId?: string;
 	}
 	declare interface ScreenShareConfig {
@@ -109,15 +114,6 @@
 	declare const enum TRTCStreamType {
 	    Main = "main",
 	    Sub = "sub"
-	}
-	declare interface TRTCMixUser extends Omit<MixUser, 'streamType'> {
-	    streamType?: TRTCStreamType;
-	}
-	declare interface TRTCMixTranscodeConfig extends Omit<MixTranscodeConfig, 'mixUsers'> {
-	    mixUsers: TRTCMixUser[];
-	}
-	declare interface TRTCPublishCDNParam extends Omit<PublishCDNStreamOptions, 'streamType'> {
-	    streamType?: TRTCStreamType;
 	}
 	declare enum TRTCDeviceType {
 	    Camera = "camera",
@@ -309,7 +305,12 @@
 	     */
 	    readonly AUTOPLAY_FAILED: "autoplay-failed";
 	    /**
-	     * @description 由于某种原因被踢出房间,包括kick:相同用户进房，banned:被管理员踢出,room_disband:房间被解散。
+	     * 被踢出房间，原因如下：<br/>
+	     * - kick: 相同 userId 的用户同时进入同一个房间（以下简称为同名进房），先进入房间的用户会被后进入的用户踢出房间。<br>
+	     *   - 同名进房是不允许的行为，可能会导致双方音视频通话异常，业务侧应避免出现这种情况。
+	     *   - TRTC 后台不保证观众角色同名进房互踢。即观众角色的用户，使用同 userId 进同一个房间，可能不会收到该事件。
+	     * - banned: 系统管理员通过{@link https://cloud.tencent.com/document/product/647/40496 服务端 API} 将该用户踢出房间。
+	     * - room-disband: 系统管理员通过{@link https://cloud.tencent.com/document/product/647/40496 服务端 API} 解散房间。
 	     * @default 'kicked-out'
 	     * @memberof module:EVENT
 	     * @example
@@ -692,7 +693,7 @@
 	     *
 	     * @returns {TRTC} trtc对象
 	     */
-	    static create(): TRTC;
+	    static create(options?: TRTCOptions): TRTC;
 	    /**
 	     * @typedef TurnServer
 	     * @property {string} url TURN 服务器 url
@@ -722,15 +723,17 @@
 	     * 建议限制长度为32字节，只允许包含大小写英文字母(a-zA-Z)、数字(0-9)及下划线和连词符。
 	     * @param {string} options.userSig userSig 签名 <br>
 	     * 计算 userSig 的方式请参考 [UserSig 相关](https://cloud.tencent.com/document/product/647/17275)。
-	     * @param {number|string} options.roomId
-	     * roomId 为 number 类型时，取值要求为 [1, 4294967294] 的整数;<br>
-	     * roomId 为 string 类型时，限制长度为64字节，且仅支持以下范围的字符集：
+	     * @param {number=} options.roomId
+	     * 数字类型的房间号，取值要求为 [1, 4294967294] 的整数;<br>
+	     * <font color="red">如果需要使用字符串类型的房间号请使用 strRoomId 参数，roomId 和 strRoomId 必须填一个。若两者都填，则优先选择 roomId。</font>
+	    * @param {string=} options.strRoomId
+	    * 字符串类型的房间号，限制长度为64字节，且仅支持以下范围的字符集：
 	     * - 大小写英文字母（a-zA-Z）
 	     * - 数字（0-9）
 	     * - 空格 ! # $ % & ( ) + - : ; < = . > ? @ [ ] ^ _ { } | ~ ,
 	      *
 	      * <font color="red">注意：建议采用数字类型的 roomId，字符串类型的房间号 "123" 与 数字类型的房间号 123 不互通。</font>
-	      * @param {string} [options.scene] 应用场景，目前支持以下两种场景：
+	    * @param {string} [options.scene] 应用场景，目前支持以下两种场景：
 	      * - {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC}（默认）实时通话场景，该模式适合 1对1 的音视频通话，或者参会人数在 300 人以内的在线会议。[支持最大50人同时开麦](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-04-info-uplink-limits.html)。
 	      * - {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} 互动直播场景，该模式适合十万人以内的在线直播场景，但需要您在接下来介绍的 options 参数中指定 角色(role) 这个字段
 	     * @param {string=} [options.role] 用户角色，仅在 {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} 场景下有意义，{@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} 场景无需指定 role，目前支持两种角色：
@@ -744,9 +747,6 @@
 	     * @param {boolean} [options.enableAutoPlayDialog] 是否开启 SDK 自动播放失败弹窗，默认：true。
 	     * - 默认开启，当出现自动播放失败时，SDK 会弹窗引导用户点击页面，来恢复音视频播放。
 	     * - 可设置为 false 关闭，建议接入侧参考 [自动播放受限处理建议](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/tutorial-21-advanced-auto-play-policy.html) 来处理自动播放失败相关问题。
-	     * @param {string=} options.streamId 用于设置在腾讯云直播平台上的 streamId（选填）。
-	     * - 【推荐取值】限制长度为64字节，可以不填写。一种推荐的方案是使用 sdkappid_roomid_userid_main 作为 streamid，这种命名方式容易辨认且不会在您的多个应用中发生冲突。
-	     * - 【参考文档】[CDN 旁路直播](https://cloud.tencent.com/document/product/647/16826)。
 	     * @param {string=} options.userDefineRecordId 用于设置云端录制的 userDefineRecordId(选填）。
 	     * - 【推荐取值】限制长度为64字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符。
 	     * - 【参考文档】[云端录制](https://cloud.tencent.com/document/product/647/16823)。
@@ -1203,6 +1203,36 @@
 	    * await trtc.setRemoteAudioVolume('123', 90);
 	    * */
 	    setRemoteAudioVolume(userId: string, volume: number): void;
+	    /**
+	     * 开启插件
+	     *
+	     * 目前支持的插件：
+	     *
+	     * | pluginName | 插件名称 | 参考教程 | 参数类型 |
+	     * | --- | --- | --- | --- |
+	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [AudioMixerOptions](./global.html#AudioMixerOptions) |
+	     * | 'AIDenoiser' | 降噪插件 | {@tutorial 35-advanced-ai-denoiser} | [AIDenoiserOptions](./global.html#AIDenoiserOptions) |
+	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](./global.html#CDNStreamingOptions) |
+	     *
+	     * @param {PluginName} plugin
+	     * @param {AudioMixerOptions|AIDenoiserOptions|CDNStreamingOptions} options
+	     * @returns {Promise<any>}
+	     */
+	    startPlugin(plugin: 'AudioMixer' | 'AIDenoiser' | 'CDNStreaming', options: any): Promise<void>;
+	    /**
+	     * 更新插件
+	     * @param {PluginName} plugin
+	     * @param {UpdateAudioMixerOptions|CDNStreamingOptions} options
+	     * @returns {Promise<any>}
+	     */
+	    updatePlugin(plugin: 'AudioMixer' | 'CDNStreaming', options: any): Promise<void>;
+	    /**
+	     * 停止插件
+	     * @param {PluginName} plugin
+	     * @param {StopAudioMixerOptions|CDNStreamingOptions} options
+	     * @returns {Promise<any>}
+	     */
+	    stopPlugin(plugin: 'AudioMixer' | 'AIDenoiser' | 'CDNStreaming', options: any): Promise<void>;
 	    /**
 	   * 开启或关闭音量大小回调<br>
 	   *

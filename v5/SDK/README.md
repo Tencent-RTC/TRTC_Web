@@ -77,7 +77,8 @@ Explore SDK documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5
 ├── package.json
 ├── trtc.js // sdk file(umd format)
 ├── trtc.esm.js // sdk file base on ES modules(esm format)
-└── index.d.ts // ts declaration file
+├── index.d.ts // ts declaration file
+└── plugins // trtc plugins
 ```
 
 ## Changelog
