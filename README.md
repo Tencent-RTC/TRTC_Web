@@ -10,7 +10,7 @@ Leveraging Tencent's many years of experience in network and audio/video technol
 
 ## Changelog
 
-For the changelog of the SDK, see [Release Notes (Web)](https://intl.cloud.tencent.com/document/product/647/39779).
+For the changelog of the SDK, see [Release Notes (Web)](https://trtc.io/document/53626).
 
 ## Contents
 
