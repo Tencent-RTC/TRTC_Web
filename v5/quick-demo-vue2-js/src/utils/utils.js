@@ -31,16 +31,10 @@ export function isUndefined(value) {
  * 获取语言
  * @returns language
  */
-export function getLanguage() {
-  let language = localStorage.getItem('trtc-quick-vue2-language') || getUrlParam('lang') || navigator.language || 'zh';
-  language = language.replace(/_/, '-').toLowerCase();
-
-  if (language === 'zh-cn' || language === 'zh') {
-    language = 'zh';
-  } else if (language === 'en' || language === 'en-us' || language === 'en-GB') {
-    language = 'en';
-  }
-  return language;
+export function getLanguage(localStorageLangId = 'trtc-v5-quick-demo-vue2-js') {
+  let lang = getUrlParam('lang') || localStorage.getItem(localStorageLangId) || window.navigator.language?.toLowerCase();
+  lang = lang.indexOf('zh') > -1 ? 'zh-cn' : 'en';
+  return lang;
 }
 
 /**
