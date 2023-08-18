@@ -1,10 +1,10 @@
-declare interface CDNStreamingOptions {
+export declare interface CDNStreamingOptions {
     target: Target;
     encoding?: Encoding;
     mix?: Mix;
 }
 
-declare interface Target {
+export declare interface Target {
     publishMode: PublishMode;
     streamId?: string;
     appId?: number;
@@ -12,7 +12,7 @@ declare interface Target {
     url?: string;
 }
 
-declare interface Encoding {
+export declare interface Encoding {
     videoWidth?: number;
     videoHeight?: number;
     videoBitrate?: number;
@@ -23,20 +23,20 @@ declare interface Encoding {
     audioChannels?: 1 | 2;
 }
 
-declare interface Mix {
+export declare interface Mix {
     backgroundColor?: number;
     backgroundImage?: string;
     audioMixUserList?: User[];
     videoLayoutList?: VideoLayout[];
 }
 
-declare interface User {
+export declare interface User {
     userId: string;
     roomId: number;
     strRoomId: string;
 }
 
-declare interface VideoLayout {
+export declare interface VideoLayout {
     fixedVideoUser: User;
     fixedVideoStreamType?: TRTCStreamType;
     fillMode?: 0 | 1 | 2;
@@ -47,18 +47,18 @@ declare interface VideoLayout {
     zOrder?: number;
 }
 
-declare enum TRTCStreamType {
+export declare enum TRTCStreamType {
     Main = 'main',
     Sub = 'sub'
 }
 
-declare enum PublishMode {
+export declare enum PublishMode {
     PublishMainStreamToCDN = 'PublishMainStreamToCDN',
     PublishSubStreamToCDN = 'PublishSubStreamToCDN',
     PublishMixStreamToCDN = 'PublishMixStreamToCDN'
 }
 
-declare class CDNStreaming {
+export declare class CDNStreaming {
     static TYPE: {
         PublishMode: {
             PublishMainStreamToCDN: PublishMode.PublishMainStreamToCDN;
@@ -72,6 +72,5 @@ declare class CDNStreaming {
     stop(options: CDNStreamingOptions): Promise<void>;
 }
 
-export { PublishMode, TRTCStreamType };
 export { CDNStreaming };
 export default CDNStreaming;
