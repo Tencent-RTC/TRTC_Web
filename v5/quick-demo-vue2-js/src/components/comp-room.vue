@@ -428,7 +428,7 @@ export default {
     "Please enter userId and roomId": "Please enter userId and roomId",
     "Please reacquire the invitation link": "Please reacquire the invitation link!"
 	},
-	"zh": {
+	"zh-cn": {
 		"Operation": "操作",
     "Enter Room": "进入房间",
     "Start Local Audio": "采集麦克风",

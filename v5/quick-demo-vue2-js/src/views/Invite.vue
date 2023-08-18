@@ -79,7 +79,7 @@ export default {
 	"en": {
 		"You've been invited to a video call": "You've been invited to a video call!"
 	},
-	"zh": {
+	"zh-cn": {
 		"You've been invited to a video call": "你被邀请参加视频通话！"
 	}
 }

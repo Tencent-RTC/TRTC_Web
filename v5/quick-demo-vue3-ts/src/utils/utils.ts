@@ -23,16 +23,10 @@ export function getUrlParam(key: string): string {
  * 获取语言
  * @returns language
  */
-export function getLanguage(): string {
-  let language = localStorage.getItem('trtc-quick-vue3-language') || getUrlParam('lang') || navigator.language || 'zh';
-  language = language.replace(/_/, '-').toLowerCase();
-
-  if (language === 'zh-cn' || language === 'zh') {
-    language = 'zh';
-  } else if (language === 'en' || language === 'en-us' || language === 'en-GB') {
-    language = 'en';
-  }
-  return language;
+export function getLanguage(localStorageLangId = 'trtc-v5-quick-demo-vue3-ts') {
+  let lang = getParamKey('lang') || localStorage.getItem(localStorageLangId) || window.navigator.language?.toLowerCase();
+  lang = lang.indexOf('zh') > -1 ? 'zh-cn' : 'en';
+  return lang;
 }
 
 export const getParamKey: any = (key: string) => {

@@ -24,12 +24,7 @@
 					<span v-if="isZhLang" class="collapse-title">步骤 2 : 创建新的应用</span>
 				</template>
         <ul v-if="isEnLang" class="collapse-content">
-					<li>Login <a target="_blank" href="https://console.cloud.tencent.com/trtc">TRTC Console</a>, choose Development Assistance > <a
-						target="_blank" href="https://console.cloud.tencent.com/trtc/quickstart">Demo Quick Run</a></li>
-					<li>Click New, enter a name for the application, such as TestTRTC.
-            If you have already created an application, click Existing.</li>
-					<li>Add or edit tags according to actual needs, click Create.</li>
-					<img src="@/assets/image/step1-en.png" alt="Create App" style="width: 400px"/>
+			Please visit the <a href="https://console.tencentcloud.com/trtc/app" target="_blank" rel="noopener noreferrer"> TRTC console </a> and create an RTC Engine application.
 				</ul>
 				<ul v-if="isZhLang" class="collapse-content">
 					<li>登录<a target="_blank" href="https://console.cloud.tencent.com/trtc">实时音视频控制台</a>，选择【开发辅助】 > 【<a
@@ -92,7 +87,7 @@ export default {
       return this.$i18n.locale === 'en';
     },
     isZhLang() {
-      return this.$i18n.locale === 'zh';
+      return this.$i18n.locale === 'zh-cn';
     },
   },
 };

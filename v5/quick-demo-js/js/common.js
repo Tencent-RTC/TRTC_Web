@@ -1,15 +1,12 @@
 /* eslint-disable*/
-
-function getLanguageKey () {
-	let lang = (navigator.language || navigator.userLanguage).toLowerCase();
-	if (lang.indexOf('zh') > -1) {
-		lang = 'zh-cn';
-	} else {
-		lang = 'en';
-	}
+const localStorageLangId = 'trtc-v5-quick-demo-js';
+function getLanguage(localStorageLangId = 'trtc-v5-quick-demo-js') {
+	let lang = getQueryString('lang') || localStorage.getItem(localStorageLangId) || window.navigator.language?.toLowerCase();
+	lang = lang.indexOf('zh') > -1 ? 'zh-cn' : 'en';
 	return lang;
 }
-window.lang_ = getLanguageKey();
+window.lang_ = getLanguage(localStorageLangId);
+changeLanguageTo(window.lang_);
 
 const VISIBLE = document.visibilityState === 'visible'
 
@@ -42,29 +39,30 @@ github.addEventListener('click', () => {
 	});
 })
 
-language.addEventListener('click', () => {
-	if (window.lang_ === 'zh-cn') {
-		const zhList = document.querySelectorAll('.zh-cn');
-		for (const item of zhList) {
-			item.style.display = 'none';
-		}
-		const enList = document.querySelectorAll('.en');
-		for (const item of enList) {
-			item.style.display = 'block';
-		}
-		window.lang_ = 'en'
-	} else if (window.lang_ === 'en') {
-		const zhList = document.querySelectorAll('.zh-cn');
-		for (const item of zhList) {
-			item.style.display = 'block';
-		}
-		const enList = document.querySelectorAll('.en');
-		for (const item of enList) {
-			item.style.display = 'none';
-		}
-		window.lang_ = 'zh-cn';
+language.addEventListener('click', handleChangeLanguageClick)
+
+function handleChangeLanguageClick() {
+	const currentLanguage = window.lang_;
+	const nextLanguage = currentLanguage === 'en' ? 'zh-cn' : 'en';
+	console.log(`language: ${currentLanguage} -> ${nextLanguage}`);
+
+	window.lang_ = nextLanguage;
+	localStorage.setItem(localStorageLangId, nextLanguage);
+	
+	changeLanguageTo(nextLanguage);
+}
+
+function changeLanguageTo(lang) {
+	const currentElementList = document.querySelectorAll('.zh-cn, .en');
+	for (const item of currentElementList) {
+		item.style.display = 'none';
 	}
-})
+	const nextElementList = document.querySelectorAll(`.${lang}`);
+	for (const item of nextElementList) {
+		item.style.display = 'block';
+	}
+	document.title = lang === 'en' ? 'Quick demo js | Tencent RTC' : 'Quick demo js | TRTC 实时音视频';
+}
 
 function addStreamView(remoteId) {
 	let remoteDiv = document.getElementById(remoteId);

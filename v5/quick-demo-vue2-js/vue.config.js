@@ -39,7 +39,7 @@ module.exports = {
 
   pluginOptions: {
     i18n: {
-      locale: 'zh',
+      locale: 'zh-cn',
       fallbackLocale: 'en',
       localeDir: 'locales',
       enableInSFC: true,
