@@ -263,6 +263,42 @@
 	    */
 	    readonly QOS_PREFERENCE_CLEAR: "clear";
 	};
+	declare interface AudioMixerOptions {
+	    id: string;
+	    url: string;
+	    loop?: boolean;
+	    volume?: number;
+	}
+	declare interface UpdateAudioMixerOptions {
+	    id: string;
+	    loop?: boolean;
+	    volume?: number;
+	    seekFrom?: number;
+	    operation?: 'pause' | 'resume' | 'stop';
+	}
+	declare interface StopAudioMixerOptions {
+	    id: string;
+	}
+	declare interface AIDenoiserOptions {
+	    assetsPath: string;
+	    sdkAppId: number;
+	    userId: string;
+	    userSig: string;
+	}
+	declare type PluginStartOptionsMap = {
+	    'AudioMixer': AudioMixerOptions;
+	    'AIDenoiser': AIDenoiserOptions;
+	    'CDNStreaming': CDNStreamingOptions;
+	};
+	declare type PluginUpdateOptionsMap = {
+	    'AudioMixer': UpdateAudioMixerOptions;
+	    'CDNStreaming': CDNStreamingOptions;
+	};
+	declare type PluginStopOptionsMap = {
+	    'AudioMixer': StopAudioMixerOptions;
+	    'AIDenoiser': undefined;
+	    'CDNStreaming': CDNStreamingOptions;
+	};
 
 	/**
 	 * **TRTC事件列表**<br>
@@ -892,41 +928,46 @@
 	     * @typedef {object|string} VideoProfile - 本地视频流配置
 	     *
 	     * 视频配置参数,可以用字符串预设值或者自定义分辨率等参数
-	    * | 视频 Profile | 分辨率（宽 x 高）| 帧率（fps）| 码率（kbps）| 备注 |
-	    * | :---       | :---           | :---      | :---      | :--- |
-	    * | 120p       | 160 x 120      | 15        | 200        ||
-	    * | 180p       | 320 x 180      | 15        | 350       ||
-	    * | 240p       | 320 x 240      | 15        | 400       ||
-	    * | 360p       | 640 x 360      | 15        | 800       ||
-	    * | 480p       | 640 x 480      | 15        | 900       ||
-	    * | 720p       | 1280 x 720     | 15        | 1500      ||
-	    * | 1080p      | 1920 x 1080    | 15        | 2000      ||
-	    * | 1440p      | 2560 x 1440    | 30        | 4860      ||
-	    * | 4K         | 3840 x 2160    | 30        | 9000      ||
+	     * | 视频 Profile | 分辨率（宽 x 高）| 帧率（fps）| 码率（kbps）| 备注 |
+	     * | :---       | :---           | :---      | :---      | :--- |
+	     * | 120p       | 160 x 120      | 15        | 200        ||
+	     * | 120p_2       | 160 x 120      | 15        | 100        | v5.1.1+ 支持 |
+	     * | 180p       | 320 x 180      | 15        | 350       ||
+	     * | 180p_2       | 320 x 180      | 15        | 150       | v5.1.1+ 支持 |
+	     * | 240p       | 320 x 240      | 15        | 400       ||
+	     * | 240p_2       | 320 x 240      | 15        | 200       | v5.1.1+ 支持 |
+	     * | 360p       | 640 x 360      | 15        | 800       ||
+	     * | 360p_2       | 640 x 360      | 15        | 400       | v5.1.1+ 支持 |
+	     * | 480p       | 640 x 480      | 15        | 900       ||
+	     * | 480p_2       | 640 x 480      | 15        | 500       | v5.1.1+ 支持 |
+	     * | 720p       | 1280 x 720     | 15        | 1500      ||
+	     * | 1080p      | 1920 x 1080    | 15        | 2000      ||
+	     * | 1440p      | 2560 x 1440    | 30        | 4860      ||
+	     * | 4K         | 3840 x 2160    | 30        | 9000      ||
 	     * @property {number} width - 视频宽度
 	     * @property {number} height - 视频高度
 	     * @property {number} frameRate - 视频帧率
 	     * @property {number} bitrate - 视频码率
-	    * @example
-	    * const config = {
-	    *  option: {
-	    *   profile: '480p',
-	    *  },
-	    * }
-	    * await trtc.startLocalVideo(config);
-	    * @example
-	    * const config = {
-	    *  option: {
-	    *    profile: {
-	    *      width: 640,
-	    *      height: 480,
-	    *      frameRate: 15,
-	    *      bitrate: 900,
-	    *    }
-	    *  }
-	    * }
-	    * await trtc.startLocalVideo(config);
-	    */
+	     * @example
+	     * const config = {
+	     *  option: {
+	     *   profile: '480p_2',
+	     *  },
+	     * }
+	     * await trtc.startLocalVideo(config);
+	     * @example
+	     * const config = {
+	     *  option: {
+	     *    profile: {
+	     *      width: 640,
+	     *      height: 480,
+	     *      frameRate: 15,
+	     *      bitrate: 500,
+	     *    }
+	     *  }
+	     * }
+	     * await trtc.startLocalVideo(config);
+	     */
 	    /**
 	    * 开启本地摄像头采集，在您指定的 HTMLElement 标签下播放摄像头画面，并将摄像头画面发布到当前所在房间中。
 	    * - 调用时机：进房前后均可调用，不可重复调用。
@@ -1206,33 +1247,47 @@
 	    /**
 	     * 开启插件
 	     *
-	     * 目前支持的插件：
-	     *
 	     * | pluginName | 插件名称 | 参考教程 | 参数类型 |
 	     * | --- | --- | --- | --- |
-	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [AudioMixerOptions](./global.html#AudioMixerOptions) |
-	     * | 'AIDenoiser' | 降噪插件 | {@tutorial 35-advanced-ai-denoiser} | [AIDenoiserOptions](./global.html#AIDenoiserOptions) |
-	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](./global.html#CDNStreamingOptions) |
+	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [AudioMixerOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#AudioMixerOptions) |
+	     * | 'AIDenoiser' | 降噪插件 | {@tutorial 35-advanced-ai-denoiser} | [AIDenoiserOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#AIDenoiserOptions) |
+	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#CDNStreamingOptions) |
 	     *
 	     * @param {PluginName} plugin
 	     * @param {AudioMixerOptions|AIDenoiserOptions|CDNStreamingOptions} options
-	     * @returns {Promise<any>}
+	     * @returns {Promise<void>}
 	     */
-	    startPlugin(plugin: 'AudioMixer' | 'AIDenoiser' | 'CDNStreaming', options: any): Promise<void>;
+	    startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
+	    startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
 	    /**
 	     * 更新插件
+	     *
+	     * | pluginName | 插件名称 | 参考教程 | 参数类型 |
+	     * | --- | --- | --- | --- |
+	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [UpdateAudioMixerOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#UpdateAudioMixerOptions) |
+	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#CDNStreamingOptions) |
+	     *
 	     * @param {PluginName} plugin
 	     * @param {UpdateAudioMixerOptions|CDNStreamingOptions} options
-	     * @returns {Promise<any>}
+	     * @returns {Promise<void>}
 	     */
-	    updatePlugin(plugin: 'AudioMixer' | 'CDNStreaming', options: any): Promise<void>;
+	    updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
+	    updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
 	    /**
 	     * 停止插件
+	     *
+	     * | pluginName | 插件名称 | 参考教程 | 参数类型 |
+	     * | --- | --- | --- | --- |
+	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [StopAudioMixerOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/global.html#StopAudioMixerOptions) |
+	     * | 'AIDenoiser' | 降噪插件 | {@tutorial 35-advanced-ai-denoiser} | |
+	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/global.html#CDNStreamingOptions) |
+	     *
 	     * @param {PluginName} plugin
-	     * @param {StopAudioMixerOptions|CDNStreamingOptions} options
-	     * @returns {Promise<any>}
+	     * @param {StopAudioMixerOptions|StopAIDenoiserOptions|CDNStreamingOptions} options
+	     * @returns {Promise<void>}
 	     */
-	    stopPlugin(plugin: 'AudioMixer' | 'AIDenoiser' | 'CDNStreaming', options: any): Promise<void>;
+	    stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
+	    stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
 	    /**
 	   * 开启或关闭音量大小回调<br>
 	   *
