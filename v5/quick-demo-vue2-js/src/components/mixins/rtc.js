@@ -3,7 +3,7 @@
  * @Date: 2022-03-14 17:15:23
  * @LastEditTime: 2022-03-23 17:47:14
  */
-import TRTC from 'trtc-sdk-v5';
+import TRTC from 'trtc-sdk-v5/trtc.js';
 
 export default {
   data() {

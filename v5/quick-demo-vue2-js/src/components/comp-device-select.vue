@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import TRTC from 'trtc-sdk-v5';
+import TRTC from 'trtc-sdk-v5/trtc.js';
 export default {
   name: 'compDeviceSelect',
   props: {
