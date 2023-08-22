@@ -127,7 +127,7 @@
 
 <script>
 import rtc from './mixins/rtc.js';
-import TRTC from 'trtc-sdk-v5';
+import TRTC from 'trtc-sdk-v5/trtc.js';
 import LibGenerateTestUserSig from '@/utils/lib-generate-test-usersig.min.js';
 
 export default {

@@ -5,7 +5,7 @@
  */
 import Vue from 'vue';
 import App from './App.vue';
-import TRTC from 'trtc-sdk-v5';
+import TRTC from 'trtc-sdk-v5/trtc.js';
 import '@/utils/aegis.js';
 
 import '@/assets/style/global.css';
