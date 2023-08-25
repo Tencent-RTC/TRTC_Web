@@ -115,6 +115,8 @@ async function leaveRoom() {
 			})
 			addFailedLog(`[${userId}] exitRoom failed.`);
 		}
+		stopLocalAudio();
+		stopLocalVideo();
 	}
 }
 
@@ -228,9 +230,9 @@ async function initDevice() {
 			}
 		} catch (error) {
 			if (window.lang_ === 'en') {
-				window.alert('If you do not allow the current page to access the microphone and camera permissions, you may fail when publishing a local stream.');
+				window.alert('If you do not allow the current page to access the microphone and camera permissions, you may fail when publishing a local audio/video.');
 			} else {
-				window.alert('如果不允许当前页面访问麦克风和摄像头权限，您在发布本地流的时候可能会失败。');
+				window.alert('如果不允许当前页面访问麦克风和摄像头权限，您在发布本地音视频流的时候可能会失败。');
 			}
 			enterBtn.disabled = true;
 		}
@@ -271,7 +273,7 @@ function handleEvent() {
 	trtc.on(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, ({ userId, streamType }) => {
 		const elementId = `${userId}_${streamType}`;
 		removeStreamView(elementId);
-		trtc.stopRemoteVideo({ userId, streamType: TRTC.TYPE.STREAM_TYPE_MAIN});
+		trtc.stopRemoteVideo({ userId, streamType });
 	});
 	trtc.on(TRTC.EVENT.SCREEN_SHARE_STOPPED, () => {
 		console.log('screen sharing was stopped');
