@@ -1,10 +1,10 @@
 <p align="center">
   <a href="https://cloud.tencent.com/document/product/647">
-    <img width="200" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtc-logo.png">
+    <img width="200" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtc.io-logo.png">
   </a>
 </p>
 
-<h1 align="center">TRTC Web SDK</h1>
+<h1 align="center" style="margin-top: -40px">TRTC Web SDK</h1>
 
 <div align="center">
 
@@ -14,7 +14,8 @@
 
 </div>
 
-简体中文 | [English](./README.md)
+<div align="center"> 简体中文 | <a href="https://github.com/LiteAVSDK/TRTC_Web/blob/main/v5/SDK/README.md" target="_blank"> English </a> </div>
+
 ## 简介
 
 [TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/index.html) 是腾讯云实时音视频通讯解决方案的 Web 端 SDK，它是通过 HTML 网页加载的 JavaScript 库。Web 开发者可以使用 TRTC Web SDK 提供的 API，在您的业务网站上实现实时音视频通话、直播等功能。

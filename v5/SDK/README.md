@@ -1,10 +1,10 @@
 <p align="center">
-  <a href="https://intl.cloud.tencent.com/products/trtc">
-    <img width="200" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtc-logo.png">
+  <a href="https://trtc.io/">
+    <img width="200" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtc.io-logo.png">
   </a>
 </p>
 
-<h1 align="center">TRTC Web SDK</h1>
+<h1 align="center" style="margin-top: -40px">TRTC Web SDK</h1>
 
 <div align="center">
 
@@ -14,13 +14,13 @@ An object-oriented WebRTC SDK library
 
 </div>
 
-English | [简体中文](https://github.com/LiteAVSDK/TRTC_Web/blob/main/v5/SDK/README-zh_CN.md)
+<div align="center"> English | <a href="https://github.com/LiteAVSDK/TRTC_Web/blob/main/v5/SDK/README-zh_CN.md" target="_blank"> 简体中文</a> </div>
 
 ## Introduction
 
 TRTC Web SDK is an object-oriented WebRTC SDK of Tencent Cloud's real-time communication solution. Web developers can use TRTC Web SDK to establish an audio/video calls or live streaming services on your website.
 
-- [Online Demo](https://trtc.tencentcloud.com/demo/homepage/#/home)
+- [Online Demo](https://trtc.io/demo/homepage/#/home)
 
 ## Environment Supports
 
