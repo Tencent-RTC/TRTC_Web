@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/cdn-streaming",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "description": "TRTC Web SDK 5.x CDN streaming plugin",
   "main": "./cdn-streaming.esm.js",
   "author": "longyuqi <longyuqi@tencent.com>",
