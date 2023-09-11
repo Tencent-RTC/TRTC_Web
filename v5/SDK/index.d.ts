@@ -336,7 +336,9 @@
 	     * @memberof module:EVENT
 	     * @example
 	     * trtc.on(TRTC.EVENT.AUTOPLAY_FAILED, event => {
-	     *   // 引导用户进行页面交互
+	     *   // 引导用户点击页面，当用户点击页面时，SDK 会自动恢复播放。
+	     *   // v5.1.3+
+	     *   console.log(event.userId);
 	     * });
 	     */
 	    readonly AUTOPLAY_FAILED: "autoplay-failed";
@@ -651,7 +653,9 @@
 	};
 	declare interface TRTCEventTypes {
 	    [TRTCEvent.ERROR]: [RtcError];
-	    [TRTCEvent.AUTOPLAY_FAILED]: [];
+	    [TRTCEvent.AUTOPLAY_FAILED]: [{
+	        userId: string;
+	    }];
 	    [TRTCEvent.KICKED_OUT]: [{
 	        reason: Exclude<BannedReason, 'user_time_out'>;
 	    }];
@@ -1239,7 +1243,8 @@
 	    *
 	    * - 不支持 iOS Safari
 	    * @param {string} userId - 远端用户 userId
-	    * @param {number} volume - 音量大小，取值范围为0 - 100
+	    * @param {number} volume - 音量大小，取值范围为0 - 100，默认值为 100。<br>
+	    * 自 `v5.1.3+` 版本支持设置 volume 大于100。需注意，设置超过 100 可能有爆音风险。
 	    * @example
 	    * await trtc.setRemoteAudioVolume('123', 90);
 	    * */
