@@ -12,32 +12,44 @@
         <el-button
           class="button"
           type="primary"
-          size="small" :disabled="isEntering || isEntered" @click="handleEnterRoom">{{ $t('Enter Room') }}</el-button>
+          size="small"
+          :loading="roomStatus === 'entering'"
+          :disabled="roomStatus === 'entered'"
+          @click="handleEnterRoom">{{ $t('Enter Room') }}</el-button>
         <el-button
           class="button"
-          type="primary" size="small" @click="handleExit">{{ $t('Exit Room') }}</el-button>
+          type="primary"
+          size="small"
+          :loading="roomStatus === 'exiting'"
+          @click="handleExit">{{ $t('Exit Room') }}</el-button>
       </div>
       <div class="rtc-control-container">
         <el-button
           v-if="isHostMode"
           class="button"
           type="primary"
+          :loading="micStatus === 'starting'"
+          :disabled="micStatus === 'started'"
           size="small" @click="handleStartLocalAudio">{{ $t('Start Local Audio') }}
         </el-button>
         <el-button
           v-if="isHostMode"
           class="button"
-          type="primary" size="small" @click="handleStopLocalAudio">{{ $t('Stop Local Audio') }}
-        </el-button>
-        <el-button
-          v-if="isHostMode"
-          class="button"
           type="primary"
+          :loading="camStatus === 'starting'"
+          :disabled="camStatus === 'started'"
           size="small" @click="handleStartLocalVideo">{{ $t('Start Local Video') }}
         </el-button>
         <el-button
           v-if="isHostMode"
           class="button"
+          :loading="micStatus === 'stopping'"
+          type="primary" size="small" @click="handleStopLocalAudio">{{ $t('Stop Local Audio') }}
+        </el-button>
+        <el-button
+          v-if="isHostMode"
+          class="button"
+          :loading="camStatus === 'stopping'"
           type="primary" size="small" @click="handleStopLocalVideo">{{ $t('Stop Local Video') }}
         </el-button>
       </div>
@@ -46,11 +58,15 @@
           class="button"
           type="primary"
           size="small"
-          :disabled="isShared"
+          :loading="shareStatus === 'sharing'"
+          :disabled="shareStatus === 'shared'"
           @click="handleStartScreenShare">{{ $t('Start Screen Share') }}</el-button>
         <el-button
           class="button"
-          type="primary" size="small" @click="handleStopScreenShare">{{ $t('Stop Screen Share') }}</el-button>
+          type="primary"
+          size="small"
+          :loading="shareStatus === 'stopping'"
+          @click="handleStopScreenShare">{{ $t('Stop Screen Share') }}</el-button>
       </div>
     </div>
 
@@ -88,11 +104,11 @@
       </div>
 
       <!-- 本地流区域 -->
-      <div v-show="isPlayingVideo" class="local-stream-container">
+      <div v-show="camStatus === 'started'" class="local-stream-container">
         <!-- 本地流播放区域 -->
         <div id="local" class="local-stream-content"></div>
         <!-- 本地流操作栏 -->
-        <div v-if="isPlayingVideo" class="local-stream-control">
+        <div class="local-stream-control">
           <div class="video-control control">
             <span v-if="!isMutedVideo" @click="muteVideo">
               <svg-icon icon-name="video" class="icon-class"></svg-icon>
@@ -127,7 +143,7 @@
 
 <script>
 import rtc from './mixins/rtc.js';
-import TRTC from 'trtc-sdk-v5/trtc.js';
+import TRTC from 'trtc-sdk-v5';
 import LibGenerateTestUserSig from '@/utils/lib-generate-test-usersig.min.js';
 
 export default {
@@ -161,7 +177,7 @@ export default {
       return this.$i18n.locale === 'en';
     },
     showInviteLink() {
-      return this.isHostMode && (this.isEntered || this.isShared) && this.inviteLink;
+      return this.isHostMode && this.roomStatus === 'entered' && this.inviteLink;
     },
   },
   watch: {
@@ -212,8 +228,8 @@ export default {
         this.userSig = this.inviteUserSig;
       }
       await this.enterRoom();
-      await this.handleStartLocalAudio();
-      await this.handleStartLocalVideo();
+      this.handleStartLocalAudio();
+      this.handleStartLocalVideo();
       this.generateInviteLink();
     },
 
@@ -226,25 +242,29 @@ export default {
         alert(this.$t('Please enter sdkAppId and secretKey'));
         return;
       }
+      this.shareStatus = 'sharing';
       try {
         await this.trtc.startScreenShare();
-        this.isShared = true;
+        this.shareStatus = 'shared';
         this.addSuccessLog('Start share screen success');
       } catch (error) {
+        this.shareStatus = 'stopped';
         this.addFailedLog(`Start share error: ${error.message}`);
       }
     },
 
     async handleStopScreenShare() {
-      if (!this.isShared) {
-        this.addFailedLog('Share is not started');
+      if (this.shareStatus !== 'shared') {
+        this.addFailedLog('The Share is not started');
         return;
       }
+      this.shareStatus = 'stopping';
       try {
         await this.trtc.stopScreenShare();
-        this.isShared = false;
+        this.shareStatus = 'stopped';
         this.addSuccessLog('Stop share screen success');
       } catch (error) {
+        this.shareStatus = 'shared';
         this.addFailedLog(`Stop share error: ${error.message}`);
       }
     },

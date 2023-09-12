@@ -16,8 +16,8 @@ const AEGIS_ID = {
 
 const aegis = new Aegis({
   id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
-  reportApiSpeed: true, // 接口测速
-  reportAssetSpeed: true, // 静态资源测速
+  reportApiSpeed: false, // 接口测速
+  reportAssetSpeed: false, // 静态资源测速
 });
 
 Vue.prototype.$aegis = aegis;

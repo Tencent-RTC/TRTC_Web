@@ -3,19 +3,20 @@
  * @Date: 2022-03-14 17:15:23
  * @LastEditTime: 2022-03-23 17:47:14
  */
-import TRTC from 'trtc-sdk-v5/trtc.js';
+import TRTC from 'trtc-sdk-v5';
 
 export default {
   data() {
     return {
       trtc: null,
       remoteUsersViews: [],
-      isEntering: false,
-      isEntered: false,
       isMutedVideo: false,
       isMutedAudio: false,
-      isPlayingVideo: false,
-      isShared: false,
+      // status
+      camStatus: 'stopped', // stopped, starting, started, stopping
+      micStatus: 'stopped',
+      roomStatus: 'exited', // exited, exiting, entering, entered
+      shareStatus: 'stopped' // stopping, stopped, sharing, shared
     };
   },
 
@@ -27,28 +28,23 @@ export default {
     },
 
     async enterRoom() {
-      if (this.isEntering || this.isEntered) {
-        return;
-      }
-      this.isEntering = true;
+      this.roomStatus = 'entering';
       this.initTRTC();
       try {
-        console.warn(this.trtc);
         await this.trtc.enterRoom({
           roomId: this.roomId,
           sdkAppId: parseInt(this.sdkAppId, 10),
           userId: this.userId,
           userSig: this.userSig,
         });
-        this.isEntering = false;
-        this.isEntered = true;
+        this.roomStatus = 'entered';
 
         this.installEventHandlers();
         this.startGetAudioLevel();
         this.reportSuccessEvent('enterRoom');
         this.addSuccessLog(`Enter room [${this.roomId}] success.`);
       } catch (error) {
-        this.isEntering = false;
+        this.roomStatus = 'exited';
         console.error('enterRoom room failed', error);
         this.addFailedLog(`Enter room ${this.roomId} failed, please check your params. Error: ${error.message}`);
         this.reportFailedEvent('enterRoom', error);
@@ -57,6 +53,7 @@ export default {
     },
 
     async handleStartLocalAudio() {
+      this.micStatus = 'starting';
       this.initTRTC();
       try {
         await this.trtc.startLocalAudio({
@@ -65,9 +62,11 @@ export default {
           },
         });
         this.isMutedAudio = false;
+        this.micStatus = 'started';
         this.addSuccessLog('Local audio started successfully');
         this.reportSuccessEvent('startLocalAudio');
       } catch (error) {
+        this.micStatus = 'stopped';
         this.addFailedLog(`Local audio is failed to started. Error: ${error.message}`);
         this.reportFailedEvent('startLocalAudio', error.message);
         throw error;
@@ -75,12 +74,19 @@ export default {
     },
 
     async handleStopLocalAudio() {
+      if (this.micStatus !== 'started') {
+        this.addFailedLog('The audio has not been started');
+        return;
+      }
+      this.micStatus = 'stopping';
       this.initTRTC();
       try {
         await this.trtc.stopLocalAudio();
+        this.micStatus = 'stopped';
         this.addSuccessLog('Local audio stopped successfully');
         this.reportSuccessEvent('stopLocalAudio');
       } catch (error) {
+        this.micStatus = 'started';
         this.addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
         this.reportFailedEvent('stopLocalAudio', error.message);
         throw error;
@@ -88,9 +94,9 @@ export default {
     },
 
     async handleStartLocalVideo() {
+      this.camStatus = 'starting';
       this.initTRTC();
       try {
-        console.warn('handleStartLocalVideo', this.cameraId);
         await this.trtc.startLocalVideo({
           view: 'local',
           option: {
@@ -98,11 +104,12 @@ export default {
             profile: '480p',
           },
         });
-        this.isPlayingVideo = true;
+        this.camStatus = 'started';
         this.isMutedVideo = false;
         this.addSuccessLog('Local video started successfully');
         this.reportSuccessEvent('startLocalVideo');
       } catch (error) {
+        this.camStatus = 'stopped';
         this.addFailedLog(`Local video is failed to started. Error: ${error.message}`);
         this.reportFailedEvent('startLocalVideo', error.message);
         throw error;
@@ -110,13 +117,19 @@ export default {
     },
 
     async handleStopLocalVideo() {
+      if (this.camStatus !== 'started') {
+        this.addFailedLog('The video has not been started');
+        return;
+      }
+      this.camStatus = 'stopping';
       this.initTRTC();
       try {
         await this.trtc.stopLocalVideo();
-        this.isPlayingVideo = false;
+        this.camStatus = 'stopped';
         this.addSuccessLog('Local audio stopped successfully');
         this.reportSuccessEvent('stopLocalVideo');
       } catch (error) {
+        this.camStatus = 'started';
         this.addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
         this.reportFailedEvent('stopLocalVideo', error.message);
         throw error;
@@ -124,30 +137,31 @@ export default {
     },
 
     async exitRoom() {
-      if (!this.isEntered || this.isExiting) {
+      if (this.roomStatus !== 'entered') {
+        this.addFailedLog('The room has not been entered');
         return;
       }
-      this.isExiting = true;
+      this.roomStatus = 'exiting';
       this.stopGetAudioLevel();
 
       try {
         await this.trtc.exitRoom();
-        this.isExiting = false;
-        this.isEntered = false;
+        this.roomStatus = 'exited';
+        this.remoteUsersViews = [];
         this.uninstallEventHandlers();
-        await this.trtc.stopLocalVideo();
-        this.isPlayingVideo = false;
-        await this.trtc.stopLocalAudio();
-        if (this.isShared) this.handleStopShare();
 
         this.addSuccessLog('Exit room success.');
         this.reportSuccessEvent('exitRoom');
       } catch (error) {
-        this.isExiting = false;
+        this.roomStatus = 'entered';
         this.addFailedLog(`Exit room failed. Error: ${error.message}`);
         this.reportFailedEvent('exitRoom', error);
         throw error;
       }
+
+      if (this.micStatus === 'started') this.handleStopLocalAudio();
+      if (this.camStatus === 'started') this.handleStopLocalVideo();
+      if (this.shareStatus === 'shared') this.handleStopShare();
     },
 
     async muteVideo() {
@@ -191,19 +205,19 @@ export default {
     },
 
     async switchDevice(type, deviceId) {
-      if (!this.isEntered) return;
       try {
-        if (type === 'video') {
+        if (type === 'video' && this.camStatus === 'started') {
           await this.trtc.updateLocalVideo({
             option: { cameraId: deviceId },
           });
+          this.addSuccessLog(`Switch ${type} device success.`);
         }
-        if (type === 'audio') {
+        if (type === 'audio' && this.micStatus === 'started') {
           await this.trtc.updateLocalAudio({
             option: { microphoneId: deviceId },
           });
+          this.addSuccessLog(`Switch ${type} device success.`);
         }
-        this.addSuccessLog(`Switch ${type} device success.`);
       } catch (error) {
         console.error('switchDevice failed', error);
         this.addFailedLog(`Switch ${type} device failed.`);
@@ -273,7 +287,6 @@ export default {
     },
 
     handleRemoteVideoAvailable(event) {
-      console.warn('handleRemoteVideoAvailable', event);
       const { userId, streamType } = event;
       try {
         this.addSuccessLog(`[${userId}] [${streamType}] video available`);
@@ -314,7 +327,7 @@ export default {
     },
 
     handleScreenShareStopped() {
-      this.isShared = false;
+      this.shareStatus = 'stopped';
       this.addSuccessLog('Stop share screen success');
     }
   },

@@ -13,8 +13,6 @@ const appStore = defineStore('app', {
     cameraList: [],
     microphoneList: [],
     logs: [],
-    isEntered: false,
-    isShared: false,
     remoteUsersViews: [],
     invitedRemoteUsers: [],
   }),
