@@ -11,9 +11,17 @@
   "device": "Device",
   "operation": "Operation",
   "permit": "Please enable your microphone and camera for current page.",
-  "paramsNeed": "Please enter the correct SDKAppId, secretKey, userId, roomId！",
+  "paramsNeed": "Please enter the correct SDKAppId, secretKey, userId, roomId!",
   "invite": "Copy the link to invite friends to join the video call, one link can invite only one person, the link will be updated automatically after copying.",
-  "inviteUrl": "You are invited to this video chat room！",
+  "inviteUrl": "You are invited to this video chat room!",
   "check": "Please reacquire the invitation link!",
-  "deviceHint": "PS: Please confirm that cameras and microphones are allowed on the current page before entering the room"
+  "deviceHint": "PS: Please confirm that cameras and microphones are allowed on the current page before entering the room",
+  "Enter Room": "Enter Room",
+  "Start Local Audio": "Start Local Audio",
+  "Stop Local Audio": "Stop Local Audio",
+  "Start Local Video": "Start Local Video",
+  "Stop Local Video": "Stop Local Video",
+  "Exit Room": "Exit Room",
+  "Start Screen Share": "Start Screen Share",
+  "Stop Screen Share": "Stop Screen Share"
 }

@@ -28,6 +28,10 @@ let microphones = [];
 let audio = true;
 let video = true;
 
+let isShared = false;
+let isCamOpened = false;
+let isMicOpened = false;
+
 TRTC.setLogLevel(1);
 
 // init device
@@ -70,8 +74,9 @@ function initParams() {
 	}
 }
 
-async function joinRoom() {
+async function enterRoom() {
 	initParams()
+	setButtonLoading('enter', true);
 	try {
 		const { userSig } = genTestUserSig({ sdkAppId, userId, secretKey });
 		await trtc.enterRoom({ roomId, sdkAppId, userId, userSig })
@@ -79,13 +84,15 @@ async function joinRoom() {
 		refreshLink()
 		invite.style.display = 'flex';
 		addSuccessLog(`[${userId}] enterRoom.`);
-		enterBtn.disabled = true;
+		setButtonLoading('enter', false);
+		setButtonDisabled('enter', true);
 
 		handleEvent();
 	} catch (error) {
 		console.log('enterRoom error', error);
+		setButtonLoading('enter', false);
 		reportFailedEvent({
-			name: 'enterRoom', // 必填
+			name: 'enterRoom',
 			sdkAppId,
 			roomId,
 			error
@@ -97,122 +104,170 @@ async function joinRoom() {
 	startLocalAudio();
 }
 
-async function leaveRoom() {
+async function exitRoom() {
 	invite.style.display = 'none';
+	setButtonLoading('exit', true);
 	if (trtc) {
 		try {
 			await trtc.exitRoom();
 			reportSuccessEvent('exitRoom', sdkAppId);
 			addSuccessLog(`[${userId}] exitRoom.`);
-			enterBtn.disabled = false;
+			setButtonLoading('exit', false);
+			setButtonDisabled('enter', false);
 			trtc.off('*');
 		} catch (error) {
 			reportFailedEvent({
-				name: 'exitRoom', // 必填
+				name: 'exitRoom',
 				sdkAppId,
 				roomId,
 				error,
 			})
+			setButtonLoading('exit', false);
 			addFailedLog(`[${userId}] exitRoom failed.`);
 		}
-		stopLocalAudio();
-		stopLocalVideo();
+		if (isMicOpened) stopLocalAudio();
+		if (isCamOpened) stopLocalVideo();
+		if (isShared) stopShare();
 	}
 }
 
 async function startLocalAudio() {
+	setButtonLoading('startLocalAudio', true);
 	if (trtc) {
 		try {
 			await trtc.startLocalAudio({ option: { microphoneId: microphoneSelect.value } });
+			audio = true;
+			isMicOpened = true;
+			setButtonLoading('startLocalAudio', false);
+			setButtonDisabled('startLocalAudio', true);
 			reportSuccessEvent('startLocalAudio', sdkAppId);
-			addSuccessLog(`[${userId}] startLocalAudio.`);
+			addSuccessLog(`${userId ? `[${userId}]` : ''} startLocalAudio.`);
 		} catch (error) {
 			reportFailedEvent({ name: 'startLocalAudio', sdkAppId, roomId, error })
-			addFailedLog(`[${userId}] startLocalAudio failed.`);
+			setButtonLoading('startLocalAudio', false);
+			addFailedLog(`${userId ? `[${userId}]` : ''} startLocalAudio failed.`);
 		}
 	}
 }
 
 async function startLocalVideo() {
+	setButtonLoading('startLocalVideo', true);
 	if (trtc) {
 		try {
 			await trtc.startLocalVideo({
-				view: document.getElementById('local'), // 在 DOM 中的 elementId 为 localVideo 的标签上预览视频。
+				view: document.getElementById('local'), // Preview the video on the element with the elementId "localVideo" in the DOM.
 				option: { cameraId: cameraSelect.value }
 			});
+			video = true;
+			isCamOpened = true;
+			setButtonLoading('startLocalVideo', false);
+			setButtonDisabled('startLocalVideo', true);
 			reportSuccessEvent('startLocalVideo', sdkAppId);
-			addSuccessLog(`[${userId}] startLocalVideo.`);
+			addSuccessLog(`${userId ? `[${userId}]` : ''} startLocalVideo.`);
 			addLocalControlView();
 		} catch (error) {
+			setButtonLoading('startLocalVideo', false);
 			reportFailedEvent({ name: 'startLocalVideo', sdkAppId, roomId, error })
-			addFailedLog(`[${userId}] startLocalAudio failed.`);
+			addFailedLog(`${userId ? `[${userId}]` : ''} startLocalVideo failed.`);
 		}
 	}
 }
 
 async function stopLocalAudio() {
+	if (!isMicOpened) {
+		addFailedLog('The audio has not been started');
+		return;
+	}
+	setButtonLoading('stopLocalAudio', true);
 	if (trtc) {
 		try {
 			await trtc.stopLocalAudio();
+			isMicOpened = false;
+			setButtonLoading('stopLocalAudio', false);
+			setButtonDisabled('startLocalAudio', false);
 			reportSuccessEvent('stopLocalAudio', sdkAppId)
-			addSuccessLog(`[${userId}] stopLocalAudio.`);
+			addSuccessLog(`${userId ? `[${userId}]` : ''} stopLocalAudio.`);
 		} catch (error) {
+			setButtonLoading('stopLocalAudio', false);
 			reportFailedEvent({ name: 'stopLocalAudio', sdkAppId, roomId, error })
-			addFailedLog(`[${userId}] startLocalAudio failed.`);
+			addFailedLog(`${userId ? `[${userId}]` : ''} startLocalAudio failed.`);
 		}
 	}
 }
 
 async function stopLocalVideo() {
+	if (!isCamOpened) {
+		addFailedLog('The video has not been started');
+		return;
+	}
+	setButtonLoading('stopLocalVideo', true);
 	if (trtc) {
 		try {
 			await trtc.stopLocalVideo();
+			isCamOpened = false;
+			setButtonLoading('stopLocalVideo', false);
+			setButtonDisabled('startLocalVideo', false);
 			reportSuccessEvent('stopLocalVideo', sdkAppId)
-			addSuccessLog(`[${userId}] stopLocalVideo.`);
+			addSuccessLog(`${userId ? `[${userId}]` : ''} stopLocalVideo.`);
 			const local = document.getElementById('local')
 			local.removeChild(local.children[0]);
 		} catch (error) {
+			setButtonLoading('stopLocalVideo', false);
 			reportFailedEvent({ name: 'stopLocalVideo', sdkAppId, roomId, error })
-			addFailedLog(`[${userId}] stopLocalVideo failed.`);
+			addFailedLog(`${userId ? `[${userId}]` : ''} stopLocalVideo failed.`);
 		}
 	}
 }
 
 
 async function startShare() {
+	setButtonLoading('startShare', true);
 	initParams()
 	try {
 		await trtc.startScreenShare();
+		isShared = true;
+		setButtonLoading('startShare', false);
+		setButtonDisabled('startShare', true);
 		reportSuccessEvent('startScreenShare', sdkAppId)
-		addSuccessLog(`[${userId}] startScreenShare.`);
+		addSuccessLog(`${userId ? `[${userId}]` : ''} startScreenShare.`);
 	} catch (error) {
 		console.log('startShare error', error);
+		setButtonLoading('startShare', false);
 		reportFailedEvent({
-			name: 'startScreenShare', // 必填
+			name: 'startScreenShare',
 			sdkAppId,
 			roomId,
 			error,
 			type: 'share'
 		})
-		addFailedLog(`[${userId}] startScreenShare failed.`);
+		addFailedLog(`${userId ? `[${userId}]` : ''} startScreenShare failed.`);
 	}
 }
 
 async function stopShare() {
+	if (!isShared) {
+		addFailedLog('The screen share has not been started');
+		return;
+	}
+	setButtonLoading('stopShare', true);
 	try {
 		await trtc.stopScreenShare();
+		isShared = false;
+		setButtonLoading('stopShare', false);
+		setButtonDisabled('startShare', false);
 		reportSuccessEvent('stopScreenShare', sdkAppId)
-		addSuccessLog(`[${userId}] stopScreenShare.`);
+		addSuccessLog(`${userId ? `[${userId}]` : ''} stopScreenShare.`);
 	} catch (error) {
 		console.log('stopShare error', error);
+		setButtonLoading('stopShare', false);
 		reportFailedEvent({
-			name: 'startScreenShare', // 必填
+			name: 'startScreenShare',
 			sdkAppId,
 			roomId,
 			error,
 			type: 'share'
 		})
-		addFailedLog(`[${userId}] stopScreenShare failed.`);
+		addFailedLog(`${userId ? `[${userId}]` : ''} stopScreenShare failed.`);
 	}
 }
 
@@ -254,7 +309,6 @@ async function initDevice() {
 			});
 		}
 		await updateDevice();
-		// 设备更新
 		navigator.mediaDevices.addEventListener('devicechange', async () => {
 			await updateDevice();
 		});
@@ -265,7 +319,7 @@ async function initDevice() {
 
 function handleEvent() {
 	trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
-		// 为了播放视频画面，您需在 DOM 中放置一个 HTMLElement，可以是一个 div 标签，假设其 id 为 `${userId}_${streamType}`
+		// In order to display the video, you need to place an HTMLElement in the DOM, which can be a div tag with an id of `${userId}_${streamType}`.
 		const elementId = `${userId}_${streamType}`;
 		addStreamView(elementId);
 		trtc.startRemoteVideo({ userId, streamType, view: elementId });
@@ -277,14 +331,15 @@ function handleEvent() {
 	});
 	trtc.on(TRTC.EVENT.SCREEN_SHARE_STOPPED, () => {
 		console.log('screen sharing was stopped');
+		isShared = false;
 	});
 
 }
 consoleBtn.addEventListener('click', () => {
 	window.vconsole = new VConsole();
 });
-enterBtn.addEventListener('click', joinRoom, false);
-exitBtn.addEventListener('click', leaveRoom, false);
+enterBtn.addEventListener('click', enterRoom, false);
+exitBtn.addEventListener('click', exitRoom, false);
 
 startLocalVideoBtn.addEventListener('click', startLocalVideo, false);
 startLocalAudioBtn.addEventListener('click', startLocalAudio, false);

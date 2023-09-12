@@ -15,5 +15,13 @@
   "invite": "复制链接邀请好友加入视频通话，一条链接仅可邀请一人，复制后自动更新链接。",
   "inviteUrl": "你被邀请参加视频通话！",
   "check": "请重新获取邀请链接！",
-  "deviceHint": "PS: 进房之前请确认当前页面允许使用摄像头和麦克风"
+  "deviceHint": "PS: 进房之前请确认当前页面允许使用摄像头和麦克风",
+  "Enter Room": "进入房间",
+  "Start Local Audio": "采集麦克风",
+  "Stop Local Audio": "终止采集麦克风",
+  "Start Local Video": "采集摄像头",
+  "Stop Local Video": "终止采集摄像头",
+  "Exit Room": "离开房间",
+  "Start Screen Share": "开始共享屏幕",
+  "Stop Screen Share": "停止共享屏幕"
 }
