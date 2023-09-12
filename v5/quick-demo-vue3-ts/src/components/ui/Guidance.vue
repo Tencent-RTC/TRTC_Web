@@ -44,16 +44,16 @@
             <li>Click the "Enter Room" button to enter the room</li>
             <li>Click the "Start Local Audio/Video" button to capture microphone or camera</li>
             <li>Click the "Stop Local Audio/Video" button to stop capturing microphone or camera</li>
-            <li>Click the "Start Share Screen" button to start screen sharing</li>
-            <li>Click the "Stop Share Screen" button to stop screen sharing</li>
+            <li>Click the "Start Screen Share" button to start screen sharing</li>
+            <li>Click the "Stop Screen Share" button to stop screen sharing</li>
           </ul>
           <ul v-if="isZhLang" class="collapse-content">
             <li>输入 userId 和 roomId</li>
-            <li>点击【Enter Room】按钮进入房间</li>
-            <li>点击【Start Local Audio/Video】按钮，可采集麦克风或摄像头</li>
-            <li>点击【Stop Local Audio/Video】按钮，可终止采集麦克风或摄像头</li>
-            <li>点击【Start Share Screen】按钮开始屏幕分享</li>
-            <li>点击【Stop Share Screen】按钮取消屏幕分享</li>
+            <li>点击【进入房间】按钮进入房间</li>
+            <li>点击【采集麦克风】/ 【采集摄像头】按钮，可采集麦克风或摄像头</li>
+            <li>点击【终止采集麦克风】/ 【终止采集摄像头】按钮，可终止采集麦克风或摄像头</li>
+            <li>点击【开始共享屏幕】按钮开始屏幕分享</li>
+            <li>点击【停止共享屏幕】按钮取消屏幕分享</li>
           </ul>
         </div>
       </el-collapse-item>

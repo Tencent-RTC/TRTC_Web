@@ -6,32 +6,32 @@
       <Device @switchDevice='switchDevice' />
       <h1 style='font-size: 14px;font-weight: 500'>{{ t('operation') }}</h1>
       <div class='btn-line'>
-        <el-button type='primary' @click='handleEnter'>
-          Enter Room
+        <el-button type='primary' :loading="roomStatus === 'entering'" :disabled="roomStatus === 'entered'" @click='handleEnter'>
+          {{ t('Enter Room') }}
         </el-button>
-        <el-button type='primary' @click='handleExit'>
-          Exit Room
-        </el-button>
-      </div>
-      <div class='btn-line'>
-        <el-button type='primary' @click='handleStartLocalAudio'>
-          Start Local Audio
-        </el-button>
-        <el-button type='primary' @click='handleStopLocalAudio'>
-          Stop Local Audio
-        </el-button>
-        <el-button type='primary' @click='handleStartLocalVideo'>
-          Start Local Video
-        </el-button>
-        <el-button type='primary' @click='handleStopLocalVideo'>
-          Stop Local Video
+        <el-button type='primary' :loading="roomStatus === 'exiting'" @click='handleExit'>
+          {{ t('Exit Room') }}
         </el-button>
       </div>
       <div class='btn-line'>
-        <el-button type='primary' @click='handleStartShare'>Start Share Screen</el-button>
-        <el-button type='primary' @click='handleStopShare'>Stop Share Screen</el-button>
+        <el-button type='primary' :loading="micStatus === 'starting'" :disabled="micStatus === 'started'" @click='handleStartLocalAudio'>
+          {{ t('Start Local Audio') }}
+        </el-button>
+        <el-button type='primary' :loading="camStatus === 'starting'" :disabled="camStatus === 'started'" @click='handleStartLocalVideo'>
+          {{ t('Start Local Video') }}
+        </el-button>
+        <el-button type='primary' :loading="micStatus === 'stopping'" @click='handleStopLocalAudio'>
+          {{ t('Stop Local Audio') }}
+        </el-button>
+        <el-button type='primary' :loading="camStatus === 'stopping'" @click='handleStopLocalVideo'>
+          {{ t('Stop Local Video') }}
+        </el-button>
       </div>
-      <div class='share-link' v-if='store.isEntered'>
+      <div class='btn-line'>
+        <el-button type='primary' :loading="shareStatus === 'sharing'" :disabled="shareStatus === 'shared'" @click='handleStartShare'>{{ t('Start Screen Share') }}</el-button>
+        <el-button type='primary' :loading="shareStatus === 'stopping'" @click='handleStopShare'>{{ t('Stop Screen Share') }}</el-button>
+      </div>
+      <div class='share-link' v-if='roomStatus === "entered"'>
         <div class='alert'>{{ t('invite') }}</div>
         <div class='invite'>
           <button class="invite-btn" @click='copy'>
@@ -41,7 +41,7 @@
         </div>
       </div>
       <div class='pusher'>
-        <div class='logs'>
+        <div class='logs' ref="log">
           <strong>Log:</strong>
           <template v-for='(item, index) in store.logs' :key='index'>
             <div class='log'>
@@ -54,7 +54,7 @@
             </div>
           </template>
         </div>
-        <div class='local' id='local' v-show="isStartedVideo">
+        <div class='local' id='local' v-show="camStatus === 'started'">
           <div class='tag'>
             <div :class="audioMuted ? 'muteAudio' : 'unmuteAudio'" @click='toggleAudio'></div>
             <div :class="videoMuted ? 'muteVideo' : 'unmuteVideo'" @click='toggleVideo'></div>
@@ -103,22 +103,33 @@ const trtc = TRTC.create();
 
 const audioMuted = ref(false);
 const videoMuted = ref(false);
-const isStartedVideo = ref(false);
+
+// status
+const roomStatus = ref('exited'); // exited, exiting, entering, entered
+const camStatus = ref('stopped'); // stopped, starting, started, stopping
+const micStatus = ref('stopped');
+const shareStatus = ref('stopped'); // stopping, stopped, sharing, shared
 
 const inviteLink = ref<string>();
 
-const addSuccessLog = (str: string) => {
+const log = ref(null);
+
+const addSuccessLog = async (str: string) => {
   store.logs.push({
     type: 'success',
     content: str,
   });
+  await nextTick();
+  log.value.scrollTop = log.value.scrollHeight;
 };
 
-const addFailedLog = (str: string) => {
+const addFailedLog = async (str: string) => {
   store.logs.push({
     type: 'failed',
     content: str,
   });
+  await nextTick();
+  log.value.scrollTop = log.value.scrollHeight;
 };
 
 const toggleAudio = async () => {
@@ -152,25 +163,30 @@ const toggleVideo = async () => {
 };
 
 async function handleStartShare() {
+  shareStatus.value = 'sharing';
   try {
     await trtc.startScreenShare();
-    store.isShared = true;
+    shareStatus.value = 'shared';
     addSuccessLog('Start share screen success');
   } catch (error: any) {
+    shareStatus.value = 'stopped';
     addFailedLog(`Start share error: ${error.message}`);
   }
 }
 
 async function handleStopShare() {
-  if (!store.isShared) {
+  if (shareStatus.value !== 'shared') {
     ElMessage({ message: 'stopScreenShare() - please start firstly', type: 'warning' });
+    addFailedLog('The Share is not started');
     return;
   }
+  shareStatus.value = 'stopping';
   try {
     await trtc.stopScreenShare();
-    store.isShared = false;
+    shareStatus.value = 'stopped';
     addSuccessLog('Stop share screen success');
   } catch (error: any) {
+    shareStatus.value = 'shared';
     addFailedLog(`Stop share error: ${error.message}`);
   }
 }
@@ -180,11 +196,7 @@ async function handleEnter() {
     ElMessage({ message: t('paramsNeed'), type: 'error' });
     return;
   }
-  if (store.isEntered) {
-    ElMessage({ message: 'duplicate enterRoom() observed', type: 'warning' });
-    return;
-  }
-
+  roomStatus.value = 'entering';
   try {
     await trtc.enterRoom({
       roomId: parseInt(store.roomId, 10),
@@ -192,7 +204,7 @@ async function handleEnter() {
       userId: store.userId,
       userSig: store.getUserSig(),
     });
-    store.isEntered = true;
+    roomStatus.value = 'entered';
 
     inviteLink.value = store.createShareLink();
 
@@ -204,12 +216,14 @@ async function handleEnter() {
     addSuccessLog(`[${store.userId}] enter room [${store.roomId}] success`);
     reportSuccessEvent('enterRoom');
   } catch (error: any) {
+    roomStatus.value = 'stopped';
     addFailedLog(`Enter room ${store.roomId} failed. Error: ${error.message}`);
     reportFailedEvent('enterRoom', error.message);
   }
 }
 
 async function handleStartLocalAudio() {
+  micStatus.value = 'starting';
   try {
     await trtc.startLocalAudio({
       option: {
@@ -217,26 +231,36 @@ async function handleStartLocalAudio() {
       },
     });
     audioMuted.value = false;
+    micStatus.value = 'started';
     addSuccessLog('Local audio started successfully');
     reportSuccessEvent('startLocalAudio');
   } catch (error: any) {
+    micStatus.value = 'stopped';
     addFailedLog(`Local audio is failed to started. Error: ${error.message}`);
     reportFailedEvent('startLocalAudio', error.message);
   }
 }
 
 async function handleStopLocalAudio() {
+  if (micStatus.value !== 'started') {
+    addFailedLog('The audio has not been started');
+    return;
+  }
+  micStatus.value = 'stopping';
   try {
     await trtc.stopLocalAudio();
+    micStatus.value = 'stopped';
     addSuccessLog('Local audio stopped successfully');
     reportSuccessEvent('stopLocalAudio');
   } catch (error: any) {
+    micStatus.value = 'started';
     addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
     reportFailedEvent('stopLocalAudio', error.message);
   }
 }
 
 async function handleStartLocalVideo() {
+    camStatus.value = 'starting';
   try {
     await trtc.startLocalVideo({
       view: 'local',
@@ -246,53 +270,61 @@ async function handleStartLocalVideo() {
       },
     });
     videoMuted.value = false;
-    isStartedVideo.value = true;
+    camStatus.value = 'started';
     addSuccessLog('Local audio stopped successfully');
     reportSuccessEvent('startLocalVideo');
   } catch (error: any) {
+    camStatus.value = 'stopped';
     addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
     reportFailedEvent('startLocalVideo', error.message);
   }
 }
 
 async function handleStopLocalVideo() {
+  if (camStatus.value !== 'started') {
+    addFailedLog('The audio has not been started');
+    return;
+  }
+  camStatus.value = 'stopping';
   try {
     await trtc.stopLocalVideo();
-    isStartedVideo.value = false;
+    camStatus.value = 'stopped';
     addSuccessLog('Local audio stopped successfully');
     reportSuccessEvent('stopLocalVideo');
   } catch (error: any) {
+    camStatus.value = 'started';
     addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
     reportFailedEvent('stopLocalVideo', error.message);
   }
 }
 
 async function handleExit() {
-  if (!store.isEntered) {
-    ElMessage({ message: 'exitRoom() - please enterRoom() firstly', type: 'warning' });
+  if (roomStatus.value !== 'entered') {
+    addFailedLog('The room has not been entered');
     return;
   }
+  roomStatus.value = 'exiting';
   try {
     uninstallEventHandlers();
     await trtc.exitRoom();
     await trtc.stopLocalVideo();
     await trtc.stopLocalAudio();
-    if (store.isShared) handleStopShare();
-    store.isEntered = false;
-    store.isAudioPublished = false;
-    store.isVideoPublished = false;
+    roomStatus.value = 'exited';
+    store.remoteUsersViews = [];
     addSuccessLog('Exit room success');
     reportSuccessEvent('exitRoom');
   } catch (error: any) {
+    roomStatus.value = 'entered';
     addFailedLog(`Exit room failed. Error: ${error.message}`);
     reportSuccessEvent('exitRoom');
   }
+
+  if (micStatus.value === 'started') handleStopLocalAudio();
+  if (camStatus.value === 'started') handleStopLocalVideo();
+  if (shareStatus.value === 'shared') handleStopShare();
 }
 
 async function switchDevice({ videoId, audioId }: { videoId: string, audioId: string }) {
-  if (!store.isEntered) {
-    return;
-  }
   if (videoId) {
     try {
       await trtc.updateLocalVideo({
@@ -397,7 +429,7 @@ function handleRemoteAudioAvailable(event: any) {
 }
 
 function handleScreenShareStopped() {
-  store.isShared = false;
+  shareStatus.value = 'stopped';
   addSuccessLog('Stop share screen success');
 }
 

@@ -81,6 +81,18 @@ function removeStreamView(remoteId) {
 	}
 }
 
+function setButtonDisabled(id, status) {
+	const button = document.getElementById(id);
+	button.disabled = status;
+}
+
+function setButtonLoading(id, status) {
+	const button = document.getElementById(id);
+	const loadingElement = button.getElementsByClassName('loading-icon')[0];
+	button.disabled = status;
+	loadingElement.style.display = status ? 'inline-block' : 'none';
+}
+
 function addSuccessLog(log) {
 	const logItem = document.createElement('div');
 
@@ -133,8 +145,8 @@ const AEGIS_ID = {
 const aegis = new Aegis({
 	id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
 	uin: '', // 用户唯一 ID（可选）
-	reportApiSpeed: true, // 接口测速
-	reportAssetSpeed: true // 静态资源测速
+	reportApiSpeed: false, // 接口测速
+	reportAssetSpeed: false // 静态资源测速
 })
 
 
