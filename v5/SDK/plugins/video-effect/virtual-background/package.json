@@ -1,15 +1,15 @@
 {
-  "name": "@rtc-plugin/cdn-streaming",
+  "name": "@rtc-plugin/virtual-background",
   "version": "5.2.0",
-  "description": "TRTC Web SDK 5.x CDN streaming plugin",
-  "main": "./cdn-streaming.esm.js",
+  "description": "TRTC Web SDK 5.x virtual background plugin",
+  "main": "./virtual-background.esm.js",
   "author": "longyuqi <longyuqi@tencent.com>",
-  "module": "./cdn-streaming.esm.js",
+  "module": "./virtual-background.esm.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
   },
-  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-26-advanced-publish-cdn-stream.html",
+  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-36-advanced-virtual-background.html",
   "keywords": [
     "webrtc",
     "TRTC",
@@ -24,8 +24,7 @@
     "microphone",
     "live streaming",
     "real-time communication",
-    "cdn",
-    "mix transcode"
+    "blur background"
   ],
-  "types": "./cdn-streaming.esm.d.ts"
+  "types": "./virtual-background.esm.d.ts"
 }
