@@ -28,6 +28,8 @@
 	    turnServer?: TurnServerOptions | TurnServerOptions[];
 	    iceTransportPolicy?: RTCIceTransportPolicy;
 	    webtransportProxy?: string;
+	    scheduleProxy?: string;
+	    unifiedProxy?: string;
 	}
 	declare interface EnterRoomConfig {
 	    sdkAppId: number;
@@ -289,17 +291,98 @@
 	    'AudioMixer': AudioMixerOptions;
 	    'AIDenoiser': AIDenoiserOptions;
 	    'CDNStreaming': CDNStreamingOptions;
+	    'VirtualBackground': VirtualBackgroundOptions;
 	};
 	declare type PluginUpdateOptionsMap = {
 	    'AudioMixer': UpdateAudioMixerOptions;
 	    'CDNStreaming': CDNStreamingOptions;
+	    'VirtualBackground': UpdateVirtualBackgroundOptions;
 	};
 	declare type PluginStopOptionsMap = {
 	    'AudioMixer': StopAudioMixerOptions;
 	    'AIDenoiser': undefined;
 	    'CDNStreaming': CDNStreamingOptions;
+	    'VirtualBackground': undefined;
 	};
+	declare interface TRTCStatistics {
+	    rtt: number;
+	    downLoss: number;
+	    upLoss: number;
+	    bytesSent: number;
+	    bytesReceived: number;
+	    localStatistics: LocalStatistic;
+	    remoteStatistics: RemoteStatistic[];
+	}
+	interface LocalStatistic {
+	    audio: {
+	        bitrate: number;
+	        audioLevel: number;
+	    };
+	    video: {
+	        width: number;
+	        height: number;
+	        frameRate: number;
+	        bitrate: number;
+	        videoType: TRTCVideoType;
+	    }[];
+	}
+	declare enum TRTCVideoType {
+	    Big = "big",
+	    Small = "small",
+	    Sub = "sub"
+	}
+	interface RemoteStatistic {
+	    audio: {
+	        bitrate: number;
+	        audioLevel: number;
+	    };
+	    video: {
+	        width: number;
+	        height: number;
+	        frameRate: number;
+	        bitrate: number;
+	        videoType: TRTCVideoType;
+	    }[];
+	    userId: string;
+	}
 
+	/**
+	   * @typedef TRTCStatistics TRTC 通话统计信息
+	   * @property {number} rtt 从 SDK 与 云端的往返延时（一个网络包经历 “SDK -> 云端 -> SDK” 的总耗时），单位 ms。
+	   * @property {number} upLoss 从 SDK 到云端的上行丢包率，单位 (%)
+	   * @property {number} downLoss 从云端到 SDK 的下行丢包率，单位 (%)
+	   * @property {number} bytesSent 总发送字节数（包含信令数据和音视频数据），单位：字节数（Bytes）。
+	   * @property {number} bytesReceived 总接收字节数（包含信令数据和音视频数据），单位：字节数（Bytes）。
+	   * @property {TRTCLocalStatistics} localStatistics 本地的音视频统计信息
+	   * @property {TRTCRemoteStatistics[]} remoteStatistics 远端的音视频统计信息
+	   */
+	/**
+	   * 本地的音视频统计信息
+	   * @typedef TRTCLocalStatistics
+	   * @property {TRTCAudioStatistic} audio 本地音频统计信息
+	   * @property {TRTCVideoStatistic[]} video 本地视频统计信息
+	   */
+	/**
+	   * 远端的音视频统计信息
+	   * @typedef TRTCRemoteStatistics
+	   * @property {string} userId 远端用户的 userId
+	   * @property {TRTCAudioStatistic} audio 远端音频统计信息
+	   * @property {TRTCVideoStatistic[]} video 远端视频统计信息
+	   */
+	/**
+	   * 音频统计信息
+	   * @typedef TRTCAudioStatistic
+	   * @property {number} bitrate 音频码率，单位：Kbps
+	   * @property {number} audioLevel 音量大小，0 ~ 1 的浮点数。
+	   */
+	/** 视频统计信息
+	   * @typedef TRTCVideoStatistic
+	   * @property {number} bitrate 视频码率，单位：Kbps
+	   * @property {number} width 视频宽度
+	   * @property {number} height 视频高度
+	   * @property {number} frameRate 视频帧率
+	   * @property {'big'|'small'|'sub'} videoType 视频类型，大流、小流、辅流。
+	   */
 	/**
 	 * **TRTC事件列表**<br>
 	 * <br>
@@ -337,7 +420,7 @@
 	     * @example
 	     * trtc.on(TRTC.EVENT.AUTOPLAY_FAILED, event => {
 	     *   // 引导用户点击页面，当用户点击页面时，SDK 会自动恢复播放。
-	     *   // v5.1.3+
+	     *   // 自 v5.1.3+ 新增 userId 参数，表示哪个用户出现自动播放失败。
 	     *   console.log(event.userId);
 	     * });
 	     */
@@ -650,6 +733,20 @@
 	     * })
 	     */
 	    readonly SEI_MESSAGE: "sei-message";
+	    /**
+	     * @description 通话相关数据指标。<br>
+	     *
+	     * - 监听该事件后，SDK 会以 2s 一次的频率定时抛出该事件。
+	     * - 您可以从该事件中可以获取通话的网络质量（rtt、丢包率）、上行和下行的音视频统计信息（音量大小、宽高、帧率、码率）等信息。详细参数说明请参考：{@link TRTCStatistics}
+	     * @default 'statistics'
+	     * @since v5.2.0
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.STATISTICS, statistics => {
+	     *    console.warn(statistics.rtt, statistics.upLoss, statistics.downLoss);
+	     * })
+	     */
+	    readonly STATISTICS: "statistics";
 	};
 	declare interface TRTCEventTypes {
 	    [TRTCEvent.ERROR]: [RtcError];
@@ -720,6 +817,7 @@
 	        data: Uint8Array;
 	        userId: string;
 	    }];
+	    [TRTCEvent.STATISTICS]: [statistics: TRTCStatistics];
 	}
  class TRTC extends EventEmitter<TRTCEventTypes> {
 	    /**
@@ -786,7 +884,7 @@
 	     * @param {boolean} [options.autoReceiveVideo=true] 是否自动接收视频。当远端用户发布视频后，SDK 自动拉流并解码远端视频，您需要调用 {@link TRTC#startRemoteVideo startRemoteVideo} 播放远端视频。
 	     * @param {boolean} [options.enableAutoPlayDialog] 是否开启 SDK 自动播放失败弹窗，默认：true。
 	     * - 默认开启，当出现自动播放失败时，SDK 会弹窗引导用户点击页面，来恢复音视频播放。
-	     * - 可设置为 false 关闭，建议接入侧参考 [自动播放受限处理建议](https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/tutorial-21-advanced-auto-play-policy.html) 来处理自动播放失败相关问题。
+	     * - 可设置为 false 关闭，建议接入侧参考{@tutorial 21-advanced-auto-play-policy}来处理自动播放失败相关问题。
 	     * @param {string=} options.userDefineRecordId 用于设置云端录制的 userDefineRecordId(选填）。
 	     * - 【推荐取值】限制长度为64字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符。
 	     * - 【参考文档】[云端录制](https://cloud.tencent.com/document/product/647/16823)。
@@ -869,10 +967,10 @@
 	    * - 一个 trtc 实例只能开启一路麦克风，若您需要在已经开启一路麦克风的情况下，再开启一路麦克风用于测试，可以创建多个 trtc 实例实现。
 	    *
 	    * @param {object} [config] - 配置项
-	    * @param {boolean} [config.publish] - 是否将本地音频发布到房间中，默认为true。若在进房前调用该接口，并且 publish = true，则在进房后 SDK 会自动发布。
+	    * @param {boolean} [config.publish] - 是否将本地音频发布到房间中，默认为true。若在进房前调用该接口，并且 publish = true，则在进房后 SDK 会自动发布。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
 	    * @param {object} [config.option] - 本地音频选项
 	    * @param {string} [config.option.microphoneId]- 指定使用哪个麦克风
-	    * @param {MediaStreamTrack} [config.option.audioTrack] - 自定义采集的 audioTrack。若同时设置 microphoneId，audioTrack，则按优先级（microphoneId>audioTrack）进行采集。
+	    * @param {MediaStreamTrack} [config.option.audioTrack] - 自定义采集的 audioTrack。{@tutorial 20-advanced-customized-capture-rendering}。
 	    * @param {number} [config.option.earMonitorVolume] - 设置耳返音量，取值[0, 100]，本地麦克风默认静音播放。
 	    * @param {string} [config.option.profile] - 音频编码配置, 默认{@link module:TYPE.AUDIO_PROFILE_STANDARD TRTC.TYPE.AUDIO_PROFILE_STANDARD}
 	    * @throws
@@ -901,11 +999,11 @@
 	    * - 调用时机：该接口需在 {@link TRTC#startLocalAudio startLocalAudio()} 成功后调用，可以多次调用。
 	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
 	    * @param {object} [config]
-	    * @param {boolean} [config.publish] - 是否将本地音频发布到房间中，默认为 true
-	    * @param {boolean} [config.mute] - 静音麦克风。参考：[开关麦克风、摄像头](./tutorial-15-basic-dynamic-add-video.html)。
+	    * @param {boolean} [config.publish] - 是否将本地音频发布到房间中，默认为 true。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
+	    * @param {boolean} [config.mute] - 静音麦克风。参考：{@tutorial 15-basic-dynamic-add-video}。
 	    * @param {object} [config.option] - 本地音频配置
 	    * @param {string} [config.option.microphoneId] - 指定使用哪个麦克风，用来切换麦克风。
-	    * @param {MediaStreamTrack} [config.option.audioSource] - 自定义采集的 audioTrack，具体参考自定义采集指引
+	    * @param {MediaStreamTrack} [config.option.audioTrack] - 自定义采集的 audioTrack。 {@tutorial 20-advanced-customized-capture-rendering}。
 	    * @throws
 	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
 	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
@@ -922,7 +1020,7 @@
 	    updateLocalAudio(config: UpdateLocalAudioConfig): Promise<void>;
 	    /**
 	    * 停止本地麦克风的采集及发布。
-	    * - 如果您只是想静音麦克风，请使用 updateLocalAudio({ mute: true })。参考：[开关麦克风、摄像头](./tutorial-15-basic-dynamic-add-video.html)。
+	    * - 如果您只是想静音麦克风，请使用 updateLocalAudio({ mute: true })。参考：{@tutorial 15-basic-dynamic-add-video}。
 	    * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
 	    * @example
 	    * await trtc.stopLocalAudio();
@@ -979,11 +1077,11 @@
 	    *
 	    * @param {object} [config]
 	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 本地视频预览的 HTMLElement 实例或者 Id， 如果不传或传入 null， 则不会播放视频。
-	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布（若 publish=true）。
+	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布（若 publish=true）。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
 	    * @param {object} [config.option] - 本地视频配置
 	    * @param {string} [config.option.cameraId] - 指定使用哪个摄像头，用于切换摄像头。
 	    * @param {boolean} [config.option.useFrontCamera] - 是否使用前置摄像头
-	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack。若同时设置 cameraId，useFrontCamera，videoTrack，则按优先级（cameraId>useFrontCamera>videoTrack）进行采集。
+	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack。{@tutorial 20-advanced-customized-capture-rendering}。
 	    * @param {boolean} [config.option.mirror] - 是否开启本地预览镜像，默认为 true。
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `cover`。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
 	    * @param {VideoProfile} [config.option.profile] - 视频大流编码参数。
@@ -1031,12 +1129,12 @@
 	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
 	    * @param {object} [config]
 	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 预览摄像头的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会推流消耗带宽的容器
-	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布。
-	    * @param {boolean} [config.mute] - 是否暂停摄像头采集，参考：[开关麦克风、摄像头](./tutorial-15-basic-dynamic-add-video.html)
+	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
+	    * @param {boolean} [config.mute] - 是否暂停摄像头采集，参考：{@tutorial 15-basic-dynamic-add-video}。
 	    * @param {object} [config.option] - 本地视频配置
 	    * @param {string} [config.option.cameraId] - 指定使用哪个摄像头，
 	    * @param {boolean} [config.option.useFrontCamera] - 是否使用前置摄像头
-	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack
+	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack，{@tutorial 20-advanced-customized-capture-rendering}。
 	    * @param {boolean} [config.option.mirror] - 是否开启镜像
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit| CSS object-fit} 属性
 	    * @param {VideoProfile} [config.option.profile] - 视频大流编码参数
@@ -1099,12 +1197,13 @@
 	    * - 开启屏幕分享后，房间内其他用户会收到 {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} 事件，streamType 为 {@link module:TYPE.STREAM_TYPE_SUB STREAM_TYPE_SUB}，其他用户可以通过 {@link TRTC#startRemoteVideo startRemoteVideo} 播放屏幕分享。
 	    * @param {object} [config]
 	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 预览本地屏幕分享的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染本地屏幕分享。
-	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布。
+	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
 	    * @param {object} [config.option] - 屏幕分享配置
 	    * @param {boolean} [config.option.systemAudio] - 是否采集系统声音，默认为 false。
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `contain`，参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
 	    * @param {ScreenShareProfile} [config.option.profile] - 屏幕分享编码配置。
 	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 （默认）清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
+	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack。{@tutorial 20-advanced-customized-capture-rendering}。
 	    * @throws
 	    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
 	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
@@ -1125,7 +1224,7 @@
 	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
 	    * @param {object} [config]
 	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 屏幕分享预览的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染屏幕分享。
-	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中
+	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
 	    * @param {object} [config.option] - 屏幕分享配置
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `contain`，参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
 	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 （默认）清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
@@ -1188,7 +1287,7 @@
 	    * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）
 	    * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: 辅流（远端用户的屏幕分享）
 	    * @param {object} [config.option] - 远端视频配置
-	    * @param {boolean} [config.option.small] - 是否拉小流，参考：[开启大小流](./tutorial-27-advanced-small-stream.html)
+	    * @param {boolean} [config.option.small] - 是否拉小流，参考：{@tutorial 27-advanced-small-stream}
 	    * @param {boolean} [config.option.mirror] - 是否开启镜像
 	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
 	    * @throws
@@ -1249,48 +1348,10 @@
 	    * await trtc.setRemoteAudioVolume('123', 90);
 	    * */
 	    setRemoteAudioVolume(userId: string, volume: number): void;
-	    /**
-	     * 开启插件
-	     *
-	     * | pluginName | 插件名称 | 参考教程 | 参数类型 |
-	     * | --- | --- | --- | --- |
-	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [AudioMixerOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#AudioMixerOptions) |
-	     * | 'AIDenoiser' | 降噪插件 | {@tutorial 35-advanced-ai-denoiser} | [AIDenoiserOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#AIDenoiserOptions) |
-	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#CDNStreamingOptions) |
-	     *
-	     * @param {PluginName} plugin
-	     * @param {AudioMixerOptions|AIDenoiserOptions|CDNStreamingOptions} options
-	     * @returns {Promise<void>}
-	     */
 	    startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
 	    startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
-	    /**
-	     * 更新插件
-	     *
-	     * | pluginName | 插件名称 | 参考教程 | 参数类型 |
-	     * | --- | --- | --- | --- |
-	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [UpdateAudioMixerOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#UpdateAudioMixerOptions) |
-	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/global.html#CDNStreamingOptions) |
-	     *
-	     * @param {PluginName} plugin
-	     * @param {UpdateAudioMixerOptions|CDNStreamingOptions} options
-	     * @returns {Promise<void>}
-	     */
 	    updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
 	    updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
-	    /**
-	     * 停止插件
-	     *
-	     * | pluginName | 插件名称 | 参考教程 | 参数类型 |
-	     * | --- | --- | --- | --- |
-	     * | 'AudioMixer' | 背景音乐插件 | {@tutorial 22-advanced-audio-mixer} | [StopAudioMixerOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/global.html#StopAudioMixerOptions) |
-	     * | 'AIDenoiser' | 降噪插件 | {@tutorial 35-advanced-ai-denoiser} | |
-	     * | 'CDNStreaming' | CDN混流插件 | {@tutorial 26-advanced-publish-cdn-stream} | [CDNStreamingOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/global.html#CDNStreamingOptions) |
-	     *
-	     * @param {PluginName} plugin
-	     * @param {StopAudioMixerOptions|StopAIDenoiserOptions|CDNStreamingOptions} options
-	     * @returns {Promise<void>}
-	     */
 	    stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
 	    stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
 	    /**
@@ -1405,6 +1466,7 @@
 	        readonly DEVICE_CHANGED: "device-changed";
 	        readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
 	        readonly SEI_MESSAGE: "sei-message";
+	        readonly STATISTICS: "statistics";
 	    };
 	    static ERROR_CODE: {
 	        INVALID_PARAMETER: number;
@@ -1447,7 +1509,7 @@
 	    /**
 	     * 检测 TRTC Web SDK 是否支持当前浏览器
 	     *
-	     * - 参考：[浏览器兼容情况](tutorial-05-info-browser.html)。
+	     * - 参考：{@tutorial 05-info-browser}。
 	     * @example
 	     * TRTC.isSupported().then((checkResult) => {
 	     *   if(!checkResult.result) {
