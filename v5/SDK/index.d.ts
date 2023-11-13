@@ -102,6 +102,9 @@
 	        audioTrack?: MediaStreamTrack;
 	        captureVolume?: number;
 	        earMonitorVolume?: number;
+	        echoCancellation?: boolean;
+	        autoGainControl?: boolean;
+	        noiseSuppression?: boolean;
 	    };
 	}
 	declare interface RemoteAudioConfig {
@@ -971,6 +974,7 @@
 	    * @param {object} [config.option] - 本地音频选项
 	    * @param {string} [config.option.microphoneId]- 指定使用哪个麦克风
 	    * @param {MediaStreamTrack} [config.option.audioTrack] - 自定义采集的 audioTrack。{@tutorial 20-advanced-customized-capture-rendering}。
+	    * @param {number} [config.option.captureVolume] - 设置采集音量，默认值 100，设置小于 100 可以降低采集音量，设置大于 100 可以放大采集音量，注意有爆音风险。自 v5.2.1+ 支持。
 	    * @param {number} [config.option.earMonitorVolume] - 设置耳返音量，取值[0, 100]，本地麦克风默认静音播放。
 	    * @param {string} [config.option.profile] - 音频编码配置, 默认{@link module:TYPE.AUDIO_PROFILE_STANDARD TRTC.TYPE.AUDIO_PROFILE_STANDARD}
 	    * @throws
@@ -1004,6 +1008,8 @@
 	    * @param {object} [config.option] - 本地音频配置
 	    * @param {string} [config.option.microphoneId] - 指定使用哪个麦克风，用来切换麦克风。
 	    * @param {MediaStreamTrack} [config.option.audioTrack] - 自定义采集的 audioTrack。 {@tutorial 20-advanced-customized-capture-rendering}。
+	    * @param {number} [config.option.captureVolume] - 设置采集音量，默认值 100，设置小于 100 可以降低采集音量，设置大于 100 可以放大采集音量，注意有爆音风险。自 v5.2.1+ 支持。
+	    * @param {number} [config.option.earMonitorVolume] - 设置耳返音量，取值[0, 100]，本地麦克风默认静音播放。
 	    * @throws
 	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
 	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
