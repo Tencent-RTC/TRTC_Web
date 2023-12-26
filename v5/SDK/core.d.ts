@@ -200,10 +200,20 @@
 
 
 
+  declare const enum NetworkQualityValue {
+    UNKNOWN,
+    EXCELLENT,
+    GOOD,
+    POOR,
+    BAD,
+    VERY_BAD,
+    DISCONNECTED
+  }
 
-
-
-
+  declare const enum RemoteStreamType {
+    Main = 'main',
+    Aux = 'auxiliary',
+  }
 
 	declare interface MixTranscodeConfig {
 	    /** Stream mixing mode */
