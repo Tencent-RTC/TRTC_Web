@@ -4,17 +4,19 @@
 	    plugins?: Array<{
 	        new (core: Core): IPlugin;
 	    }>;
+	    enableSEI?: boolean;
 	}
 	declare interface LocalVideoConfig {
 	    view?: string | HTMLElement | HTMLElement[] | null;
 	    publish?: boolean;
+	    mute?: boolean;
 	    option?: {
 	        cameraId?: string;
 	        useFrontCamera?: boolean;
 	        profile?: keyof typeof videoProfileMap | VideoProfile;
 	        fillMode?: 'contain' | 'cover' | 'fill';
 	        mirror?: boolean;
-	        small?: keyof typeof videoProfileMap | VideoProfile;
+	        small?: keyof typeof videoProfileMap | VideoProfile | boolean;
 	        qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
 	        videoTrack?: MediaStreamTrack;
 	    };
@@ -84,6 +86,7 @@
 	}
 	declare interface LocalAudioConfig {
 	    publish?: boolean;
+	    mute?: boolean;
 	    option?: {
 	        microphoneId?: string;
 	        profile?: keyof typeof audioProfileMap;
@@ -158,111 +161,114 @@
 	    error?: Error | DOMException | CoreError;
 	}
 	/**
-	 * **TRTC 常量**<br>
+	 * **TRTC Constants**<br>
 	 * @module TYPE
 	 * @example
-	 * // 使用方式：
+	 * // Usage:
 	 * TRTC.TYPE.SCENE_LIVE
 	 */
 	declare const TRTCType: {
 	    /**
-	     * 直播场景
-	     * @default 'live'
-	     * @memberof module:TYPE
-	     */
+	       * Live streaming scene
+	       * @default 'live'
+	       * @memberof module:TYPE
+	       */
 	    readonly SCENE_LIVE: Scene.LIVE;
 	    /**
-	     * 通话场景
-	     * @default 'rtc'
-	     * @memberof module:TYPE
-	    */
+	       * RTC scene
+	       * @default 'rtc'
+	       * @memberof module:TYPE
+	      */
 	    readonly SCENE_RTC: Scene.RTC;
 	    /**
-	     * 主播角色
-	     * @default 'anchor'
-	     * @memberof module:TYPE
-	     */
+	       * Anchor role
+	       * @default 'anchor'
+	       * @memberof module:TYPE
+	       */
 	    readonly ROLE_ANCHOR: UserRole.ANCHOR;
 	    /**
-	     * 观众角色
-	     * @default 'audience'
-	     * @memberof module:TYPE
-	     */
+	       * Audience role
+	       * @default 'audience'
+	       * @memberof module:TYPE
+	       */
 	    readonly ROLE_AUDIENCE: UserRole.AUDIENCE;
 	    /**
-	     * 主流
-	     *
-	     * - TRTC 有主路视频流（主流）和辅路视频流（辅流）
-	     * - 摄像头通过主流发布，屏幕分享通过辅流发布，一个房间内只能有一路辅流。
-	     * - 主路视频流包括：高清大画面和低清小画面两种，默认情况下，{@link TRTC#startRemoteVideo TRTC.startRemoteVideo} 播放的是高清大画面，可以通过 small 参数播放低清小画面，参考：[开启大小流功能](./tutorial-27-advanced-small-stream.html)。
-	     * @default 'main'
-	     * @memberof module:TYPE
-	     */
+	       * Main stream
+	       *
+	       * - TRTC has a main video stream (main stream) and an sub video stream (sub stream)
+	       * - The camera is published through the main stream, and the screen sharing is published through the sub stream.
+	       * - The main video stream includes: high-definition large picture and low-definition small picture. By default, {@link TRTC#startRemoteVideo TRTC.startRemoteVideo} plays the high-definition large picture, and the low-definition small picture can be played through the small parameter. Refer to: [Enable small stream function](./tutorial-27-advanced-small-stream.html).
+	       * @default 'main'
+	       * @memberof module:TYPE
+	       */
 	    readonly STREAM_TYPE_MAIN: TRTCStreamType.Main;
 	    /**
-	     * 辅流
-	     * @default 'sub'
-	     * @memberof module:TYPE
-	     */
+	       * Sub stream
+	       * @default 'sub'
+	       * @memberof module:TYPE
+	       */
 	    readonly STREAM_TYPE_SUB: TRTCStreamType.Sub;
 	    /**
-	     * 标准音质
-	    * | 音频 Profile | 采样率 | 声道 | 码率 (kbps) |
-	    * | :---        | :---  | :--- | :---       |
-	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | 单声道| 40         |
-	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
-	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
-	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	    * @default 'standard'
-	    * @memberof module:TYPE
-	    */
+	       * Standard audio quality
+	      * | Audio Profile | Sampling Rate | Channel | Bitrate (kbps) |
+	      * | :---        | :---  | :--- | :---       |
+	      * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | Mono| 40         |
+	      * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | Mono| 128        |
+	      * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | Stereo| 64        |
+	      * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | Stereo| 192        |
+	      * @default 'standard'
+	      * @memberof module:TYPE
+	      */
 	    readonly AUDIO_PROFILE_STANDARD: "standard";
 	    /**
-	     * 标准音质立体声
-	   * | 音频 Profile | 采样率 | 声道 | 码率 (kbps) |
-	    * | :---        | :---  | :--- | :---       |
-	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | 单声道| 40         |
-	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
-	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
-	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	    * @default 'standard-stereo'
-	    * @memberof module:TYPE
-	    */
+	       * Standard stereo audio quality
+	     * | Audio Profile | Sampling Rate | Channel | Bitrate (kbps) |
+	      * | :---        | :---  | :--- | :---       |
+	      * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | Mono| 40         |
+	      * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | Mono| 128        |
+	      * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | Stereo| 64        |
+	      * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | Stereo| 192        |
+	      * @default 'standard-stereo'
+	      * @memberof module:TYPE
+	      */
 	    readonly AUDIO_PROFILE_STANDARD_STEREO: "standard-stereo";
 	    /**
-	     * 高音质
-	     * | 音频 Profile | 采样率 | 声道 | 码率 (kbps) |
-	     * | :---        | :---  | :--- | :---       |
-	     * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | 单声道| 40         |
-	     * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
-	     * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
-	     * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	    * @default 'high'
-	    * @memberof module:TYPE
-	    */
+	       * High audio quality
+	       * | Audio Profile | Sampling Rate | Channel | Bitrate (kbps) |
+	       * | :---        | :---  | :--- | :---       |
+	       * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | Mono| 40         |
+	       * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | Mono| 128        |
+	       * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | Stereo| 64        |
+	       * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | Stereo| 192        |
+	      * @default 'high'
+	      * @memberof module:TYPE
+	      */
 	    readonly AUDIO_PROFILE_HIGH: "high";
 	    /**
-	     * 高音质立体声
-	     * | 音频 Profile | 采样率 | 声道 | 码率 (kbps) |
-	     * | :---        | :---  | :--- | :---       |
-	     * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | 单声道| 40         |
-	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | 单声道| 128        |
-	    * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | 双声道| 64        |
-	    * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | 双声道| 192        |
-	    * @default 'high-stereo'
-	    * @memberof module:TYPE
-	    */
+	       * High-quality stereo audio
+	       * | Audio Profile | Sampling Rate | Channel | Bitrate (kbps) |
+	       * | :---        | :---  | :--- | :---       |
+	       * | TRTC.TYPE.AUDIO_PROFILE_STANDARD    | 48000 | Mono| 40         |
+	       * | TRTC.TYPE.AUDIO_PROFILE_HIGH        | 48000 | Mono| 128        |
+	       * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | Stereo| 64        |
+	       * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | Stereo| 192        |
+	       * @default 'high-stereo'
+	  
+	      * @memberof module:TYPE
+	      */
 	    readonly AUDIO_PROFILE_HIGH_STEREO: "high-stereo";
 	    /**
-	     * 弱网时，视频编码策略以流畅度优先，即优先保帧率。
-	     * 摄像头默认流畅度优先，屏幕分享默认清晰度优先。
+	     * When the network is weak, the video encoding strategy takes 'smooth' first, i.e., the priority is to preserve frame rate.
+	     * <br>
+	     * Default 'smooth' first for camera, 'default' clear first for screen sharing
 	    * @default 'smooth'
 	    * @memberof module:TYPE
 	    */
 	    readonly QOS_PREFERENCE_SMOOTH: "smooth";
 	    /**
-	     * 弱网时，视频编码策略以清晰度优先，即优先保分辨率。
-	     * 摄像头默认流畅度优先，屏幕分享默认清晰度优先。
+	     * When the network is weak, the video encoding strategy takes 'clear' first, i.e., the priority is to preserve resolution.
+	     * <br>
+	     * Default 'smooth' first for camera, 'default' clear first for screen sharing
 	    * @default 'clear'
 	    * @memberof module:TYPE
 	    */
@@ -295,6 +301,7 @@
 	    'AIDenoiser': AIDenoiserOptions;
 	    'CDNStreaming': CDNStreamingOptions;
 	    'VirtualBackground': VirtualBackgroundOptions;
+	    'Watermark': WatermarkOptions;
 	};
 	declare type PluginUpdateOptionsMap = {
 	    'AudioMixer': UpdateAudioMixerOptions;
@@ -306,6 +313,7 @@
 	    'AIDenoiser': undefined;
 	    'CDNStreaming': CDNStreamingOptions;
 	    'VirtualBackground': undefined;
+	    'Watermark': undefined;
 	};
 	declare interface TRTCStatistics {
 	    rtt: number;
@@ -350,59 +358,59 @@
 	}
 
 	/**
-	   * @typedef TRTCStatistics TRTC 通话统计信息
-	   * @property {number} rtt 从 SDK 与 云端的往返延时（一个网络包经历 “SDK -> 云端 -> SDK” 的总耗时），单位 ms。
-	   * @property {number} upLoss 从 SDK 到云端的上行丢包率，单位 (%)
-	   * @property {number} downLoss 从云端到 SDK 的下行丢包率，单位 (%)
-	   * @property {number} bytesSent 总发送字节数（包含信令数据和音视频数据），单位：字节数（Bytes）。
-	   * @property {number} bytesReceived 总接收字节数（包含信令数据和音视频数据），单位：字节数（Bytes）。
-	   * @property {TRTCLocalStatistics} localStatistics 本地的音视频统计信息
-	   * @property {TRTCRemoteStatistics[]} remoteStatistics 远端的音视频统计信息
-	   */
+	 * @typedef TRTCStatistics TRTC statistics
+	 * @property {number} rtt The round-trip time from SDK to TRTC server(SDK -> TRTC server -> SDK). Unit: ms.
+	 * @property {number} upLoss Uplink loss rate from SDK to TRTC server. Unit: %
+	 * @property {number} downLoss Downlink loss rate from TRTC server to SDK. Unit: %
+	 * @property {number} bytesSent Total bytes sent, including signaling data and media data. Unit: bytes.
+	 * @property {number} bytesReceived Total bytes received, including signaling data and media data. Unit: bytes.
+	 * @property {TRTCLocalStatistics} localStatistics Local statistics.
+	 * @property {TRTCRemoteStatistics[]} remoteStatistics Remote statistics.
+	 */
 	/**
-	   * 本地的音视频统计信息
-	   * @typedef TRTCLocalStatistics
-	   * @property {TRTCAudioStatistic} audio 本地音频统计信息
-	   * @property {TRTCVideoStatistic[]} video 本地视频统计信息
-	   */
+	 * Local statistics
+	 * @typedef TRTCLocalStatistics
+	 * @property {TRTCAudioStatistic} audio Local audio statistics
+	 * @property {TRTCVideoStatistic[]} video Local video statistics
+	 */
 	/**
-	   * 远端的音视频统计信息
-	   * @typedef TRTCRemoteStatistics
-	   * @property {string} userId 远端用户的 userId
-	   * @property {TRTCAudioStatistic} audio 远端音频统计信息
-	   * @property {TRTCVideoStatistic[]} video 远端视频统计信息
-	   */
+	 * Remote statistics.
+	 * @typedef TRTCRemoteStatistics
+	 * @property {string} userId The userId of remote user
+	 * @property {TRTCAudioStatistic} audio Remote audio statistics
+	 * @property {TRTCVideoStatistic[]} video Remote video statistics
+	 */
 	/**
-	   * 音频统计信息
-	   * @typedef TRTCAudioStatistic
-	   * @property {number} bitrate 音频码率，单位：Kbps
-	   * @property {number} audioLevel 音量大小，0 ~ 1 的浮点数。
-	   */
-	/** 视频统计信息
-	   * @typedef TRTCVideoStatistic
-	   * @property {number} bitrate 视频码率，单位：Kbps
-	   * @property {number} width 视频宽度
-	   * @property {number} height 视频高度
-	   * @property {number} frameRate 视频帧率
-	   * @property {'big'|'small'|'sub'} videoType 视频类型，大流、小流、辅流。
-	   */
+	 * Audio statistics
+	 * @typedef TRTCAudioStatistic
+	 * @property {number} bitrate Audio bitrate. Unit: kbps
+	 * @property {number} audioLevel Audio level. Value: float from 0 to 1.
+	 */
+	/** Video statistics
+	 * @typedef TRTCVideoStatistic
+	 * @property {number} bitrate Video bitrate. Unit: kbps
+	 * @property {number} width Video width
+	 * @property {number} height Video height
+	 * @property {number} frameRate Video frameRate
+	 * @property {'big'|'small'|'sub'} videoType Video type: big, small, sub.
+	 */
 	/**
-	 * **TRTC事件列表**<br>
+	 * **TRTC Event List**<br>
 	 * <br>
-	 * 通过 {@link TRTC#on trtc.on(TRTC.EVENT.XXX)} 监听指定的事件。您可以通过这些事件实现管理房间用户列表，以及管理用户的流状态，感知网络状态等功能，下面是事件的详细介绍。
+	 * Listen to specific events through {@link TRTC#on trtc.on(TRTC.EVENT.XXX)}. You can use these events to manage the room user list, manage user stream state, and perceive network state. The following is a detailed introduction to the events.
 	 * > !
-	 * > - 事件需要在事件触发之前监听，这样才能收到相应的事件通知，因此建议在 trtc 进房前完成事件监听，这样才能确保不会漏掉事件通知。
+	 * > - Events need to be listened to before they are triggered, so that you can receive the corresponding event notifications. Therefore, it is recommended to complete event listening before entering the room, so as to ensure that no event notifications are missed.
 	 * @module EVENT
 	 * @example
-	 * // 使用方式：
+	 * // Usage:
 	 * trtc.on(TRTC.EVENT.ERROR, () => {});
 	 */
 	declare const TRTCEvent: {
 	    /**
-	     * 错误事件，非 API 调用错误，SDK 在运行过程中出现了不可恢复的错误时抛出。
+	     * Error event, non-API call error, SDK throws when an unrecoverable error occurs during operation.
 	     *
-	     * - 错误码(error.code)为：{@link module:ERROR_CODE.OPERATION_FAILED ErrorCode.OPERATION_FAILED}
-	     * - 可能的扩展错误码(error.extraCode)：5501, 5502
+	     * - Error code (error.code): {@link module:ERROR_CODE.OPERATION_FAILED ErrorCode.OPERATION_FAILED}
+	     * - Possible extended error codes (error.extraCode): 5501, 5502
 	     * @default 'error'
 	     * @memberof module:EVENT
 	     * @see {@link RtcError RtcError}
@@ -410,31 +418,31 @@
 	     * @example
 	     *
 	     * trtc.on(TRTC.EVENT.ERROR, error => {
-	     *   console.error('client error observed: ' + error);
+	     *   console.error('trtc error observed: ' + error);
 	     *   const errorCode = error.code;
 	     *   const extraCode = error.extraCode;
 	     * });
 	     */
 	    readonly ERROR: "error";
 	    /**
-	     * @description 自动播放失败，参考 [自动播放处理建议](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-21-advanced-auto-play-policy.html)
-	     * @default 'autoplay-failed'
-	     * @memberof module:EVENT
-	     * @example
-	     * trtc.on(TRTC.EVENT.AUTOPLAY_FAILED, event => {
-	     *   // 引导用户点击页面，当用户点击页面时，SDK 会自动恢复播放。
-	     *   // 自 v5.1.3+ 新增 userId 参数，表示哪个用户出现自动播放失败。
-	     *   console.log(event.userId);
-	     * });
-	     */
+	       * @description Automatic playback failed, refer to {@tutorial 21-advanced-auto-play-policy}
+	       * @default 'autoplay-failed'
+	       * @memberof module:EVENT
+	       * @example
+	       * trtc.on(TRTC.EVENT.AUTOPLAY_FAILED, event => {
+	       *   // Guide user to click the page, SDK will resume playback automatically when user click the page.
+	       *   // Since v5.1.3+, you can get userId on this event.
+	       *   console.log(event.userId);
+	       * });
+	       */
 	    readonly AUTOPLAY_FAILED: "autoplay-failed";
 	    /**
-	     * 被踢出房间，原因如下：<br/>
-	     * - kick: 相同 userId 的用户同时进入同一个房间（以下简称为同名进房），先进入房间的用户会被后进入的用户踢出房间。<br>
-	     *   - 同名进房是不允许的行为，可能会导致双方音视频通话异常，业务侧应避免出现这种情况。
-	     *   - TRTC 后台不保证观众角色同名进房互踢。即观众角色的用户，使用同 userId 进同一个房间，可能不会收到该事件。
-	     * - banned: 系统管理员通过{@link https://cloud.tencent.com/document/product/647/40496 服务端 API} 将该用户踢出房间。
-	     * - room-disband: 系统管理员通过{@link https://cloud.tencent.com/document/product/647/40496 服务端 API} 解散房间。
+	     * @description Kicked out of the room for some reason, including:<br>
+	     * - kick: The same user with same userId enters same room. The user who enters the room first will be kicked out of the room by the user who enters later.
+	     *   - Entering a room with the same userId is not allowed behavior, which may lead to abnormal audio/video calls between the two parties, and should be avoided on the business side.
+	     *   - Users with the same userId who enter the same room with the same audience role may not receive this event.
+	     * - banned: kicked out by the administrator using [Server API - RemoveUser](https://trtc.io/document/34267/34268).
+	     * - room_disband: kicked out by the administrator using [Server API - DismissRoom](https://trtc.io/document/34267/34269).
 	     * @default 'kicked-out'
 	     * @memberof module:EVENT
 	     * @example
@@ -445,9 +453,9 @@
 	     */
 	    readonly KICKED_OUT: "kicked-out";
 	    /**
-	     * 远端用户进房事件。
+	     * Remote user enters the room event.
 	     *
-	     * - `live` 模式下，只有主播才有进退房通知，观众没有进退房通知，观众可以收到主播的进退房通知。
+	     * - In `live` mode, only the anchor has the notification of entering and leaving the room, and the audience does not have the notification of entering and leaving the room. The audience can receive the notification of entering and leaving the room of the anchor.
 	     * @default 'remote-user-enter'
 	     * @memberof module:EVENT
 	     * @example
@@ -458,9 +466,9 @@
 	     */
 	    readonly REMOTE_USER_ENTER: "remote-user-enter";
 	    /**
-	     * 远端用户退房事件。
+	     * Remote user exits the room event.
 	     *
-	     * - `live` 模式下，只有主播才有进退房通知，观众没有进退房通知，观众可以收到主播的进退房通知。
+	     * - In `live` mode, only the anchor has the notification of entering and leaving the room, and the audience does not have the notification of entering and leaving the room. The audience can receive the notification of entering and leaving the room of the anchor.
 	     * @default 'remote-user-exit'
 	     * @memberof module:EVENT
 	     * @example
@@ -471,28 +479,28 @@
 	     */
 	    readonly REMOTE_USER_EXIT: "remote-user-exit";
 	    /**
-	     * 远端用户发布了音频。当远端用户打开麦克风后，您会收到该通知。参考：[开关摄像头、麦克风](./tutorial-15-basic-dynamic-add-video.html)
+	     * Remote user publishes audio. You will receive this notification when the remote user turns on the microphone. Refer to: [Turn on/off camera and microphone](./tutorial-15-basic-dynamic-add-video.html)
 	     *
-	     * - 默认情况下，SDK 会自动播放远端音频，您无需调用 API 来播放远端音频。可以监听该事件及 {@link module:EVENT.REMOTE_AUDIO_UNAVAILABLE REMOTE_AUDIO_UNAVAILABLE} 来更新“远端是否开启麦克风”的 UI icon。
-	     * - 需要注意的是：如果用户在进房前没有与页面产生过交互，自动播放音频可能会因为【浏览器的自动播放策略限制】而失败，您需参考[自动播放受限处理建议](./tutorial-21-advanced-auto-play-policy.html)进行处理。
-	     * - 若您不希望 SDK 自动播放音频，您可以在 {@link TRTC#enterRoom trtc.enterRoom()} 时设置 receiveMode = {@link module:TYPE.RECEIVE_MODE_MANUAL TRTC.TYPE.RECEIVE_MODE_MANUAL} 关闭自动播放音频。
-	     * - 监听 {@link module:EVENT.REMOTE_AUDIO_AVAILABLE TRTC.EVENT.REMOTE_AUDIO_AVAILABLE} 事件，记录有远端音频的 userId，在需要播放音频时，调用 {@link TRTC#muteRemoteAudio trtc.muteRemoteAudio(userId, false)} 方法。
+	     * - By default, the SDK automatically plays remote audio, and you do not need to call the API to play remote audio. You can listen for this event and {@link module:EVENT.REMOTE_AUDIO_UNAVAILABLE REMOTE_AUDIO_UNAVAILABLE} to update the UI icon for "whether the remote microphone is turned on".
+	     * - Note: If the user has not interacted with the page before entering the room, automatic audio playback may fail due to the [browser's automatic playback policy restrictions](./tutorial-21-advanced-auto-play-policy.html). You need to refer to the [suggestions for handling automatic playback restrictions](./tutorial-21-advanced-auto-play-policy.html) for processing.
+	     * - If you do not want the SDK to automatically play audio, you can set receiveMode = {@link module:TYPE.RECEIVE_MODE_MANUAL TRTC.TYPE.RECEIVE_MODE_MANUAL} to turn off automatic audio playback when {@link TRTC#enterRoom trtc.enterRoom()}.
+	     * - Listen for the {@link module:EVENT.REMOTE_AUDIO_AVAILABLE TRTC.EVENT.REMOTE_AUDIO_AVAILABLE} event, record the userId with remote audio, and call the {@link TRTC#muteRemoteAudio trtc.muteRemoteAudio(userId, false)} method when you need to play audio.
 	     * @default 'remote-audio-available'
 	     * @memberof module:EVENT
 	     * @example
-	     * // 在进房前监听
+	     * // Listen before entering the room
 	     * trtc.on(TRTC.EVENT.REMOTE_AUDIO_AVAILABLE, event => {
 	     *   const userId = event.userId;
 	     * });
 	     */
 	    readonly REMOTE_AUDIO_AVAILABLE: "remote-audio-available";
 	    /**
-	     * 远端停止发布了音频。当远端用户关闭麦克风后，您会收到该通知。
+	     * Remote user stops publishing audio. You will receive this notification when the remote user turns off the microphone.
 	     *
 	     * @default 'remote-audio-unavailable'
 	     * @memberof module:EVENT
 	     * @example
-	     * // 在进房前监听
+	     * // Listen before entering the room
 	     * trtc.on(TRTC.EVENT.REMOTE_AUDIO_UNAVAILABLE, event => {
 	     *   const userId = event.userId;
 	     *
@@ -500,15 +508,15 @@
 	     */
 	    readonly REMOTE_AUDIO_UNAVAILABLE: "remote-audio-unavailable";
 	    /**
-	     * 远端用户发布了视频，当远端用户开启摄像头后，您会收到该通知。参考：[开关摄像头、麦克风](./tutorial-15-basic-dynamic-add-video.html)
+	     * Remote user publishes video. You will receive this notification when the remote user turns on the camera. Refer to: [Turn on/off camera and microphone](./tutorial-15-basic-dynamic-add-video.html)
 	     *
-	     * - 可以监听该事件及 {@link module:EVENT.REMOTE_VIDEO_UNAVAILABLE REMOTE_VIDEO_UNAVAILABLE} 来更新“远端是否开启摄像头”的 UI icon。
+	     * - You can listen for this event and {@link module:EVENT.REMOTE_VIDEO_UNAVAILABLE REMOTE_VIDEO_UNAVAILABLE} to update the UI icon for "whether the remote camera is turned on".
 	     * @see {@link module:TYPE.STREAM_TYPE_MAIN STREAM_TYPE_MAIN}
 	     * @see {@link module:TYPE.STREAM_TYPE_SUB STREAM_TYPE_SUB}
 	     * @default 'remote-video-available'
 	     * @memberof module:EVENT
 	     * @example
-	     * // 在进房前监听
+	     * // Listen before entering the room
 	     * trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, event => {
 	     *   const userId = event.userId;
 	     *   const streamType = event.streamType;
@@ -517,32 +525,32 @@
 	     */
 	    readonly REMOTE_VIDEO_AVAILABLE: "remote-video-available";
 	    /**
-	     * 远端用户停止发布视频，当远端用户关闭摄像头后，您会收到该通知。
+	     * Remote user stops publishing video. You will receive this notification when the remote user turns off the camera.
 	     * @default 'remote-video-unavailable'
 	     * @memberof module:EVENT
 	     * @example
-	     * // 在进房前监听
+	     * // Listen before entering the room
 	     * trtc.on(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, event => {
 	     *   const userId = event.userId;
 	     *   const streamType = event.streamType;
-	     *   // 此时 SDK 会自动停止播放，无需调用 stopRemoteVideo。
+	     *   // At this point, the SDK will automatically stop playing, and there is no need to call stopRemoteVideo.
 	     * });
 	     */
 	    readonly REMOTE_VIDEO_UNAVAILABLE: "remote-video-unavailable";
 	    /**
-	     * @description 音量大小事件<br>
-	     * 调用 {@link Client#enableAudioVolumeEvaluation enableAudioVolumeEvaluation} 接口开启音量大小回调后，SDK 会定时抛出该事件，通知每个 userId 的音量大小。<br>
+	     * @description Volume event<br>
+	     * After calling the {@link TRTC#enableAudioVolumeEvaluation enableAudioVolumeEvaluation} interface to enable the volume callback, the SDK will throw this event regularly to notify the volume of each userId.<br>
 	     * **Note**
-	     * - 回调中包含本地麦克风音量及远端用户的音量，无论是否有人说话，都会触发该回调。
-	     * - 回调 event.result 会根据音量大小，按大到小进行排序。
-	     * - 当 userId 为空串时，代表本地麦克风音量。
-	     * - volume 取值为0-100的正整数
+	     * - The callback contains the volume of the local microphone and the volume of the remote user. The callback will be triggered regardless of whether anyone is speaking.
+	     * - The event.result will be sorted from large to small according to the volume size.
+	     * - When userId is an empty string, it represents the volume of the local microphone.
+	     * - volume is a positive integer with a value of 0-100.
 	     * @default 'audio-volume'
 	     * @memberof module:EVENT
 	     * @example
 	     * trtc.on(TRTC.EVENT.AUDIO_VOLUME, event => {
 	     *    event.result.forEach(({ userId, volume }) => {
-	     *        const isMe = userId === ''; // 当 userId 为空串时，代表本地麦克风音量。
+	     *        const isMe = userId === ''; // When userId is an empty string, it represents the volume of the local microphone.
 	     *        if (isMe) {
 	     *            console.log(`my volume: ${volume}`);
 	     *        } else {
@@ -551,30 +559,30 @@
 	     *    })
 	     * });
 	     *
-	     * // 开启音量回调，并设置每 1000ms 触发一次事件
+	     * // Enable volume callback and trigger the event every 1000ms
 	     * trtc.enableAudioVolumeEvaluation(1000);
 	     */
 	    readonly AUDIO_VOLUME: "audio-volume";
 	    /**
-	     * @description 网络质量统计数据事件，进房后开始统计，每两秒触发一次，该数据反映的是您本地的上、下行的网络质量。
-	     * - 上行网络质量（uplinkNetworkQuality）指的是您上传本地流的网络情况（SDK 到腾讯云的上行连接网络质量）
-	     * - 下行网络质量（downlinkNetworkQuality）指的是您下载所有流的平均网络情况（腾讯云到 SDK 的所有下行连接的平均网络质量）
+	     * @description Network quality statistics data event, which starts to be counted after entering the room and triggers every two seconds. This data reflects the network quality of your local uplink and downlink.
+	     * - The uplink network quality (uplinkNetworkQuality) refers to the network situation of uploading local streams (uplink connection network quality from SDK to Tencent Cloud)
+	     * - The downlink network quality (downlinkNetworkQuality) refers to the average network situation of downloading all streams (average network quality of all downlink connections from Tencent Cloud to SDK)
 	     *
-	     *    其枚举值及含义如下表所示：
-	     *    | 数值 | 含义 |
+	     *    The enumeration values and meanings are shown in the following table:
+	     *    | Value | Meaning |
 	     *    | :--- | :---- |
-	     *    | 0 | 网络状况未知，表示当前 client 实例还没有建立上行/下行连接 |
-	     *    | 1 | 网络状况极佳 |
-	     *    | 2 | 网络状况较好|
-	     *    | 3 | 网络状况一般 |
-	     *    | 4 | 网络状况差 |
-	     *    | 5 | 网络状况极差 |
-	     *    | 6 | 网络连接已断开<br/>注意：若下行网络质量为此值，则表示所有下行连接都断开了 |
-	     * - uplinkRTT，uplinkLoss 为上行 RTT(ms) 及上行丢包率。
-	     * - downlinkRTT，downlinkLoss 为所有下行连接的平均 RTT(ms) 及平均丢包率。
+	     *    | 0 | Network state is unknown, indicating that the current trtc instance has not established an uplink/downlink connection |
+	     *    | 1 | Network state is excellent |
+	     *    | 2 | Network state is good |
+	     *    | 3 | Network state is average |
+	     *    | 4 | Network state is poor |
+	     *    | 5 | Network state is very poor |
+	     *    | 6 | Network connection is disconnected<br/>Note: If the downlink network quality is this value, it means that all downlink connections have been disconnected |
+	     * - uplinkRTT, uplinkLoss are the uplink RTT (ms) and uplink packet loss rate.
+	     * - downlinkRTT, downlinkLoss are the average RTT (ms) and average packet loss rate of all downlink connections.
 	     *
 	     * **Note**
-	     * - 如果您想知道对方的上下行网络情况，需要把对方的网络质量情况通过 IM 广播出去。
+	     * - If you want to know the uplink and downlink network conditions of the other party, you need to broadcast the other party's network quality through IM.
 	     *
 	     * @default 'network-quality'
 	     * @memberof module:EVENT
@@ -587,52 +595,52 @@
 	     */
 	    readonly NETWORK_QUALITY: "network-quality";
 	    /**
-	     * @description SDK 和腾讯云的连接状态变更事件，您可以利用该事件从总体上监听 SDK 与腾讯云的连接状态。<br>
-	     * - 'DISCONNECTED'：连接断开
-	     * - 'CONNECTING'：正在连接中
-	     * - 'CONNECTED'：已连接
+	     * @description SDK and Tencent Cloud connection state change event, you can use this event to listen to the overall connection state of the SDK and Tencent Cloud.<br>
+	     * - 'DISCONNECTED': Connection disconnected
+	     * - 'CONNECTING': Connecting
+	     * - 'CONNECTED': Connected
 	     *
-	     * 不同状态变更的含义：
+	     * Meanings of different state changes:
 	     *
-	     * - DISCONNECTED -> CONNECTING: 正在尝试建立连接，调用进房接口或者 SDK 自动重连时触发。
-	     * - CONNECTING -> DISCONNECTED: 连接建立失败，当正在连接时调用退房接口中断连接或者经过 SDK 重试后任然连接失败时触发。
-	     * - CONNECTING -> CONNECTED: 连接建立成功，连接成功时触发。
-	     * - CONNECTED -> DISCONNECTED: 连接中断，调用退房接口或者当网络异常导致连接断开时触发。
+	     * - DISCONNECTED -> CONNECTING: Trying to establish a connection, triggered when calling the enter room interface or when the SDK automatically reconnects.
+	     * - CONNECTING -> DISCONNECTED: Connection establishment failed, triggered when calling the exit room interface to interrupt the connection or when the connection fails after SDK retries.
+	     * - CONNECTING -> CONNECTED: Connection established successfully, triggered when the connection is successful.
+	     * - CONNECTED -> DISCONNECTED: Connection interrupted, triggered when calling the exit room interface or when the connection is disconnected due to network anomalies.
 	     *
-	     * 处理建议：可以监听该事件，在不同状态显示不同的 UI，提醒用户当前的连接状态。
+	     * Suggestion: You can listen to this event and display different UIs in different states to remind users of the current connection state.
 	     *
 	     * @default 'connection-state-changed'
 	     * @memberof module:EVENT
 	     * @example
-	     * client.on(TRTC.CONNECTION_STATE_CHANGED, event => {
+	     * trtc.on(TRTC.CONNECTION_STATE_CHANGED, event => {
 	     *   const prevState = event.prevState;
 	     *   const curState = event.state;
 	     * });
 	     */
 	    readonly CONNECTION_STATE_CHANGED: "connection-state-changed";
 	    /**
-	     * @description 音频播放状态变更事件
+	     * @description Audio playback state change event
 	     *
-	     * event.userId 当 userId 为空串时，代表本地用户，非空串代表远端用户。
+	     * event.userId When userId is an empty string, it represents the local user, and when it is a non-empty string, it represents a remote user.
 	     *
-	     * event.state 取值如下：
-	     * - 'PLAYING'：开始播放
-	     *   - event.reason 为 'playing' 或者 'unmute'。
-	     * - 'PAUSED'：暂停播放
-	     *   - event.reason 为 'pause' 时，由 \<audio\> element 的 pause 事件触发，如下几种情况会触发：
-	     *      - 调用 HTMLMediaElement.pause 接口。
-	     *   - event.reason 为 'mute' 时。详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
-	     *      - 若 userId 为自己时 触发该事件，表明音频采集暂停，通常是设备异常引起，如设备被其他应用抢占，此时需引导用户重新采集。
-	     *      - 若 userId 为他人时 触发该事件，表明收到的音频数据不足以播放。通常是网络抖动引起，接入侧无需做任何处理。当收到的数据足以播放时，会自动恢复。
-	     * - 'STOPPED'：停止播放
-	     *   - event.reason 为 'ended'。
+	     * event.state The value is as follows:
+	     * - 'PLAYING': start playing
+	     *   - event.reason is 'playing' or 'unmute'.
+	     * - 'PAUSED': pause playback
+	     *   - When event.reason is 'pause', it is triggered by the pause event of the \<audio\> element. The following situations will trigger:
+	     *      - Call the HTMLMediaElement.pause interface.
+	     *   - When event.reason is 'mute'. See event {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     *      - When userId is oneself, this event is triggered, indicating that audio collection is paused, usually caused by device abnormalities, such as being preempted by other applications on the device, at this time, the user needs to be guided to recollect.
+	     *      - When userId is others, this event is triggered, indicating that the received audio data is not enough to play. Usually caused by network jitter, no processing is required on the access side. When the received data is sufficient to play, it will automatically resume.
+	     * - 'STOPPED': stop playing
+	     *   - event.reason is 'ended'.
 	     *
-	     * event.reason 状态变化的原因，取值如下：
-	     * - 'playing'：开始播放，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event | HTMLMediaElement.playing_event}
-	     * - 'mute'：音频轨道暂时未能提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
-	     * - 'unmute'：音频轨道恢复提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/unmute_event | MediaStreamTrack.unmute_event}
-	     * - 'ended'：音频轨道已被关闭
-	     * - 'pause'：播放暂停
+	     * event.reason The reason for the state change, the value is as follows:
+	     * - 'playing': start playing, see event {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event | HTMLMediaElement.playing_event}
+	     * - 'mute': The audio track cannot provide data temporarily, see event {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     * - 'unmute': The audio track resumes providing data, see event {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/unmute_event | MediaStreamTrack.unmute_event}
+	     * - 'ended': The audio track has been closed
+	     * - 'pause': Playback paused
 	     * @default 'audio-play-state-changed'
 	     * @memberof module:EVENT
 	     * @example
@@ -642,31 +650,31 @@
 	     */
 	    readonly AUDIO_PLAY_STATE_CHANGED: "audio-play-state-changed";
 	    /**
-	     * @description 视频播放状态变更事件
+	     * @description Video playback state change event
 	     *
-	     * event.userId 当 userId 为空串时，代表本地用户，非空串代表远端用户。
+	     * event.userId When userId is an empty string, it represents the local user, and when it is a non-empty string, it represents a remote user.
 	     *
-	     * event.streamType 流类型，取值：{@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN} {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}
+	     * event.streamType Stream type, value: {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN} {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}
 	     *
-	     * event.state 取值如下：
-	     * - 'PLAYING'：开始播放
-	     *   - event.reason 为 'playing' 或者 'unmute'。
-	     * - 'PAUSED'：暂停播放
-	     *   - event.reason 为 'pause' 时，由 \<video\> element 的 pause 事件触发，如下几种情况会触发：
-	     *      - 调用 HTMLMediaElement.pause 接口。
-	     *      - 在播放成功后，从 DOM 中移除了播放视频的 view 容器。
-	     *   - event.reason 为 'mute' 时。详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
-	     *      - 若 userId 为自己时 触发该事件，表明视频采集暂停，通常是设备异常引起，如设备被其他应用抢占，此时需引导用户重新采集。
-	     *      - 若 userId 为他人时 触发该事件，表明收到的视频数据不足以播放。通常是网络抖动引起，接入侧无需做任何处理。当收到的数据足以播放时，会自动恢复。
-	     * - 'STOPPED'：停止播放
-	     *   - event.reason 为 'ended'。
+	     * event.state The value is as follows:
+	     * - 'PLAYING': start playing
+	     *   - event.reason is 'playing' or 'unmute'.
+	     * - 'PAUSED': pause playback
+	     *   - When event.reason is 'pause', it is triggered by the pause event of the \<video\> element. The following situations will trigger:
+	     *      - Call the HTMLMediaElement.pause interface.
+	     *      - After successful playback, the view container for playing the video is removed from the DOM.
+	     *   - When event.reason is 'mute'. See event {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     *      - When userId is oneself, this event is triggered, indicating that video collection is paused, usually caused by device abnormalities, such as being preempted by other applications on the device, at this time, the user needs to be guided to recollect.
+	     *      - When userId is others, this event is triggered, indicating that the received video data is not enough to play. Usually caused by network jitter, no processing is required on the access side. When the received data is sufficient to play, it will automatically resume.
+	     * - 'STOPPED': stop playing
+	     *   - event.reason is 'ended'.
 	     *
-	     * event.reason 状态变化的原因，取值如下：
-	     * - 'playing'：开始播放，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event | HTMLMediaElement.playing_event}
-	     * - 'mute'：视频轨道暂时未能提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
-	     * - 'unmute'：视频轨道恢复提供数据，详见事件 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/unmute_event | MediaStreamTrack.unmute_event}
-	     * - 'ended'：视频轨道已被关闭
-	     * - 'pause'：播放暂停
+	     * event.reason The reason for the state change, the value is as follows:
+	     * - 'playing': start playing, see event {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playing_event | HTMLMediaElement.playing_event}
+	     * - 'mute': The video track cannot provide data temporarily, see event {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/mute_event | MediaStreamTrack.mute_event}
+	     * - 'unmute': The video track resumes providing data, see event {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/unmute_event | MediaStreamTrack.unmute_event}
+	     * - 'ended': The video track has been closed
+	     * - 'pause': Playback paused
 	     * @default 'video-play-state-changed'
 	     * @memberof module:EVENT
 	     * @example
@@ -676,8 +684,8 @@
 	     */
 	    readonly VIDEO_PLAY_STATE_CHANGED: "video-play-state-changed";
 	    /**
-	     * @description 本地屏幕分享停止事件通知，仅对本地屏幕分享流有效。
-	     * @default 'screen-sharing-stopped'
+	     * @description Notification event for local screen sharing stop, only valid for local screen sharing streams.
+	     * @default 'screen-share-stopped'
 	     * @memberof module:EVENT
 	     * @example
 	     * trtc.on(TRTC.EVENT.SCREEN_SHARE_STOPPED, () => {
@@ -686,16 +694,16 @@
 	     */
 	    readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
 	    /**
-	     * @description 摄像头、麦克风等设备变化的通知事件。
-	     * - event.device 是一个 [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo) 对象，属性：
-	     *    - deviceId：设备 Id
-	     *    - label：设备描述信息
-	     *    - groupId：设备 groupId
-	     * - event.type 值：`'camera'|'microphone'|'speaker'`
-	     * - event.action 值：
-	     *    - 'add' 设备已添加。
-	     *    - 'remove' 设备已被移除。
-	     *    - 'active' 设备已启动，例如：startLocalVideo 成功后，会触发该事件。
+	     * @description Notification event for device changes such as camera and microphone.
+	     * - event.device is a [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo) object with properties:
+	     *    - deviceId: device ID
+	     *    - label: device description information
+	     *    - groupId: device group ID
+	     * - event.type value: `'camera'|'microphone'|'speaker'`
+	     * - event.action value:
+	     *    - 'add' device has been added.
+	     *    - 'remove' device has been removed.
+	     *    - 'active' device has been activated, for example: after startLocalVideo is successful, this event will be triggered.
 	     * @default 'device-changed'
 	     * @memberof module:EVENT
 	     * @example
@@ -705,18 +713,18 @@
 	     */
 	    readonly DEVICE_CHANGED: "device-changed";
 	    /**
-	     * @description 推流状态变更事件。
-	     * - event.mediaType 媒体类型，值：`'audio'|'video'|'screen'`。
-	     * - event.state 当前的推流状态，值：
-	     *    - `'starting'` 正在尝试推流
-	     *    - `'started'` 推流成功
-	     *    - `'stopped'` 推流停止，原因见 event.reason 字段
-	     * - event.prevState 上一次事件触发时的推流状态，值和 event.state 相同。
-	     * - event.reason 推流状态变为 `'stopped'` 的原因，值：
-	     *    - `'timeout'` 推流超时，一般是由于网络抖动、防火墙拦截导致。SDK 会不断进行重试，业务侧可以在此时引导用户检查网络、更换网络。
-	     *    - `'error'` 推流出错，此时可从 event.error 中获取到具体错误信息，一般是由于浏览器不支持 H264 编码导致。
-	     *    - `'api-call'` 业务侧 api 调用导致推流停止，例如在 startLocalVideo 推流成功前，调用了 stopLocalVideo 停止了推流，属于正常行为，业务侧无需关注。
-	     * - event.error event.reason 为 `'error'` 时的错误信息。
+	     * @description Publish state change event.
+	     * - event.mediaType media type, value: `'audio'|'video'|'screen'`.
+	     * - event.state current publish state, value:
+	     *    - `'starting'` trying to publish stream
+	     *    - `'started'` publish stream succeeded
+	     *    - `'stopped'` publish stream stopped, see event.reason field for the reason
+	     * - event.prevState the publish state at the last event trigger, with the same type as event.state.
+	     * - event.reason the reason for the publish state to become `'stopped'`, value:
+	     *    - `'timeout'` publish stream timeout, usually caused by network jitter or firewall interception. The SDK will keep retrying, and the business side can guide the user to check the network or change the network at this time.
+	     *    - `'error'` publish stream error, at this time, you can get the specific error information from event.error, usually caused by the browser not supporting H264 encoding.
+	     *    - `'api-call'` publish stream stopped due to business side API call, for example, stopLocalVideo was called to stop the publish stream before startLocalVideo was successful, which is a normal behavior and the business side does not need to pay attention to it.
+	     * - event.error error information when event.reason is `'error'`.
 	     * @default 'publish-state-changed'
 	     * @memberof module:EVENT
 	     * @example
@@ -726,21 +734,10 @@
 	     */
 	    readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
 	    /**
-	     * @private
-	     * @description 收到 SEI message<br>
-	     * @default 'sei-message'
-	     * @memberof module:EVENT
-	     * @example
-	     * trtc.on(TRTC.EVENT.SEI_MESSAGE, event => {
-	     *    console.log(`收到 ${event.userId} 的 sei message: ${event.data}`)
-	     * })
-	     */
-	    readonly SEI_MESSAGE: "sei-message";
-	    /**
-	     * @description 通话相关数据指标。<br>
+	     * @description TRTC statistics.<br>
 	     *
-	     * - 监听该事件后，SDK 会以 2s 一次的频率定时抛出该事件。
-	     * - 您可以从该事件中可以获取通话的网络质量（rtt、丢包率）、上行和下行的音视频统计信息（音量大小、宽高、帧率、码率）等信息。详细参数说明请参考：{@link TRTCStatistics}
+	     * - SDK will fires this event once every 2s.
+	     * - You can get the network quality, statistics of audio and video from this event. For detailed parameter description, please refer to {@link TRTCStatistics}.
 	     * @default 'statistics'
 	     * @since v5.2.0
 	     * @memberof module:EVENT
@@ -750,6 +747,33 @@
 	     * })
 	     */
 	    readonly STATISTICS: "statistics";
+	    /**
+	     * @since v5.3.0
+	     * @description SEI message received<br>
+	     * @default 'sei-message'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.SEI_MESSAGE, event => {
+	     *    console.log(`received sei message from ${event.userId}, data: ${event.data}, streamType: ${event.streamType}`)
+	     * })
+	     */
+	    readonly SEI_MESSAGE: "sei-message";
+	    /**
+	     * @since v5.3.0
+	     * @description a new MediaStreamTrack object received.
+	     * @default 'track'
+	     * @memberof module:EVENT
+	     * @example
+	     * trtc.on(TRTC.EVENT.TRACK, event => {
+	     *   // userId === '' means event.track is a local track, otherwise it's a remote track
+	     *   const isLocal = event.userId === '';
+	     *   // Usually the sub stream is a screen-sharing video stream.
+	     *   const isSubStream = event.streamType === TRTC.TYPE.STREAM_TYPE_SUB;
+	     *   const mediaStreamTrack = event.track;
+	     *   const kind = event.track.kind; // audio or video
+	     * })
+	     */
+	    readonly TRACK: "track";
 	};
 	declare interface TRTCEventTypes {
 	    [TRTCEvent.ERROR]: [RtcError];
@@ -819,80 +843,79 @@
 	    [TRTCEvent.SEI_MESSAGE]: [{
 	        data: Uint8Array;
 	        userId: string;
+	        streamType: TRTCStreamType;
 	    }];
 	    [TRTCEvent.STATISTICS]: [statistics: TRTCStatistics];
+	    [TRTCEvent.TRACK]: [{
+	        userId: string;
+	        streamType?: TRTCStreamType;
+	        track: MediaStreamTrack;
+	    }];
 	}
  class TRTC extends EventEmitter<TRTCEventTypes> {
 	    /**
-	     * 创建一个 TRTC 对象，用于实现进房、预览、推流、拉流等功能。<br>
+	     * Create a TRTC object for implementing functions such as entering a room, previewing, pushing, and pulling streams.<br>
 	     *
-	     * **注意：**
-	     * - 您必须先创建 TRTC 对象，通过调用此对象方法和监听此对象事件才能实现业务所需要的各种功能。
+	     * **Note:**
+	     * - You must create a TRTC object first and call its methods and listen to its events to implement various functions required by the business.
 	     * @example
-	     * // 创建trtc对象
+	     * // Create a TRTC object
 	     * const trtc = TRTC.create();
 	     *
-	     * @returns {TRTC} trtc对象
+	     * @returns {TRTC} TRTC object
 	     */
 	    static create(options?: TRTCOptions): TRTC;
 	    /**
 	     * @typedef TurnServer
-	     * @property {string} url TURN 服务器 url
-	     * @property {string=} username TURN 服务器验证用户名
-	     * @property {string=} credential TURN 服务器验证密码
-	     * @property {string=} [credentialType=password] TURN 服务器验证密码类型
+	     * @property {string} url TURN server url
+	     * @property {string=} username TURN server auth user name
+	     * @property {string=} credential TURN server password
+	     * @property {string=} [credentialType=password] TURN server verify password type
 	     */
 	    /**
 	     * @typedef ProxyServer
-	     * @property {string} [websocketProxy] websocket 信令服务代理
-	     * @property {string} [loggerProxy] 日志上报服务代理
-	     * @property {TurnServer[]} [turnServer] 音视频数据传输代理
-	     * @property {'all'|'relay'} [iceTransportPolicy='all'] 'all' 优先直连 TRTC，连不通时尝试走 turn server。<br>
-	     * 'relay' 强制走 turn server。
+	     * @property {string} [websocketProxy] websocket service proxy
+	     * @property {string} [loggerProxy] log service agent
+	     * @property {TurnServer[]} [turnServer] media data transmission agent
+	     * @property {'all'|'relay'} [iceTransportPolicy='all'] 'all' gives priority to directly connecting to TRTC, and tries to go to the turn server if the connection fails.<br>
+	     * 'relay' forces the connection through the TURN server.
 	     */
 	    /**
-	     * 进入一个音视频通话房间（以下简称"进房"）。<br>
-	     * - 进房代表开始一个音视频通话会话，只有进房成功后才能和房间内的其他用户进行音视频通话。
-	     * - 可以通过 {@link TRTC#startLocalVideo startLocalVideo()} 和  {@link TRTC#startLocalAudio startLocalAudio()}发布本地音视频流，发布成功后，房间内其他用户会收到
-	     * {@link module:EVENT.REMOTE_AUDIO_AVAILABLE REMOTE_AUDIO_AVAILABLE} 和 {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} 事件通知。
-	     * - 默认情况下 SDK 会自动播放远端音频，您需要在调用 {@link TRTC#startRemoteVideo startRemoteVideo()} 来播放远端视频画面。
+	     * Enter a video call room.<br>
+	     * - Entering a room means starting a video call session. Only after entering the room successfully can you make audio and video calls with other users in the room.
+	     * - You can publish local audio and video streams through {@link TRTC#startLocalVideo startLocalVideo()} and {@link TRTC#startLocalAudio startLocalAudio()} respectively. After successful publishing, other users in the room will receive the {@link module:EVENT.REMOTE_AUDIO_AVAILABLE REMOTE_AUDIO_AVAILABLE} and {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} event notifications.
+	     * - By default, the SDK automatically plays remote audio. You need to call {@link TRTC#startRemoteVideo startRemoteVideo()} to play remote video.
 	     *
-	     * @param {object} options 进房参数
+	     * @param {object} options Enter room parameters
 	     * @param {number} options.sdkAppId sdkAppId <br>
-	     * 在 [实时音视频控制台](https://console.cloud.tencent.com/trtc) 单击 **应用管理** > **创建应用** 创建新应用之后，即可在 **应用信息** 中获取 sdkAppId 信息。
-	     * @param {string} options.userId 用户ID <br>
-	     * 建议限制长度为32字节，只允许包含大小写英文字母(a-zA-Z)、数字(0-9)及下划线和连词符。
-	     * @param {string} options.userSig userSig 签名 <br>
-	     * 计算 userSig 的方式请参考 [UserSig 相关](https://cloud.tencent.com/document/product/647/17275)。
+	     * You can obtain the sdkAppId information in the **Application Information** section after creating a new application by clicking **Application Management** > **Create Application** in the [TRTC Console](https://console.intl.cloud.tencent.com/trtc).
+	     * @param {string} options.userId User ID <br>
+	     * It is recommended to limit the length to 32 bytes, and only allow uppercase and lowercase English letters (a-zA-Z), numbers (0-9), underscores, and hyphens.
+	     * @param {string} options.userSig UserSig signature <br>
+	     * Please refer to [UserSig related](https://www.tencentcloud.com/document/product/647/35166) for the calculation method of userSig.
 	     * @param {number=} options.roomId
-	     * 数字类型的房间号，取值要求为 [1, 4294967294] 的整数;<br>
-	     * <font color="red">如果需要使用字符串类型的房间号请使用 strRoomId 参数，roomId 和 strRoomId 必须填一个。若两者都填，则优先选择 roomId。</font>
-	    * @param {string=} options.strRoomId
-	    * 字符串类型的房间号，限制长度为64字节，且仅支持以下范围的字符集：
-	     * - 大小写英文字母（a-zA-Z）
-	     * - 数字（0-9）
-	     * - 空格 ! # $ % & ( ) + - : ; < = . > ? @ [ ] ^ _ { } | ~ ,
-	      *
-	      * <font color="red">注意：建议采用数字类型的 roomId，字符串类型的房间号 "123" 与 数字类型的房间号 123 不互通。</font>
-	    * @param {string} [options.scene] 应用场景，目前支持以下两种场景：
-	      * - {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC}（默认）实时通话场景，该模式适合 1对1 的音视频通话，或者参会人数在 300 人以内的在线会议。[支持最大50人同时开麦](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-04-info-uplink-limits.html)。
-	      * - {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} 互动直播场景，该模式适合十万人以内的在线直播场景，但需要您在接下来介绍的 options 参数中指定 角色(role) 这个字段
-	     * @param {string=} [options.role] 用户角色，仅在 {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} 场景下有意义，{@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} 场景无需指定 role，目前支持两种角色：
-	     * - {@link module:TYPE.ROLE_ANCHOR TRTC.TYPE.ROLE_ANCHOR}（默认） 主播
-	     * - {@link module:TYPE.ROLE_AUDIENCE TRTC.TYPE.ROLE_AUDIENCE} 观众
-	     * <br>
-	     * 注意：观众角色没有发布本地音视频的权限，只有收看远端流的权限。如果观众想要连麦跟主播互动，
-	     * 请先通过 {@link TRTC#switchRole switchRole()} 切换角色到主播后再发布本地音视频。
-	     * @param {boolean} [options.autoReceiveAudio=true] 是否自动接收音频。当远端用户发布音频后，SDK 自动播放远端用户的音频。
-	     * @param {boolean} [options.autoReceiveVideo=true] 是否自动接收视频。当远端用户发布视频后，SDK 自动拉流并解码远端视频，您需要调用 {@link TRTC#startRemoteVideo startRemoteVideo} 播放远端视频。
-	     * @param {boolean} [options.enableAutoPlayDialog] 是否开启 SDK 自动播放失败弹窗，默认：true。
-	     * - 默认开启，当出现自动播放失败时，SDK 会弹窗引导用户点击页面，来恢复音视频播放。
-	     * - 可设置为 false 关闭，建议接入侧参考{@tutorial 21-advanced-auto-play-policy}来处理自动播放失败相关问题。
-	     * @param {string=} options.userDefineRecordId 用于设置云端录制的 userDefineRecordId(选填）。
-	     * - 【推荐取值】限制长度为64字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符。
-	     * - 【参考文档】[云端录制](https://cloud.tencent.com/document/product/647/16823)。
-	     * @param {string|ProxyServer} [options.proxy] 设置代理服务器。参考最佳实践：{@tutorial 34-advanced-proxy}。
-	     * @param {boolean} [options.privateMapKey] 进房钥匙，若需要权限控制请携带该参数（传空或传错会导致进房失败）。<br>[privateMapKey 权限设置](https://cloud.tencent.com/document/product/647/32240)
+	     * the value must be an integer between 1 and 4294967294<br>
+	     * <font color="red">If you need to use a string type room id, please use the strRoomId parameter. One of roomId and strRoomId must be passed in. If both are passed in, the roomId will be selected first.</font>
+	     * @param {string=} options.strRoomId
+	     * String type room id, the length is limited to 64 bytes, and only supports the following characters:
+	     * - Uppercase and lowercase English letters (a-zA-Z)
+	     * - Numbers (0-9)
+	     * - Space ! # $ % & ( ) + - : ; < = . > ? @ [ ] ^ _ { } | ~ ,
+	     * <font color="red">Note: It is recommended to use a numeric type roomId. The string type room id "123" is not the same room as the numeric type room id 123.</font>
+	     * @param {string} [options.scene] Application scene, currently supports the following two scenes:
+	     * - {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} (default) Real-time call scene, which is suitable for 1-to-1 audio and video calls, or online meetings with up to 300 participants. {@tutorial 04-info-uplink-limits}.
+	     * - {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} Interactive live streaming scene, which is suitable for online live streaming scenes with up to 100,000 people, but you need to specify the role field in the options parameter introduced next.
+	     * @param {string=} [options.role] User role, only meaningful in the {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} scene, and the {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} scene does not need to specify the role. Currently supports two roles:
+	     * - {@link module:TYPE.ROLE_ANCHOR TRTC.TYPE.ROLE_ANCHOR} (default) Anchor
+	     * - {@link module:TYPE.ROLE_AUDIENCE TRTC.TYPE.ROLE_AUDIENCE} Audience
+	     * Note: The audience role does not have the permission to publish local audio and video, only the permission to watch remote streams. If the audience wants to interact with the anchor by connecting to the microphone, please switch the role to the anchor through {@link TRTC#switchRole switchRole()} before publishing local audio and video.
+	     * @param {boolean} [options.autoReceiveAudio=true] Whether to automatically receive audio. When a remote user publishes audio, the SDK automatically plays the remote user's audio.
+	     * @param {boolean} [options.autoReceiveVideo=true] Whether to automatically receive video. When a remote user publishes video, the SDK automatically pulls and decodes the remote video. You need to call {@link TRTC#startLocalVideo startLocalVideo} to play the remote video.
+	     * @param {boolean} [options.enableAutoPlayDialog] Whether to enable the SDK's automatic playback failure dialog box, default: true.
+	     * - Enabled by default. When automatic playback fails, the SDK will pop up a dialog box to guide the user to click the page to restore audio and video playback.
+	     * - Can be set to false in order to turn off. Refer to {@tutorial 21-advanced-auto-play-policy}.
+	     * @param {string|ProxyServer} [options.proxy] proxy config. Refer to {@tutorial 34-advanced-proxy}.
+	     * @param {boolean} [options.privateMapKey] Key for entering a room. If permission control is required, please carry this parameter (empty or incorrect value will cause a failure in entering the room).<br>[privateMapKey permission configuration](https://www.tencentcloud.com/document/product/647/35157?lang=en&pg=).
 	     * @throws
 	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
 	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
@@ -905,9 +928,9 @@
 	     */
 	    enterRoom(params: EnterRoomConfig): Promise<void>;
 	    /**
-	     * 退出当前音视频通话房间。
-	     * - 退房后将会关闭和远端用户的连接，不再接收和播放远端用户音视频，并且停止本地音视频的发布。
-	     * - 本地摄像头和麦克风的采集和预览不会因此而停止。您可以调用 {@link TRTC#stopLocalVideo stopLocalVideo()} 和 {@link TRTC#stopLocalAudio stopLocalAudio()} 停止本地音视频采集。
+	     * Exit the current audio and video call room.
+	     * - After exiting the room, the connection with remote users will be closed, and remote audio and video will no longer be received and played, and the publishing of local audio and video will be stopped.
+	     * - The capture and preview of the local camera and microphone will not stop. You can call {@link TRTC#stopLocalVideo stopLocalVideo()} and {@link TRTC#stopLocalAudio stopLocalAudio()} to stop capturing local microphone and camera.
 	     * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
 	     * @memberof TRTC
 	     * @example
@@ -915,49 +938,57 @@
 	     */
 	    exitRoom(): Promise<void>;
 	    /**
-	   * 切换用户角色，仅在 TRTC.TYPE.SCENE_LIVE 互动直播模式下生效。
-	   *
-	   * 互动直播模式下，一个用户可能需要在“观众”和“主播”之间来回切换。
-	   * 您可以通过 {@link TRTC#enterRoom enterRoom()} 中的 role 字段确定角色，也可以通过 switchRole 在进房后切换角色。
-	   * - 观众切换为主播，调用 trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR) 将用户角色转换为 TRTC.TYPE.ROLE_ANCHOR 主播角色，之后按需调用 {@link TRTC#startLocalVideo startLocalVideo()} 和 {@link TRTC#startLocalAudio startLocalAudio()} 发布本地音视频。
-	   * - 主播切换为观众，调用 trtc.switchRole(TRTC.TYPE.ROLE_AUDIENCE) 将用户角色转换为 TRTC.TYPE.ROLE_AUDIENCE 观众角色，此时如果有已发布的本地音视频，SDK 会取消发布本地音视频。
-	   * > !
-	   * > - 该接口需要在进房成功后才可以调用。
-	   * > - 关闭摄像头和麦克风后，建议及时切换成观众角色，避免主播角色占用 50路上行的资源。
-	   * @param {string} role 用户角色
-	   * - TRTC.TYPE.ROLE_ANCHOR 主播，可以发布本地音视频，单个房间里最多支持 50 个主播同时发布本地音视频。
-	   * - TRTC.TYPE.ROLE_AUDIENCE 观众，不能发布本地音视频，只能观看远端流，单个房间里的观众人数没有上限。
-	   * @throws
-	   * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	   * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
-	   * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	   * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	   * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
-	   * @memberof TRTC
-	   * @example
-	   * // 进房成功后
-	   * // TRTC.TYPE.SCENE_LIVE 互动直播模式下，观众切换为主播
-	   * await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR);
-	   * // 观众角色切换为主播，开始推流
-	   * await trtc.startLocalVideo();
-	   *
-	   * // TRTC.TYPE.SCENE_LIVE 互动直播模式下，主播切换为观众
-	   * await trtc.switchRole(TRTC.TYPE.ROLE_AUDIENCE);
-	   */
-	    switchRole(role: UserRole): Promise<void>;
+	     * Switches the user role, only effective in TRTC.TYPE.SCENE_LIVE interactive live streaming mode.
+	     *
+	     * In interactive live streaming mode, a user may need to switch between "audience" and "anchor".
+	     * You can determine the role through the role field in {@link TRTC#enterRoom enterRoom()}, or switch roles after entering the room through switchRole.
+	     * - Audience switches to anchor, call trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR) to convert the user role to TRTC.TYPE.ROLE_ANCHOR anchor role, and then call {@link TRTC#startLocalVideo startLocalVideo()} and {@link TRTC#startLocalAudio startLocalAudio()} to publish local audio and video as needed.
+	     * - Anchor switches to audience, call trtc.switchRole(TRTC.TYPE.ROLE_AUDIENCE) to convert the user role to TRTC.TYPE.ROLE_AUDIENCE audience role. If there is already published local audio and video, the SDK will cancel the publishing of local audio and video.
+	     * > !
+	     * > - This interface can only be called after entering the room successfully.
+	     * > - After closing the camera and microphone, it is recommended to switch to the audience role in time to avoid the anchor role occupying the resources of 50 upstreams.
+	     * @param {string} role User role
+	     * - TRTC.TYPE.ROLE_ANCHOR anchor, can publish local audio and video, up to 50 anchors can publish local audio and video in a single room at the same time.
+	     * - TRTC.TYPE.ROLE_AUDIENCE audience, cannot publish local audio and video, can only watch remote streams, and there is no upper limit on the number of audience members in a single room.
+	     * @param {object} [option]
+	     * @param {string} [option.privateMapKey] `Since v5.3.0+` <br>
+	     * The privateMapKey may expire after a timeout, so you can use this parameter to update the privateMapKey.
+	     * @throws
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
+	     * @memberof TRTC
+	     * @example
+	     * // After entering the room successfully
+	     * // TRTC.TYPE.SCENE_LIVE interactive live streaming mode, audience switches to anchor
+	     * await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR);
+	     * // Switch from audience role to anchor role and start streaming
+	     * await trtc.startLocalVideo();
+	     *
+	     * // TRTC.TYPE.SCENE_LIVE interactive live streaming mode, anchor switches to audience
+	     * await trtc.switchRole(TRTC.TYPE.ROLE_AUDIENCE);
+	     * @example
+	     * // Since v5.3.0+
+	     * await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR, { privateMapKey: 'your new privateMapKey' });
+	     */
+	    switchRole(role: UserRole, option?: {
+	        privateMapKey: string;
+	    }): Promise<void>;
 	    /**
-	     * 销毁 TRTC 实例 <br/>
+	     * Destroy the TRTC instance <br/>
 	     *
-	     * 在退房之后，若业务侧无需再使用 trtc 时，需调用该接口及时销毁 trtc 实例，释放相关资源。
+	     * After exiting the room, if the business side no longer needs to use trtc, you need to call this interface to destroy the trtc instance in time and release related resources.
 	     *
-	     * 注意：
-	     *  - 销毁后的 trtc 实例不可再继续使用。
-	     *  - 已进房的情况下，需先调用 {@link TRTC#exitRoom TRTC.exitRoom} 接口退房成功后，才能调用该接口销毁 trtc。
+	     * Note:
+	     *  - The trtc instance after destruction cannot be used again.
+	     *  - If you have entered the room, you need to call the {@link TRTC#exitRoom TRTC.exitRoom} interface to exit the room successfully before calling this interface to destroy trtc.
 	     *
 	     * @example
-	     * // 通话结束时
+	     * // When the call is over
 	     * await trtc.exitRoom();
-	     * // 若后续无需再使用该 trtc，则销毁 trtc，并释放引用。
+	     * // If the trtc is no longer needed, destroy the trtc and release the reference.
 	     * trtc.destroy();
 	     * trtc = null;
 	     * @throws {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
@@ -965,101 +996,97 @@
 	     */
 	    destroy(): void;
 	    /**
-	    * 开启本地麦克风采集，并发布到当前的房间中。
-	    * - 调用时机：进房前后均可调用，不可重复调用。
-	    * - 一个 trtc 实例只能开启一路麦克风，若您需要在已经开启一路麦克风的情况下，再开启一路麦克风用于测试，可以创建多个 trtc 实例实现。
-	    *
-	    * @param {object} [config] - 配置项
-	    * @param {boolean} [config.publish] - 是否将本地音频发布到房间中，默认为true。若在进房前调用该接口，并且 publish = true，则在进房后 SDK 会自动发布。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
-	    * @param {object} [config.option] - 本地音频选项
-	    * @param {string} [config.option.microphoneId]- 指定使用哪个麦克风
-	    * @param {MediaStreamTrack} [config.option.audioTrack] - 自定义采集的 audioTrack。{@tutorial 20-advanced-customized-capture-rendering}。
-	    * @param {number} [config.option.captureVolume] - 设置采集音量，默认值 100，设置小于 100 可以降低采集音量，设置大于 100 可以放大采集音量，注意有爆音风险。自 v5.2.1+ 支持。
-	    * @param {number} [config.option.earMonitorVolume] - 设置耳返音量，取值[0, 100]，本地麦克风默认静音播放。
-	    * @param {string} [config.option.profile] - 音频编码配置, 默认{@link module:TYPE.AUDIO_PROFILE_STANDARD TRTC.TYPE.AUDIO_PROFILE_STANDARD}
-	    * @throws
-	    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
-	    * @example
-	    * // 采集默认麦克风并发布
-	    * await trtc.startLocalAudio();
-	    * @example
-	    * // 如下是测试麦克风音量的代码示例，可用于麦克风音量检测。
-	    * trtc.enableAudioVolumeEvaluation();
-	    * trtc.on(TRTC.EVENT.AUDIO_VOLUME, event => { });
-	    * // 测试麦克风无需发布音频
-	    * await trtc.startLocalAudio({ publish: false });
-	    * // 测试完毕后，关闭麦克风
-	    * await trtc.stopLocalAudio();
-	    * @memberof TRTC
-	    */
+	     * Start collecting audio from the local microphone and publish it to the current room.
+	     * - When to call: can be called before or after entering the room, cannot be called repeatedly.
+	     * - Only one microphone can be opened for a trtc instance. If you need to open another microphone for testing in the case of already opening one microphone, you can create multiple trtc instances to achieve it.
+	     *
+	     * @param {object} [config] - Configuration item
+	     * @param {boolean} [config.publish] - Whether to publish local audio to the room, default is true. If you call this interface before entering the room and publish = true, the SDK will automatically publish after entering the room. You can get the publish state by listening this event {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}.
+	     * @param {boolean} [config.mute] - Whether to mute microphone. Refer to: {@tutorial 15-basic-dynamic-add-video}.
+	     * @param {object} [config.option] - Local audio options
+	     * @param {string} [config.option.microphoneId]- Specify which microphone to use
+	     * @param {MediaStreamTrack} [config.option.audioTrack] - Custom audioTrack. {@tutorial 20-advanced-customized-capture-rendering}.
+	     * @param {number} [config.option.captureVolume] - Set the capture volume of microphone. The default value is 100. Setting above 100 enlarges the capture volume. Since v5.2.1+.
+	     * @param {number} [config.option.earMonitorVolume] - Set the ear return volume, value range [0, 100], the local microphone is muted by default.
+	     * @param {string} [config.option.profile] - Audio encoding configuration, default {@link module:TYPE.AUDIO_PROFILE_STANDARD TRTC.TYPE.AUDIO_PROFILE_STANDARD}
+	     * @throws
+	     * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
+	     * @example
+	     * // Collect the default microphone and publish
+	     * await trtc.startLocalAudio();
+	     * @example
+	     * // The following is a code example for testing microphone volume, which can be used for microphone volume detection.
+	     * trtc.enableAudioVolumeEvaluation();
+	     * trtc.on(TRTC.EVENT.AUDIO_VOLUME, event => { });
+	     * // No need to publish audio for testing microphone
+	     * await trtc.startLocalAudio({ publish: false });
+	     * // After the test is completed, turn off the microphone
+	     * await trtc.stopLocalAudio();
+	     * @memberof TRTC
+	     */
 	    startLocalAudio(config?: LocalAudioConfig): Promise<void>;
 	    /**
-	    * 更新本地麦克风配置。
-	    * - 调用时机：该接口需在 {@link TRTC#startLocalAudio startLocalAudio()} 成功后调用，可以多次调用。
-	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
-	    * @param {object} [config]
-	    * @param {boolean} [config.publish] - 是否将本地音频发布到房间中，默认为 true。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
-	    * @param {boolean} [config.mute] - 静音麦克风。参考：{@tutorial 15-basic-dynamic-add-video}。
-	    * @param {object} [config.option] - 本地音频配置
-	    * @param {string} [config.option.microphoneId] - 指定使用哪个麦克风，用来切换麦克风。
-	    * @param {MediaStreamTrack} [config.option.audioTrack] - 自定义采集的 audioTrack。 {@tutorial 20-advanced-customized-capture-rendering}。
-	    * @param {number} [config.option.captureVolume] - 设置采集音量，默认值 100，设置小于 100 可以降低采集音量，设置大于 100 可以放大采集音量，注意有爆音风险。自 v5.2.1+ 支持。
-	    * @param {number} [config.option.earMonitorVolume] - 设置耳返音量，取值[0, 100]，本地麦克风默认静音播放。
-	    * @throws
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example
-	    * // 切换麦克风
-	    * const microphoneList = await TRTC.getMicrophoneList();
-	    * if (microphoneList[1]) {
-	    *   await trtc.updateLocalAudio({ option: { microphoneId: microphoneList[1].deviceId }});
-	    * }
-	    * @memberof TRTC
-	    */
+	     * Update the configuration of the local microphone.
+	     * - When to call: This interface needs to be called after {@link TRTC#startLocalAudio startLocalAudio()} is successful and can be called multiple times.
+	     * - This method uses incremental update: only update the passed parameters, and keep the parameters that are not passed unchanged.
+	     * @param {object} [config]
+	     * @param {boolean} [config.publish] - Whether to publish local audio to the room. You can get the publish state by listening this event {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}.
+	     * @param {boolean} [config.mute] - Whether to mute microphone. Refer to: {@tutorial 15-basic-dynamic-add-video}.
+	     * @param {object} [config.option] - Local audio configuration
+	     * @param {string} [config.option.microphoneId] - Specify which microphone to use to switch microphones.
+	     * @param {MediaStreamTrack} [config.option.audioTrack] - Custom audioTrack. {@tutorial 20-advanced-customized-capture-rendering}.
+	     * @param {number} [config.option.captureVolume] - Set the capture volume of microphone. The default value is 100. Setting above 100 enlarges the capture volume. Since v5.2.1+.
+	     * @param {number} [config.option.earMonitorVolume] - Set the ear return volume, value range [0, 100], the local microphone is muted by default.
+	     * @throws
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * // Switch microphone
+	     * const microphoneList = await TRTC.getMicrophoneList();
+	     * if (microphoneList[1]) {
+	     *   await trtc.updateLocalAudio({ option: { microphoneId: microphoneList[1].deviceId }});
+	     * }
+	     * @memberof TRTC
+	     */
 	    updateLocalAudio(config: UpdateLocalAudioConfig): Promise<void>;
 	    /**
-	    * 停止本地麦克风的采集及发布。
-	    * - 如果您只是想静音麦克风，请使用 updateLocalAudio({ mute: true })。参考：{@tutorial 15-basic-dynamic-add-video}。
-	    * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example
-	    * await trtc.stopLocalAudio();
-	    * */
+	     * Stop collecting and publishing the local microphone.
+	     * - If you just want to mute the microphone, please use updateLocalAudio({ mute: true }). Refer to: {@tutorial 15-basic-dynamic-add-video}.
+	     * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * await trtc.stopLocalAudio();
+	     */
 	    stopLocalAudio(): Promise<void>;
 	    /**
-	     * @typedef {object|string} VideoProfile - 本地视频流配置
+	     * @typedef {object|string} VideoProfile - Configuration for local video stream
 	     *
-	     * 视频配置参数,可以用字符串预设值或者自定义分辨率等参数
-	     * | 视频 Profile | 分辨率（宽 x 高）| 帧率（fps）| 码率（kbps）| 备注 |
+	     * Video configuration parameters, can use preset values in string format or custom resolution and other parameters
+	     * | Video Profile | Resolution (Width x Height) | Frame Rate (fps) | Bitrate (kbps) | Remarks |
 	     * | :---       | :---           | :---      | :---      | :--- |
 	     * | 120p       | 160 x 120      | 15        | 200        ||
-	     * | 120p_2       | 160 x 120      | 15        | 100        | v5.1.1+ 支持 |
 	     * | 180p       | 320 x 180      | 15        | 350       ||
-	     * | 180p_2       | 320 x 180      | 15        | 150       | v5.1.1+ 支持 |
 	     * | 240p       | 320 x 240      | 15        | 400       ||
-	     * | 240p_2       | 320 x 240      | 15        | 200       | v5.1.1+ 支持 |
 	     * | 360p       | 640 x 360      | 15        | 800       ||
-	     * | 360p_2       | 640 x 360      | 15        | 400       | v5.1.1+ 支持 |
 	     * | 480p       | 640 x 480      | 15        | 900       ||
-	     * | 480p_2       | 640 x 480      | 15        | 500       | v5.1.1+ 支持 |
 	     * | 720p       | 1280 x 720     | 15        | 1500      ||
 	     * | 1080p      | 1920 x 1080    | 15        | 2000      ||
 	     * | 1440p      | 2560 x 1440    | 30        | 4860      ||
 	     * | 4K         | 3840 x 2160    | 30        | 9000      ||
-	     * @property {number} width - 视频宽度
-	     * @property {number} height - 视频高度
-	     * @property {number} frameRate - 视频帧率
-	     * @property {number} bitrate - 视频码率
+	      * @property {number} width - Video width
+	      * @property {number} height - Video height
+	      * @property {number} frameRate - Video frame rate
+	      * @property {number} bitrate - Video bitrate
 	     * @example
 	     * const config = {
 	     *  option: {
-	     *   profile: '480p_2',
+	     *   profile: '480p',
 	     *  },
 	     * }
 	     * await trtc.startLocalVideo(config);
@@ -1070,289 +1097,295 @@
 	     *      width: 640,
 	     *      height: 480,
 	     *      frameRate: 15,
-	     *      bitrate: 500,
+	     *      bitrate: 900,
 	     *    }
 	     *  }
 	     * }
 	     * await trtc.startLocalVideo(config);
 	     */
 	    /**
-	    * 开启本地摄像头采集，在您指定的 HTMLElement 标签下播放摄像头画面，并将摄像头画面发布到当前所在房间中。
-	    * - 调用时机：进房前后均可调用，不可重复调用。
-	    * - 一个 trtc 实例只能开启一路摄像头。若您需要在已经开启一路摄像头的情况下，再开启一路摄像头用于测试，可以创建多个 trtc 实例实现。
-	    *
-	    * @param {object} [config]
-	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 本地视频预览的 HTMLElement 实例或者 Id， 如果不传或传入 null， 则不会播放视频。
-	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布（若 publish=true）。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
-	    * @param {object} [config.option] - 本地视频配置
-	    * @param {string} [config.option.cameraId] - 指定使用哪个摄像头，用于切换摄像头。
-	    * @param {boolean} [config.option.useFrontCamera] - 是否使用前置摄像头
-	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack。{@tutorial 20-advanced-customized-capture-rendering}。
-	    * @param {boolean} [config.option.mirror] - 是否开启本地预览镜像，默认为 true。
-	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `cover`。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
-	    * @param {VideoProfile} [config.option.profile] - 视频大流编码参数。
-	    * @param {VideoProfile} [config.option.small] - 视频小流编码参数。
-	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。（默认）流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
-	    * @throws
-	    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
-	    * @example <caption>示例 1：预览及发布摄像头</caption>
-	    * // 预览及发布摄像头
-	    * await trtc.startLocalVideo({
-	    *   view: document.getElementById('localVideo'), // 在 DOM 中的 elementId 为 localVideo 的标签上预览视频。
-	    * });
-	    * @example <caption>示例 2：测试摄像头——只预览不发布</caption>
-	    * // 只预览摄像头画面、不发布。可用于做摄像头测试。
-	    * const config = {
-	    *   view: document.getElementById('localVideo'), // 在 DOM 中的 elementId 为 localVideo 的标签上预览视频。
-	    *   publish: false // 不发布摄像头
-	    * }
-	    * await trtc.startLocalVideo(config);
-	    * // 当需要发布视频时调用 updateLocalVideo
-	    * await trtc.updateLocalVideo({ publish:true });
-	    * @example <caption>示例 3：预览及发布指定的摄像头</caption>
-	    * // 使用指定的摄像头。
-	    * const cameraList = await TRTC.getCameraList();
-	    * if (cameraList[0]) {
-	    *   await trtc.startLocalVideo({
-	    *     view: document.getElementById('localVideo'), // 在 DOM 中的 elementId 为 localVideo 的标签上预览视频。
-	    *     option: {
-	    *       cameraId: cameraList[0].deviceId,
-	    *     }
-	    *   });
-	    * }
-	    * @memberof TRTC
-	    */
+	     * Start collecting video from the local camera, play the camera's video on the specified HTMLElement tag, and publish the camera's video to the current room.
+	     * - When to call: can be called before or after entering the room, but cannot be called repeatedly.
+	     * - Only one camera can be started per trtc instance. If you need to start another camera for testing while one camera is already started, you can create multiple trtc instances to achieve this.
+	  
+	     * @param {object} [config]
+	     * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or ID for local video preview. If not passed or passed as null, the video will not be played.
+	     * @param {boolean} [config.publish] - Whether to publish the local video to the room. If you call this interface before entering the room and publish = true, the SDK will automatically publish after entering the room. You can get the publish state by listening this event {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}.
+	     * @param {boolean} [config.mute] - Whether to mute camera, refer to: {@tutorial 15-basic-dynamic-add-video}.
+	     * @param {object} [config.option] - Local video configuration
+	     * @param {string} [config.option.cameraId] - Specify which camera to use for switching cameras.
+	     * @param {boolean} [config.option.useFrontCamera] - Whether to use the front camera.
+	     * @param {MediaStreamTrack} [config.option.videoTrack] - Custom videoTrack. {@tutorial 20-advanced-customized-capture-rendering}.
+	     * @param {boolean} [config.option.mirror] - Whether to enable local preview mirroring. The default is true.
+	     * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `cover`. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
+	     * @param {VideoProfile} [config.option.profile] - Video encoding parameters for the main video.
+	     * @param {VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
+	     * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first(default) ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+	     * @throws
+	     * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
+	     * @example
+	     * // Preview and publish the camera
+	     * await trtc.startLocalVideo({
+	     *   view: document.getElementById('localVideo'), // Preview the video on the element with the DOM elementId of localVideo.
+	     * });
+	     * @example
+	     * // Preview the camera without publishing. Can be used for camera testing.
+	     * const config = {
+	     *   view: document.getElementById('localVideo'), // Preview the video on the element with the DOM elementId of localVideo.
+	     *   publish: false // Do not publish the camera
+	     * }
+	     * await trtc.startLocalVideo(config);
+	     * // Call updateLocalVideo when you need to publish the video
+	     * await trtc.updateLocalVideo({ publish:true });
+	     * @example
+	     * // Use a specified camera.
+	     * const cameraList = await TRTC.getCameraList();
+	     * if (cameraList[0]) {
+	     *   await trtc.startLocalVideo({
+	     *     view: document.getElementById('localVideo'), // Preview the video on the element with the DOM elementId of localVideo.
+	     *     option: {
+	     *       cameraId: cameraList[0].deviceId,
+	     *     }
+	     *   });
+	     * }
+	     *
+	     * // use front camera on mobile device.
+	     * await trtc.startLocalVideo({ view, option: { useFrontCamera: true }});
+	     * // use rear camera on mobile device.
+	     * await trtc.startLocalVideo({ view, option: { useFrontCamera: false }});
+	     * @memberof TRTC
+	     */
 	    startLocalVideo(config?: LocalVideoConfig): Promise<void>;
 	    /**
-	    * 更新本地摄像头配置。
-	    * - 该接口需在 {@link TRTC#startLocalVideo startLocalVideo()} 成功后调用。
-	    * - 该接口可以多次调用。
-	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
-	    * @param {object} [config]
-	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 预览摄像头的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会推流消耗带宽的容器
-	    * @param {boolean} [config.publish] - 是否将本地视频发布到房间中。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
-	    * @param {boolean} [config.mute] - 是否暂停摄像头采集，参考：{@tutorial 15-basic-dynamic-add-video}。
-	    * @param {object} [config.option] - 本地视频配置
-	    * @param {string} [config.option.cameraId] - 指定使用哪个摄像头，
-	    * @param {boolean} [config.option.useFrontCamera] - 是否使用前置摄像头
-	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack，{@tutorial 20-advanced-customized-capture-rendering}。
-	    * @param {boolean} [config.option.mirror] - 是否开启镜像
-	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit| CSS object-fit} 属性
-	    * @param {VideoProfile} [config.option.profile] - 视频大流编码参数
-	    * @param {VideoProfile} [config.option.small] - 视频小流编码参数
-	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。（默认）流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_SMOOTH}）
-	    * @throws
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example <caption>示例 1：动态切换摄像头</caption>
-	    * // 切换摄像头
-	    * const cameraList = await TRTC.getCameraList();
-	    * if (cameraList[1]) {
-	    *   await trtc.updateLocalVideo({ option: { cameraId: cameraList[1].deviceId }});
-	    * }
-	    * @example <caption>示例 2：停止发布视频，但保持本地预览</caption>
-	    * // 停止发布视频，但保持本地预览
-	    * await trtc.updateLocalVideo({ publish:false });
-	    * @memberof TRTC
-	    */
+	     * Update the local camera configuration.
+	     * - This interface needs to be called after {@link TRTC#startLocalVideo startLocalVideo()} is successful.
+	     * - This interface can be called multiple times.
+	     * - This method uses incremental update: only updates the passed-in parameters, and keeps the parameters that are not passed in unchanged.
+	     * @param {object} [config]
+	     * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or Id of the preview camera. If not passed in or passed in null, the video will not be rendered, but the container that consumes bandwidth will still be pushed.
+	     * @param {boolean} [config.publish] - Whether to publish the local video to the room. You can get the publish state by listening this event {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}.
+	     * @param {boolean} [config.mute] - Whether to mute camera, refer to: {@tutorial 15-basic-dynamic-add-video}.
+	     * @param {object} [config.option] - Local video configuration
+	     * @param {string} [config.option.cameraId] - Specify which camera to use
+	     * @param {boolean} [config.option.useFrontCamera] - Whether to use the front camera
+	     * @param {MediaStreamTrack} [config.option.videoTrack] - Custom videoTrack. {@tutorial 20-advanced-customized-capture-rendering}.
+	     * @param {boolean} [config.option.mirror] - Whether to enable mirror
+	     * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit| CSS object-fit} property
+	     * @param {VideoProfile} [config.option.profile] - Video encoding parameters for the main stream
+	     * @param {VideoProfile|boolean} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
+	     * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+	     * @throws
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * // Switch camera
+	     * const cameraList = await TRTC.getCameraList();
+	     * if (cameraList[1]) {
+	     *   await trtc.updateLocalVideo({ option: { cameraId: cameraList[1].deviceId }});
+	     * }
+	     * @example
+	     * // Stop publishing video, but keep local preview
+	     * await trtc.updateLocalVideo({ publish:false });
+	     * @memberof TRTC
+	     */
 	    updateLocalVideo(config: UpdateLocalVideoConfig): Promise<void>;
 	    /**
-	    * 停止本地摄像头的采集、预览及发布。
-	    * - 如果希望仅停止发布视频但保留本地摄像头预览，可以使用{@link TRTC#updateLocalVideo updateLocalVideo({ publish:false })}方法。<br>
-	    * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example
-	    * await trtc.stopLocalVideo();
-	    * */
+	     * Stop capturing, previewing, and publishing the local camera.
+	     * - If you only want to stop publishing video but keep the local camera preview, you can use the {@link TRTC#updateLocalVideo updateLocalVideo({ publish:false })} method.<br>
+	     * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * await trtc.stopLocalVideo();
+	     */
 	    stopLocalVideo(): Promise<void>;
 	    /**
-	     * @typedef {object|string} ScreenShareProfile - 屏幕分享分辨率码率帧率配置
-	   * 屏幕分享配置参数,可以用字符串预设值或者自定义分辨率等参数
-	   * | 屏幕 Profile | 分辨率（宽 x 高）| 帧率（fps）| 码率 (kbps) |
-	    * | :---       | :---           | :---      | :---        |
-	    * | 480p       | 640 x 480      | 5         | 900         |
-	    * | 480p_2     | 640 x 480      | 30        | 1000        |
-	    * | 720p       | 1280 x 720     | 5         | 1200        |
-	    * | 720p_2     | 1280 x 720     | 30        | 3000        |
-	    * | 1080p      | 1920 x 1080    | 5         | 1600        |
-	    * | 1080p_2    | 1920 x 1080    | 30        | 4000        |
-	    * - 屏幕分享默认使用 `1080p`。
-	    * - 若以上 Profile 不能满足您的业务需求，您也可以指定自定义的分辨率、帧率和码率。
-	    *
-	     * @property {number} width - 屏幕分享宽度
-	     * @property {number} height - 屏幕分享高度
-	     * @property {number} frameRate - 屏幕分享帧率
-	     * @property {number} bitrate - 屏幕分享码率
-	    * @example
-	    * const config = {
-	    *  option: {
-	    *   profile: '720p',
-	    *  },
-	    * }
-	    * await trtc.startScreenShare(config);
-	   */
+	     * @typedef {object|string} ScreenShareProfile - Screen sharing resolution, bit rate, and frame rate configuration
+	     * Screen sharing configuration parameters, can use preset values or custom resolution and other parameters
+	     * | Screen Profile | Resolution (width x height) | Frame Rate (fps) | Bitrate (kbps) |
+	     * | :---       | :---           | :---      | :---        |
+	     * | 480p       | 640 x 480      | 5         | 900         |
+	     * | 480p_2     | 640 x 480      | 30        | 1000        |
+	     * | 720p       | 1280 x 720     | 5         | 1200        |
+	     * | 720p_2     | 1280 x 720     | 30        | 3000        |
+	     * | 1080p      | 1920 x 1080    | 5         | 1600        |
+	     * | 1080p_2    | 1920 x 1080    | 30        | 4000        |
+	     * - The default resolution for screen sharing is `1080p`.
+	     * - If the above profiles do not meet your business needs, you can also specify custom resolution, frame rate, and bitrate.
+	  
+	     * @property {number} width - Screen sharing width
+	     * @property {number} height - Screen sharing height
+	     * @property {number} frameRate - Screen sharing frame rate
+	     * @property {number} bitrate - Screen sharing bitrate
+	     * @example
+	     * const config = {
+	     *  option: {
+	     *   profile: '720p',
+	     *  },
+	     * }
+	     * await trtc.startScreenShare(config);
+	     */
 	    /**
-	    * 开启屏幕分享。
-	    *
-	    * - 开启屏幕分享后，房间内其他用户会收到 {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} 事件，streamType 为 {@link module:TYPE.STREAM_TYPE_SUB STREAM_TYPE_SUB}，其他用户可以通过 {@link TRTC#startRemoteVideo startRemoteVideo} 播放屏幕分享。
-	    * @param {object} [config]
-	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 预览本地屏幕分享的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染本地屏幕分享。
-	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中。默认为 true，若在进房前调用该接口，SDK 会在进房成功后自动发布。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
-	    * @param {object} [config.option] - 屏幕分享配置
-	    * @param {boolean} [config.option.systemAudio] - 是否采集系统声音，默认为 false。
-	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `contain`，参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
-	    * @param {ScreenShareProfile} [config.option.profile] - 屏幕分享编码配置。
-	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 （默认）清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
-	    * @param {MediaStreamTrack} [config.option.videoTrack] - 自定义采集的 videoTrack。{@tutorial 20-advanced-customized-capture-rendering}。
-	    * @throws
-	    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
-	    * @example
-	    * // 开始屏幕分享
-	    * await trtc.startScreenShare();
-	    * @memberof TRTC
-	    */
+	     * Start screen sharing.
+	     *
+	     * - After starting screen sharing, other users in the room will receive the {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} event, with streamType as {@link module:TYPE.STREAM_TYPE_SUB STREAM_TYPE_SUB}, and other users can play screen sharing through {@link TRTC#startRemoteVideo startRemoteVideo}.
+	     * @param {object} [config]
+	     * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or Id for previewing local screen sharing. If not passed or passed as null, local screen sharing will not be rendered.
+	     * @param {boolean} [config.publish] - Whether to publish screen sharing to the room. The default is true. If you call this interface before entering the room and publish = true, the SDK will automatically publish after entering the room. You can get the publish state by listening this event {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}.
+	     * @param {object} [config.option] - Screen sharing configuration
+	     * @param {boolean} [config.option.systemAudio] - Whether to capture system audio. The default is false.
+	     * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `contain`, refer to {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
+	     * @param {ScreenShareProfile} [config.option.profile] - Screen sharing encoding configuration.
+	     * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first(default) ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+	     * @throws
+	     * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
+	     * @example
+	     * // Start screen sharing
+	     * await trtc.startScreenShare();
+	     * @memberof TRTC
+	     */
 	    startScreenShare(config?: ScreenShareConfig): Promise<void>;
 	    /**
-	    * 更新屏幕分享配置
-	    * - 该接口需在 {@link TRTC#startScreenShare startScreenShare()} 成功后调用。
-	    * - 该接口可以多次调用。
-	    * - 本方法采用增量更新方式：只更新传入的参数，不传入的参数保持不变。
-	    * @param {object} [config]
-	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 屏幕分享预览的 HTMLElement 实例或 Id， 如果不传或传入 null， 则不会渲染屏幕分享。
-	    * @param {boolean} [config.publish] - 是否将屏幕分享发布到房间中。可监听该事件获取推流状态 {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}。
-	    * @param {object} [config.option] - 屏幕分享配置
-	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。默认为 `contain`，参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
-	    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - 设置弱网时，视频编码策略。流畅度优先（{@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}）或 （默认）清晰度优先（{@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR}）
-	    * @throws
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
-	    * @example
-	    * // 停止屏幕分享，但保持屏幕分享本地预览
-	    * await trtc.updateScreenShare({publish:false});
-	    * @memberof TRTC
-	    */
+	     * Update screen sharing configuration
+	     * - This interface needs to be called after {@link TRTC#startScreenShare startScreenShare()} is successful.
+	     * - This interface can be called multiple times.
+	     * - This method uses incremental update: only update the passed-in parameters, and keep the parameters that are not passed-in unchanged.
+	     * @param {object} [config]
+	     * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or Id for screen sharing preview. If not passed in or passed in null, the screen sharing will not be rendered.
+	     * @param {boolean} [config.publish=true] - Whether to publish screen sharing to the room
+	     * @param {object} [config.option] - Screen sharing configuration
+	     * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `contain`, refer to {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
+	     * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+	     * @throws
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
+	     * @example
+	     * // Stop screen sharing, but keep the local preview of screen sharing
+	     * await trtc.updateScreenShare({publish:false});
+	     * @memberof TRTC
+	     */
 	    updateScreenShare(config: UpdateScreenShareConfig): Promise<void>;
 	    /**
-	    * 停止屏幕分享。
-	    * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example
-	    * await trtc.stopScreenShare();
-	    * */
+	     * Stop screen sharing.
+	  
+	     * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * await trtc.stopScreenShare();
+	     */
 	    stopScreenShare(): Promise<void>;
 	    /**
-	    * 播放远端视频
-	    *
-	    * - 调用时机：在收到 {@link module:EVENT.REMOTE_VIDEO_AVAILABLE TRTC.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE)} 事件后调用。
-	    * @param {object} [config]
-	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 用于播放远端视频的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会拉流消耗带宽
-	    * @param {string} config.userId - 远端用户Id
-	    * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType - 远端流类型
-	    * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）（远端用户的摄像头）
-	    * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: 辅流（远端用户的屏幕分享）
-	    * @param {object} [config.option] - 远端视频配置
-	    * @param {boolean} [config.option.small] - 是否拉小流
-	    * @param {boolean} [config.option.mirror] - 是否开启镜像
-	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
-	    * @throws
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
-	    * @example
-	    * trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
-	    *   // 您需在 DOM 中提前放置视频容器，建议以 `${userId}_${streamType}` 作为 element id。
-	    *   trtc.startRemoteVideo({ userId, streamType, view: `${userId}_${streamType}` });
-	    * })
-	    * @memberof TRTC
-	    */
+	     * Play remote video
+	     *
+	     * - When to call: Call after receiving the {@link module:EVENT.REMOTE_VIDEO_AVAILABLE TRTC.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE)} event.
+	     * @param {object} [config]
+	     * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or Id used to play remote video. If not passed or passed null, the video will not be rendered, but the bandwidth will still be consumed.
+	     * @param {string} config.userId - Remote user ID
+	     * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType - Remote stream type
+	     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (remote user's camera)
+	     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (remote user's screen sharing)
+	     * @param {object} [config.option] - Remote video configuration
+	     * @param {boolean} [config.option.small] - Whether to pull small streams
+	     * @param {boolean} [config.option.mirror] - Whether to enable mirror
+	     * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
+	     * @throws
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
+	     * @example
+	     * trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
+	     *   // You need to place the video container in the DOM in advance, and it is recommended to use `${userId}_${streamType}` as the element id.
+	     *   trtc.startRemoteVideo({ userId, streamType, view: `${userId}_${streamType}` });
+	     * })
+	     * @memberof TRTC
+	     */
 	    startRemoteVideo(config: RemoteVideoConfig): Promise<void>;
 	    /**
-	    * 更新远端视频播放配置<br>
-	    * - 该方法需 {@link TRTC#startRemoteVideo startRemoteVideo} 成功后调用。
-	    * - 该方法可多次调用。
-	    * - 该方法采用增量更新的方式，只需要传入需要更新的配置项即可。
-	    * @param {object} [config]
-	    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - 用于播放远端视频的 HTMLElement 实例或者 Id， 如果不传或传入null， 则不会渲染视频， 但会仍然会拉流消耗带宽
-	    * @param {string} config.userId - 远端用户Id
-	    * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType - 远端流类型：
-	    * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）
-	    * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: 辅流（远端用户的屏幕分享）
-	    * @param {object} [config.option] - 远端视频配置
-	    * @param {boolean} [config.option.small] - 是否拉小流，参考：{@tutorial 27-advanced-small-stream}
-	    * @param {boolean} [config.option.mirror] - 是否开启镜像
-	    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - 视频填充模式。参考 {@link https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit CSS object-fit} 属性。
-	    * @throws
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example
-	    * const config = {
-	    *  view: document.getElementById(userId),
-	    *  userId,
-	    * }
-	    * await trtc.updateRemoteVideo(config);
-	    * @memberof TRTC
-	    */
+	     * Update remote video playback configuration<br>
+	     * - This method should be called after {@link TRTC#startRemoteVideo startRemoteVideo} is successful.
+	     * - This method can be called multiple times.
+	     * - This method uses incremental updates, so only the configuration items that need to be updated need to be passed in.
+	     * @param {object} [config]
+	     * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or Id used to play remote video. If not passed or passed null, the video will not be rendered, but the bandwidth will still be consumed.
+	     * @param {string} config.userId - Remote user ID
+	     * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType - Remote stream type
+	     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (remote user's camera)
+	     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (remote user's screen sharing)
+	     * @param {object} [config.option] - Remote video configuration
+	     * @param {boolean} [config.option.small] - Whether to pull small streams. Refer to: {@tutorial 27-advanced-small-stream}.
+	     * @param {boolean} [config.option.mirror] - Whether to enable mirror
+	     * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
+	     * @throws
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * const config = {
+	     *  view: document.getElementById(userId),
+	     *  userId,
+	     * }
+	     * await trtc.updateRemoteVideo(config);
+	     * @memberof TRTC
+	     */
 	    updateRemoteVideo(config: RemoteVideoConfig): Promise<void>;
 	    /**
-	    * 用于停止远端视频播放。<br>
-	    * @param {object} config - 远端视频配置
-	    * @param {string} config.userId - 远端用户 userId，'*' 代表所有用户。
-	    * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} [config.streamType] - 远端流类型，当 userId 不为 '*' 时，该字段必填。
-	    * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）
-	    * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: 辅流（远端用户的屏幕分享）
-	    * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example
-	    * // 停止播放所有远端用户
-	    * await trtc.stopRemoteVideo({ userId: '*' });
-	    * */
+	     * Used to stop remote video playback.<br>
+	     * @param {object} config - Remote video configuration
+	     * @param {string} config.userId - Remote user ID, '*' represents all users.
+	     * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} [config.streamType] - Remote stream type. This field is required when userId is not '*'.
+	     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (remote user's camera)
+	     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (remote user's screen sharing)
+	     * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * // Stop playing all remote users
+	     * await trtc.stopRemoteVideo({ userId: '*' });
+	     */
 	    stopRemoteVideo(config: StopRemoteVideoConfig): Promise<void>;
 	    /**
-	    * 静音某个远端用户，并且不再拉取该用户的音频数据。仅对当前用户有效，房间内的其他用户依然可以听到被静音用户的声音。<br>
-	    *
-	    * 注意：
-	    * - 默认情况下，在进房后，SDK 会自动播放远端音频。您可以调用该接口将远端用户静音及取消静音。
-	    * - 进房时如果传入参数 autoReceiveAudio = false，则不会自动播放远端音频。当需要播放音频时，需要调用该方法（mute 传入 false）播放远端音频。
-	    * - 在进入房间（enterRoom）之前或之后调用本接口均生效，静音状态在退出房间（exitRoom）之后会被重置为 false。
-	    * - 如果您希望继续拉取该用户的音频数据，仅仅是不播放，可以调用 setRemoteAudioVolume(userId, 0)
-	    * @param {string} userId - 远端用户 userId，'*' 代表所有用户。
-	    * @param {boolean} mute - 是否静音
-	    * @throws
-	    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-	    * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
-	    * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	    * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-	    * @example
-	    * // 静音所有远端用户
-	    * await trtc.muteRemoteAudio('*', true);
-	    * */
+	     * Mute a remote user and stop pulling audio data from that user. Only effective for the current user, other users in the room can still hear the muted user's voice.<br>
+	     *
+	     * Note:
+	     * - By default, after entering the room, the SDK will automatically play remote audio. You can call this interface to mute or unmute remote users.
+	     * - If the parameter autoReceiveAudio = false is passed in when entering the room, remote audio will not be played automatically. When audio playback is required, you need to call this method (mute is passed in false) to play remote audio.
+	     * - This interface is effective before or after entering the room (enterRoom), and the mute state will be reset to false after exiting the room (exitRoom).
+	     * - If you want to continue pulling audio data from the user but not play it, you can call setRemoteAudioVolume(userId, 0)
+	     * @param {string} userId - Remote user ID, '*' represents all users.
+	     * @param {boolean} mute - Whether to mute
+	     * @throws
+	     * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+	     * - {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
+	     * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	     * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+	     * @example
+	     * // Mute all remote users
+	     * await trtc.muteRemoteAudio('*', true);
+	     */
 	    muteRemoteAudio(userId: string, mute: boolean): Promise<void>;
 	    /**
-	    * 用于控制远端音频的播放音量。<br>
-	    *
-	    * - 不支持 iOS Safari
-	    * @param {string} userId - 远端用户 userId
-	    * @param {number} volume - 音量大小，取值范围为0 - 100，默认值为 100。<br>
-	    * 自 `v5.1.3+` 版本支持设置 volume 大于100。需注意，设置超过 100 可能有爆音风险。
-	    * @example
-	    * await trtc.setRemoteAudioVolume('123', 90);
-	    * */
+	     * Used to control the playback volume of remote audio.<br>
+	     *
+	     * - Not supported by iOS Safari
+	     * @param {string} userId - Remote user ID
+	     * @param {number} volume - Volume, ranging from 0 to 100. The default value is 100.<br>
+	     * Since `v5.1.3+`, the volume can be set higher than 100.
+	     * @example
+	     * await trtc.setRemoteAudioVolume('123', 90);
+	     */
 	    setRemoteAudioVolume(userId: string, volume: number): void;
 	    startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
 	    startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
@@ -1361,52 +1394,52 @@
 	    stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
 	    stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
 	    /**
-	   * 开启或关闭音量大小回调<br>
-	   *
-	   * - 开启此功能后，无论房间内是否有人说话，SDK 会定时抛出 {@link module:EVENT.AUDIO_VOLUME TRTC.on(TRTC.EVENT.AUDIO_VOLUME)} 事件，反馈每一个用户的的音量大小评估值。<br>
-	   *
-	   * @param {number} [interval=2000] 用于设置音量回调事件定时触发的时间间隔。默认为 2000(ms)，最小值为100(ms)。若设置小于等于0时，则关闭音量大小回调。
-	   * @param {boolean} [enableInBackground=false] 出于性能的考虑，当页面切换到后台时，SDK 不会抛出音量回调事件。如需在页面切后台时接收音量回调事件，可设置该参数为 true。
-	   * @memberof TRTC
-	   * @example
-	   * trtc.on(TRTC.EVENT.AUDIO_VOLUME, event => {
-	   *    event.result.forEach(({ userId, volume }) => {
-	   *        const isMe = userId === ''; // 当 userId 为空串时，代表本地麦克风音量。
-	   *        if (isMe) {
-	   *            console.log(`my volume: ${volume}`);
-	   *        } else {
-	   *            console.log(`user: ${userId} volume: ${volume}`);
-	   *        }
-	   *    })
-	   * });
-	   *
-	   * // 开启音量回调，并设置每 1000ms 触发一次事件
-	   * trtc.enableAudioVolumeEvaluation(1000);
-	   *
-	   * // 如需关闭音量回调，传入 interval 值小于等于0即可
-	   * trtc.enableAudioVolumeEvaluation(-1);
-	   */
+	     * Enables or disables the volume callback.<br>
+	     *
+	     * - After enabling this function, whether someone is speaking in the room or not, the SDK will regularly throw the {@link module:EVENT.AUDIO_VOLUME TRTC.on(TRTC.EVENT.AUDIO_VOLUME)} event, which feedbacks the volume evaluation value of each user.<br>
+	     *
+	     * @param {number} [interval=2000] Used to set the time interval for triggering the volume callback event. The default is 2000(ms), and the minimum value is 100(ms). If set to less than or equal to 0, the volume callback will be turned off.
+	     * @param {boolean} [enableInBackground=false] For performance reasons, when the page switches to the background, the SDK will not throw volume callback events. If you need to receive volume callback events when the page is switched to the background, you can set this parameter to true.
+	     * @memberof TRTC
+	     * @example
+	     * trtc.on(TRTC.EVENT.AUDIO_VOLUME, event => {
+	     *    event.result.forEach(({ userId, volume }) => {
+	     *        const isMe = userId === ''; // When userId is an empty string, it represents the local microphone volume.
+	     *        if (isMe) {
+	     *            console.log(`my volume: ${volume}`);
+	     *        } else {
+	     *            console.log(`user: ${userId} volume: ${volume}`);
+	     *        }
+	     *    })
+	     * });
+	     *
+	     * // Enable volume callback and trigger the event every 1000ms
+	     * trtc.enableAudioVolumeEvaluation(1000);
+	     *
+	     * // To turn off the volume callback, pass in an interval value less than or equal to 0
+	     * trtc.enableAudioVolumeEvaluation(-1);
+	     */
 	    enableAudioVolumeEvaluation(interval?: number, enableInBackground?: boolean): void;
 	    /**
-	    * 监听 TRTC 事件<br><br>
-	    * 详细事件列表请参见：{@link module:EVENT TRTC.EVENT}
-	    *
-	    * @param {string} eventName 事件名
-	    * @param {function} handler 事件回调函数
-	    * @param {context} context 上下文
-	    * @memberof TRTC
-	    * @example
-	    * trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, event => {
-	    *   // REMOTE_VIDEO_AVAILABLE event handler
-	    * });
-	    */
+	     * Listen to TRTC events<br><br>
+	     * For a detailed list of events, please refer to: {@link module:EVENT TRTC.EVENT}
+	     *
+	     * @param {string} eventName Event name
+	     * @param {function} handler Event callback function
+	     * @param {context} context Context
+	     * @memberof TRTC
+	     * @example
+	     * trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, event => {
+	     *   // REMOTE_VIDEO_AVAILABLE event handler
+	     * });
+	     */
 	    on<T extends keyof TRTCEventTypes>(event: T, handler: (...args: TRTCEventTypes[T]) => void, context?: any): this;
 	    /**
-	     * 取消事件监听<br>
+	     * Remove event listener<br>
 	     *
-	     * @param {string} eventName 事件名，传入通配符 '*' 会解除所有事件监听。
-	     * @param {function} handler 事件回调函数
-	     * @param {context} context 上下文
+	     * @param {string} eventName Event name. Passing in the wildcard '*' will remove all event listeners.
+	     * @param {function} handler Event callback function
+	     * @param {context} context Context
 	     * @memberof TRTC
 	     * @example
 	     * trtc.on(TRTC.EVENT.REMOTE_USER_ENTER, function peerJoinHandler(event) {
@@ -1416,28 +1449,28 @@
 	     *   trtc.off(TRTC.EVENT.REMOTE_USER_ENTER, peerJoinHandler);
 	     * });
 	     *
-	     * // 解除所有事件绑定
+	     * // Remove all event listeners
 	     * trtc.off('*');
 	     */
 	    off<T extends keyof TRTCEventTypes>(event: T | '*', handler: T extends '*' ? never : (...args: TRTCEventTypes[T]) => void, context?: any): this;
 	    /**
-	     * 获取视频轨道
+	     * Get video track
 	     *
-	     * @param {string} [config] 不传则获取本地摄像头 videoTrack
-	     * @param {string} [config.userId] 不传或传空串，代表获取本地的 videoTrack。传远端用户的 userId，代表获取远端用户的 videoTrack。
-	     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - 远端流类型：
-	     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: 主流（远端用户的摄像头）（默认值）
-	     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: 辅流（远端用户的屏幕分享）
-	     * @returns {MediaStreamTrack|null} 视频轨道
+	     * @param {string} [config] If not passed, get the local camera videoTrack
+	     * @param {string} [config.userId] If not passed or passed an empty string, get the local videoTrack. Pass the userId of the remote user to get the remote user's videoTrack.
+	     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - Remote stream type:
+	     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (remote user's camera)(default)
+	     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (remote user's screen sharing)
+	     * @returns {MediaStreamTrack|null} Video track
 	     * @memberof TRTC
 	     * @example
-	     * // 获取本地摄像头 videoTrack
+	     * // Get local camera videoTrack
 	     * const videoTrack = trtc.getVideoTrack();
-	     * // 获取本地屏幕分享 videoTrack
+	     * // Get local screen sharing videoTrack
 	     * const screenVideoTrack = trtc.getVideoTrack({ streamType: TRTC.TYPE.STREAM_TYPE_SUB });
-	     * // 获取远端用户的主流 videoTrack
+	     * // Get remote user's main stream videoTrack
 	     * const remoteMainVideoTrack = trtc.getVideoTrack({ userId: 'test', streamType: TRTC.TYPE.STREAM_TYPE_MAIN });
-	     * // 获取远端用户的辅流 videoTrack
+	     * // Get remote user's sub stream videoTrack
 	     * const remoteSubVideoTrack = trtc.getVideoTrack({ userId: 'test', streamType: TRTC.TYPE.STREAM_TYPE_SUB });
 	    */
 	    getVideoTrack(config?: {
@@ -1445,14 +1478,64 @@
 	        streamType?: TRTCStreamType;
 	    }): MediaStreamTrack | null;
 	    /**
-	     * 获取音频轨道
+	     * Get audio track
 	     *
-	     * @returns {MediaStreamTrack?} 音频轨道
-	     * @param {string} [userId] 不传则获取本地的 audioTrack
+	     * @returns {MediaStreamTrack?} Audio track
+	     * @param {string} [userId] If not passed, get the local audioTrack
 	     * @memberof TRTC
 	     */
 	    getAudioTrack(userId?: string): MediaStreamTrack | null;
 	    setCurrentSpeaker(speakerId: string): void;
+	    /**
+	     * Send SEI Message <br>
+	     *
+	     * > The header of a video frame has a header block called SEI.
+	     * > The principle of this interface is to use the SEI to embed the custom data you want to send along with the video frame.
+	     * > SEI messages can accompany video frames all the way to the live CDN.
+	     *
+	     * Applicable scenarios: synchronization of lyrics, live answering questions, etc.
+	     *
+	     * When to call: call after {@link TRTC#startLocalVideo trtc.startLocalVideo} successfully.
+	     *
+	     * Note:
+	     * 1. Maximum 1KB(Byte) sent in a single call, maximum 30 calls per second, maximum 8KB sent per second.
+	     * 2. Currently only support Chrome 86+, Edge 86+, Opera 72+ browsers.
+	     * 3. Since SEI is sent along with video frames, there is a possibility that video frames may be lost, and therefore SEI may be lost as well. The number of times it can be sent can be increased within the frequency limit, and the business side needs to do message de-duplication on the receiving side.
+	     * 4. SEI cannot be sent without trtc.startLocalVideo; SEI cannot be received without startRemoteVideo.
+	     * 5. Only H264 encoder is supported to send SEI.
+	     * 6. SEI sending and receiving is not supported for small streams for the time being.
+	     * @see {@link module:EVENT.SEI_MESSAGE TRTC.EVENT.SEI_MESSAGE}
+	     * @since v5.3.0
+	     * @param {ArrayBuffer} buffer SEI data to be sent
+	     * @param {Object=} options
+	     * @param {Number} options.seiPayloadType Set the SEI payload type. SDK uses the custom payloadType 243 by default, the business side can use this parameter to set the payloadType to the standard 5. When the business side uses the 5 payloadType, you need to follow the specification to make sure that the first 16 bytes of the `buffer` are the business side's customized uuid.
+	     * @example
+	     * // 1. enable SEI
+	     * const trtc = TRTC.create({
+	     *    enableSEI: true
+	     * })
+	     *
+	     * // 2. send SEI
+	     * try {
+	     *  await trtc.enterRoom({
+	     *   userId: 'user_1',
+	     *   roomId: 12345,
+	     * })
+	     *  await trtc.startLocalVideo();
+	     *  const unit8Array = new Uint8Array([1, 2, 3]);
+	     *  trtc.sendSEIMessage(unit8Array.buffer);
+	     * } catch(error) {
+	     *  console.warn(error);
+	     * }
+	     *
+	     * // 3. receive SEI
+	     * trtc.on(TRTC.EVENT.SEI_MESSAGE, event => {
+	     *  console.warn(`sei ${event.data} from ${event.userId}`);
+	     * })
+	     */
+	    sendSEIMessage(buffer: ArrayBuffer, options?: {
+	        seiPayloadType: number;
+	    }): void;
 	    static EVENT: {
 	        readonly ERROR: "error";
 	        readonly AUTOPLAY_FAILED: "autoplay-failed";
@@ -1471,8 +1554,9 @@
 	        readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
 	        readonly DEVICE_CHANGED: "device-changed";
 	        readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
-	        readonly SEI_MESSAGE: "sei-message";
 	        readonly STATISTICS: "statistics";
+	        readonly SEI_MESSAGE: "sei-message";
+	        readonly TRACK: "track";
 	    };
 	    static ERROR_CODE: {
 	        INVALID_PARAMETER: number;
@@ -1500,44 +1584,44 @@
 	    };
 	    static frameWorkType: number;
 	    /**
-	     * 设置日志输出等级
+	     * Set the log output level
 	     * <br>
-	     * 建议在开发测试阶段设置为 DEBUG 等级，该日志等级包含详细的提示信息。
-	     * 默认输出 INFO 日志等级，该日志等级包含 SDK 主要功能的日志信息。
+	     * It is recommended to set the DEBUG level during development and testing, which includes detailed prompt information.
+	     * The default output level is INFO, which includes the log information of the main functions of the SDK.
 	     *
-	     * @param {0-5} [level] 日志输出等级 0: TRACE 1: DEBUG 2: INFO 3: WARN 4: ERROR 5: NONE
-	     * @param {boolean} [enableUploadLog=true] 是否开启日志上传，默认开启。不建议关闭，关闭后将影响问题排障。
+	     * @param {0-5} [level] Log output level 0: TRACE 1: DEBUG 2: INFO 3: WARN 4: ERROR 5: NONE
+	     * @param {boolean} [enableUploadLog=true] Whether to enable log upload, which is enabled by default. It is not recommended to turn it off, which will affect problem troubleshooting.
 	     * @example
-	     * // 输出 DEBUG 以上日志等级
+	     * // Output log levels above DEBUG
 	     * TRTC.setLogLevel(1);
 	     */
 	    static setLogLevel(level: LOG_LEVEL, enableUploadLog?: boolean): void;
 	    /**
-	     * 检测 TRTC Web SDK 是否支持当前浏览器
+	     * Check if the TRTC Web SDK is supported by the current browser
 	     *
-	     * - 参考：{@tutorial 05-info-browser}。
+	     * - Reference: {@tutorial 05-info-browser}.
 	     * @example
 	     * TRTC.isSupported().then((checkResult) => {
 	     *   if(!checkResult.result) {
 	     *      console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
-	     *      // SDK 不支持当前浏览器，引导用户使用最新版的 Chrome 浏览器。
+	     *      // The SDK is not supported by the current browser, guide the user to use the latest version of Chrome browser.
 	     *   }
 	     * });
 	     *
-	     * @returns {Promise.<object>} Promise 返回检测结果
+	     * @returns {Promise.<object>} Promise returns the detection result
 	     * | Property                                   | Type    | Description                         |
 	     * |--------------------------------------------|---------|-------------------------------------|
-	     * | checkResult.result                         | boolean | 检测结果                             |
-	     * | checkResult.detail.isBrowserSupported      | boolean | 当前浏览器是否是 SDK 支持的浏览器        |
-	     * | checkResult.detail.isWebRTCSupported       | boolean | 当前浏览器是否支持 WebRTC               |
-	     * | checkResult.detail.isWebCodecsSupported    | boolean | 当前浏览器是否支持 WebCodecs            |
-	     * | checkResult.detail.isMediaDevicesSupported | boolean | 当前浏览器是否支持获取媒体设备及媒体流     |
-	     * | checkResult.detail.isScreenShareSupported | boolean | 当前浏览器是否支持屏幕分享    |
-	     * | checkResult.detail.isSmallStreamSupported | boolean | 当前浏览器是否支持小流     |
-	     * | checkResult.detail.isH264EncodeSupported   | boolean | 当前浏览器上行是否支持 H264 编码         |
-	     * | checkResult.detail.isH264DecodeSupported   | boolean | 当前浏览器下行是否支持 H264 编码         |
-	     * | checkResult.detail.isVp8EncodeSupported    | boolean | 当前浏览器上行是否支持 VP8 编码          |
-	     * | checkResult.detail.isVp8DecodeSupported    | boolean | 当前浏览器下行是否支持 VP8 编码          |
+	     * | checkResult.result                         | boolean | Detection result                             |
+	     * | checkResult.detail.isBrowserSupported      | boolean | Whether the current browser is supported by the SDK        |
+	     * | checkResult.detail.isWebRTCSupported       | boolean | Whether the current browser supports WebRTC               |
+	     * | checkResult.detail.isWebCodecsSupported    | boolean | Whether the current browser supports WebCodecs            |
+	     * | checkResult.detail.isMediaDevicesSupported | boolean | Whether the current browser supports obtaining media devices and media streams     |
+	     * | checkResult.detail.isScreenShareSupported | boolean | Whether the current browser supports screen sharing    |
+	     * | checkResult.detail.isSmallStreamSupported | boolean | Whether the current browser supports small streams     |
+	     * | checkResult.detail.isH264EncodeSupported   | boolean | Whether the current browser supports H264 encoding for uplink         |
+	     * | checkResult.detail.isH264DecodeSupported   | boolean | Whether the current browser supports H264 decoding for downlink         |
+	     * | checkResult.detail.isVp8EncodeSupported    | boolean | Whether the current browser supports VP8 encoding for uplink          |
+	     * | checkResult.detail.isVp8DecodeSupported    | boolean | Whether the current browser supports VP8 decoding for downlink          |
 	     */
 	    static isSupported(): Promise<{
 	        result: boolean;
@@ -1555,38 +1639,55 @@
 	        };
 	    }>;
 	    /**
-	    * 返回摄像头设备列表
-	    * <br>
-	    * **Note**
-	    * - 该接口不支持在 http 协议下使用，请使用 https 协议部署您的网站。{@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
-	    * - 出于安全的考虑，在用户未授权摄像头或麦克风访问权限前，label 及 deviceId 字段可能都是空的。因此建议在用户授权访问后，
-	    * 再调用该接口获取设备详情。
-	    * @returns {Promise.<MediaDeviceInfo[]>} Promise 返回 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo} 数组
-	    */
+	     * Returns the list of camera devices
+	     * <br>
+	     * **Note**
+	     * - This interface does not support use under the http protocol, please use the https protocol to deploy your website. {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
+	     * - Calling this method may temporarily open the camera to ensure that the camera list can be normally obtained, and the SDK will automatically release the camera capture later.
+	     * - You can call the browser's native interface [getCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/InputDeviceInfo/getCapabilities) to get the maximum resolutions supported by the camera, frame rate, mobile devices to distinguish between front and rear cameras, etc. This interface supports Chrome 67+, Edge 79+, Safari 17+, Opera 54+.
+	     * @example
+	     * const cameraList = await TRTC.getCameraList();
+	     * if (cameraList[0] && cameraList[0].getCapabilities) {
+	     *   const { width, height, frameRate, facingMode } = cameraList[0].getCapabilities();
+	     *   console.log(width.max, height.max, frameRate.max);
+	     *   if (facingMode) {
+	     *     if (facingMode[0] === 'user') {
+	     *       // front camera
+	     *     } else if (facingMode[0] === 'environment') {
+	     *       // rear camera
+	     *     }
+	     *   }
+	     * }
+	     * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
+	     */
 	    static getCameraList(): Promise<DeviceInfo[]>;
 	    /**
-	    * 返回麦克风设备列表
-	    * <br>
-	    * **Note**
-	    * - 该接口不支持在 http 协议下使用，请使用 https 协议部署您的网站。{@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
-	    * - 出于安全的考虑，在用户未授权摄像头或麦克风访问权限前，label 及 deviceId 字段可能都是空的。因此建议在用户授权访问后，
-	    * 再调用该接口获取设备详情。
-	    * @returns {Promise.<MediaDeviceInfo[]>} Promise 返回 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo} 数组
-	    */
+	     * Returns the list of microphone devices
+	     * <br>
+	     * **Note**
+	     * - This interface does not support use under the http protocol, please use the https protocol to deploy your website. {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
+	     * - Calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically release the microphone capture later.
+	     * - You can call the browser's native interface [getCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/InputDeviceInfo/getCapabilities) to get information about the microphone's capabilities, e.g. the maximum number of channels supported, etc. This interface supports Chrome 67+, Edge 79+, Safari 17+, Opera 54+.
+	     * @example
+	     * const microphoneList = await TRTC.getMicrophoneList();
+	     * if (microphoneList[0] && microphoneList[0].getCapabilities) {
+	     *   const { channelCount } = microphoneList[0].getCapabilities();
+	     *   console.log(channelCount.max);
+	     * }
+	     * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
+	     */
 	    static getMicrophoneList(): Promise<DeviceInfo[]>;
 	    /**
-	    * 返回扬声器设备列表
-	    * <br>
-	    * 出于安全的考虑，在用户未授权摄像头或麦克风访问权限前，label 及 deviceId 字段可能都是空的。因此建议在用户授权访问后
-	    * 再调用该接口获取设备详情。
-	    *
-	    * @returns {Promise.<MediaDeviceInfo[]>} Promise 返回 {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo} 数组
-	    */
+	     * Returns the list of speaker devices
+	     * <br>
+	     * Calling this method may temporarily open the microphone to ensure that the speaker list can be normally obtained, and the SDK will automatically release the microphone capture later.
+	     * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
+	     */
 	    static getSpeakerList(): Promise<DeviceInfo[]>;
 	    /**
-	     *  设置当前音频播放的扬声器
+	     *  Set the current speaker for audio playback
 	     *
-	     * @param {string} speakerId 扬声器 ID
+	     * @param {string} speakerId Speaker ID
 	     */
 	    static setCurrentSpeaker(speakerId: string): Promise<void>;
 	}
