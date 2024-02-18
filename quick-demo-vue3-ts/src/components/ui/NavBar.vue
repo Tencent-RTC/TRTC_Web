@@ -26,17 +26,18 @@ const { locale, t } = useI18n({ useScope: 'global' });
 
 function toggleLanguage() {
   switch (locale.value) {
-    case 'zh':
+    case 'zh-cn':
       locale.value = 'en';
-      localStorage.setItem('trtc-quick-vue3-language', 'en');
+      localStorage.setItem('trtc-v5-quick-demo-vue3-ts', 'en');
+      document.title = 'Quick demo Vue 3 | Tencent RTC';
       break;
     case 'en':
     default:
-      locale.value = 'zh';
-      localStorage.setItem('trtc-quick-vue3-language', 'zh');
+      locale.value = 'zh-cn';
+      localStorage.setItem('trtc-v5-quick-demo-vue3-ts', 'zh-cn');
+      document.title = 'Quick demo Vue 3 | TRTC 实时音视频';
       break;
   }
-  document.title = t('title');
 }
 
 function goToGithub() {

@@ -4,7 +4,7 @@
 
 ## 在线体验
 
-为了方便快速体验，TRTC 提供了 [Web quick demo (vue2 版本) 在线体验地址](https://web.sdk.qcloud.com/trtc/webrtc/demo/quick-demo-vue2-js/index.html) 。
+为了方便快速体验，TRTC 提供了 [Web quick demo (vue2 版本) 在线体验地址](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-js/index.html) 。
 
 在体验页面中，输入您应用的 SDKAppId 及 密钥（SecretKey）即可加入房间。获取 SDKAppId 及 SecretKey 请参考 <a href="#getAppInfo">[获取应用信息]</a>。
 
@@ -14,7 +14,7 @@
 
 #### 下载 Demo 源码
 
-通过 [GitHub](https://github.com/LiteAVSDK/TRTC_Web) 下载 TRTC_Web 源码包，TRTC Web quick demo (vue2 版本) 源码在 `TRTC_Web/quick-demo-vue2-js`目录下。
+通过 [GitHub](https://github.com/LiteAVSDK/TRTC_Web/v5) 下载 TRTC_Web 源码包，TRTC Web quick demo (vue2 版本) 源码在 `TRTC_Web/v5/quick-demo-vue2-js`目录下。
 
 #### 运行 Demo
 
@@ -42,12 +42,12 @@
 
 #### 体验 Demo
 
+- 输入 userId 和 roomId
 - 点击【进入房间】按钮进入房间
-- 点击【发布流】按钮发布本地流
-- 点击【取消发布流】按钮取消发布本地流
-- 点击【离开房间】按钮离开房间
-- 点击【开始共享屏幕】按钮布屏幕分享流
-- 点击【停止共享屏幕】按钮取消发布屏幕分享流
+- 点击【采集麦克风/摄像头】按钮，可采集麦克风或摄像头
+- 点击【终止采集麦克风/摄像头】按钮，可终止采集麦克风或摄像头
+- 点击【开始共享屏幕】按钮开始屏幕分享
+- 点击【停止共享屏幕】按钮取消屏幕分享
 
 #### 其他
 

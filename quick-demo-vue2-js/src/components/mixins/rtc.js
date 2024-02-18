@@ -3,240 +3,219 @@
  * @Date: 2022-03-14 17:15:23
  * @LastEditTime: 2022-03-23 17:47:14
  */
-import TRTC from 'trtc-js-sdk';
-import { isUndefined } from '@/utils/utils.js';
+import TRTC from 'trtc-sdk-v5';
 
 export default {
   data() {
     return {
-      client: null,
-      localStream: null,
-      remoteStreamList: [],
-      isJoining: false,
-      isJoined: false,
-      isPublishing: false,
-      isPublished: false,
+      trtc: null,
+      remoteUsersViews: [],
       isMutedVideo: false,
       isMutedAudio: false,
-      isPlayingLocalStream: false,
+      // status
+      camStatus: 'stopped', // stopped, starting, started, stopping
+      micStatus: 'stopped',
+      roomStatus: 'exited', // exited, exiting, entering, entered
+      shareStatus: 'stopped' // stopping, stopped, sharing, shared
     };
   },
 
   methods: {
-    // 初始化客户端
-    async initClient() {
-      this.client = TRTC.createClient({
-        mode: 'rtc',
-        sdkAppId: this.sdkAppId,
-        userId: this.userId,
-        userSig: this.userSig,
-      });
-      this.addSuccessLog(`Client [${this.userId}] created.`);
-      this.handleClientEvents();
+    initTRTC() {
+      if (this.trtc) return;
+      this.trtc = TRTC.create();
+      this.addSuccessLog('trtc instance created.');
     },
 
-    async initLocalStream() {
-      this.localStream = TRTC.createStream({
-        audio: true,
-        video: true,
-        userId: this.userId,
-        cameraId: this.cameraId,
-        microphoneId: this.microphoneId,
-      });
+    async enterRoom() {
+      this.roomStatus = 'entering';
+      this.initTRTC();
       try {
-        await this.localStream.initialize();
-        this.addSuccessLog(`LocalStream [${this.userId}] initialized.`);
-      } catch (error) {
-        this.localStream = null;
-        this.addFailedLog(`LocalStream failed to initialize. Error: ${error.message}.`);
-        throw error;
-      }
-    },
-
-    playLocalStream() {
-      this.localStream.play('localStream')
-        .then(() => {
-          this.isPlayingLocalStream = true;
-          this.addSuccessLog(`LocalStream [${this.userId}] playing.`);
-        })
-        .catch((error) => {
-          this.addFailedLog(`LocalStream [${this.userId}] failed to play. Error: ${error.message}`);
+        await this.trtc.enterRoom({
+          roomId: this.roomId,
+          sdkAppId: parseInt(this.sdkAppId, 10),
+          userId: this.userId,
+          userSig: this.userSig,
         });
-    },
+        this.roomStatus = 'entered';
 
-    destroyLocalStream() {
-      this.localStream && this.localStream.stop();
-      this.localStream && this.localStream.close();
-      this.localStream = null;
-      this.isPlayingLocalStream = false;
-    },
-
-    playRemoteStream(remoteStream, element) {
-      if (remoteStream.getType() === 'main' && remoteStream.getUserId().indexOf('share') >= 0) {
-        remoteStream.play(element, { objectFit: 'contain' }).catch();
-      } else {
-        remoteStream.play(element).catch();
-      }
-    },
-
-    resumeStream(stream) {
-      stream.resume();
-    },
-
-    async join() {
-      if (this.isJoining || this.isJoined) {
-        return;
-      }
-      this.isJoining = true;
-      !this.client && await this.initClient();
-      try {
-        await this.client.join({ roomId: this.roomId });
-        this.isJoining = false;
-        this.isJoined = true;
-
-        this.addSuccessLog(`Join room [${this.roomId}] success.`);
-        this.reportSuccessEvent('joinRoom');
-
+        this.installEventHandlers();
         this.startGetAudioLevel();
+        this.reportSuccessEvent('enterRoom');
+        this.addSuccessLog(`Enter room [${this.roomId}] success.`);
       } catch (error) {
-        this.isJoining = false;
-        console.error('join room failed', error);
-        this.addFailedLog(`Join room ${this.roomId} failed, please check your params. Error: ${error.message}`);
-        this.reportFailedEvent('joinRoom', error);
+        this.roomStatus = 'exited';
+        console.error('enterRoom room failed', error);
+        this.addFailedLog(`Enter room ${this.roomId} failed, please check your params. Error: ${error.message}`);
+        this.reportFailedEvent('enterRoom', error);
         throw error;
       }
     },
 
-    async publish() {
-      if (!this.isJoined || this.isPublishing || this.isPublished) {
-        return;
-      }
-      this.isPublishing = true;
+    async handleStartLocalAudio() {
+      this.micStatus = 'starting';
+      this.initTRTC();
       try {
-        await this.client.publish(this.localStream);
-        this.isPublishing = false;
-        this.isPublished = true;
-
-        this.addSuccessLog('LocalStream is published successfully.');
-        this.reportSuccessEvent('publish');
-      } catch (error) {
-        this.isPublishing = false;
-        console.error('publish localStream failed', error);
-        this.addFailedLog(`LocalStream is failed to publish. Error: ${error.message}`);
-        this.reportFailedEvent('publish');
-        throw error;
-      }
-    },
-
-    async unPublish() {
-      if (!this.isPublished || this.isUnPublishing) {
-        return;
-      }
-      this.isUnPublishing = true;
-      try {
-        await this.client.unpublish(this.localStream);
-        this.isUnPublishing = false;
-        this.isPublished = false;
-
-        this.addSuccessLog('localStream unpublish successfully.');
-        this.reportSuccessEvent('unpublish');
-      } catch (error) {
-        this.isUnPublishing = false;
-        console.error('unpublish localStream failed', error);
-        this.addFailedLog(`LocalStream is failed to unpublish. Error: ${error.message}`);
-        this.reportFailedEvent('unpublish', error);
-        throw error;
-      }
-    },
-
-    async subscribe(remoteStream, config = { audio: true, video: true }) {
-      try {
-        await this.client.subscribe(remoteStream, {
-          audio: isUndefined(config.audio) ? true : config.audio,
-          video: isUndefined(config.video) ? true : config.video,
+        await this.trtc.startLocalAudio({
+          option: {
+            microphoneId: this.microphoneId,
+          },
         });
-        this.addSuccessLog(`Subscribe [${remoteStream.getUserId()}] success.`);
-        this.reportSuccessEvent('subscribe');
+        this.isMutedAudio = false;
+        this.micStatus = 'started';
+        this.addSuccessLog('Local audio started successfully');
+        this.reportSuccessEvent('startLocalAudio');
       } catch (error) {
-        console.error(`subscribe ${remoteStream.getUserId()} with audio: ${config.audio} video: ${config.video} error`, error);
-        this.addFailedLog(`Subscribe ${remoteStream.getUserId()} failed!`);
-        this.reportFailedEvent('subscribe', error);
-      }
-    },
-
-    async unSubscribe(remoteStream) {
-      try {
-        await this.client.unsubscribe(remoteStream);
-        this.addSuccessLog(`unsubscribe [${remoteStream.getUserId()}] success.`);
-        this.reportSuccessEvent('unsubscribe');
-      } catch (error) {
-        console.error(`unsubscribe ${remoteStream.getUserId()} error`, error);
-        this.addFailedLog(`unsubscribe ${remoteStream.getUserId()} failed!`);
-        this.reportFailedEvent('unsubscribe', error);
-      }
-    },
-
-    async leave() {
-      if (!this.isJoined || this.isLeaving) {
-        return;
-      }
-      this.isLeaving = true;
-      this.stopGetAudioLevel();
-      this.isPublished && await this.unPublish();
-      this.localStream && this.destroyLocalStream();
-
-      try {
-        await this.client.leave();
-        this.isLeaving = false;
-        this.isJoined = false;
-
-        this.addSuccessLog('Leave room success.');
-        this.reportSuccessEvent('leaveRoom');
-      } catch (error) {
-        this.isLeaving = false;
-        console.error('leave room error', error);
-        this.addFailedLog(`Leave room failed. Error: ${error.message}`);
-        this.reportFailedEvent('leaveRoom', error);
+        this.micStatus = 'stopped';
+        this.addFailedLog(`Local audio is failed to started. Error: ${error.message}`);
+        this.reportFailedEvent('startLocalAudio', error.message);
         throw error;
       }
     },
 
-    muteVideo() {
-      if (this.localStream) {
-        this.localStream.muteVideo();
-        this.isMutedVideo = true;
-        this.addSuccessLog('LocalStream muted video.');
+    async handleStopLocalAudio() {
+      if (this.micStatus !== 'started') {
+        this.addFailedLog('The audio has not been started');
+        return;
       }
-    },
-
-    muteAudio() {
-      if (this.localStream) {
-        this.localStream.muteAudio();
-        this.isMutedAudio = true;
-        this.addSuccessLog('LocalStream muted audio.');
-      }
-    },
-
-    unmuteVideo() {
-      if (this.localStream) {
-        this.localStream.unmuteVideo();
-        this.isMutedVideo = false;
-        this.addSuccessLog('LocalStream unmuted video.');
-      }
-    },
-
-    unmuteAudio() {
-      if (this.localStream) {
-        this.localStream.unmuteAudio();
-        this.isMutedAudio = false;
-        this.addSuccessLog('LocalStream unmuted audio.');
-      }
-    },
-
-    switchDevice(type, deviceId) {
+      this.micStatus = 'stopping';
+      this.initTRTC();
       try {
-        if (this.localStream) {
-          this.localStream.switchDevice(type, deviceId);
+        await this.trtc.stopLocalAudio();
+        this.micStatus = 'stopped';
+        this.addSuccessLog('Local audio stopped successfully');
+        this.reportSuccessEvent('stopLocalAudio');
+      } catch (error) {
+        this.micStatus = 'started';
+        this.addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
+        this.reportFailedEvent('stopLocalAudio', error.message);
+        throw error;
+      }
+    },
+
+    async handleStartLocalVideo() {
+      this.camStatus = 'starting';
+      this.initTRTC();
+      try {
+        await this.trtc.startLocalVideo({
+          view: 'local',
+          option: {
+            cameraId: this.cameraId,
+            profile: '480p',
+          },
+        });
+        this.camStatus = 'started';
+        this.isMutedVideo = false;
+        this.addSuccessLog('Local video started successfully');
+        this.reportSuccessEvent('startLocalVideo');
+      } catch (error) {
+        this.camStatus = 'stopped';
+        this.addFailedLog(`Local video is failed to started. Error: ${error.message}`);
+        this.reportFailedEvent('startLocalVideo', error.message);
+        throw error;
+      }
+    },
+
+    async handleStopLocalVideo() {
+      if (this.camStatus !== 'started') {
+        this.addFailedLog('The video has not been started');
+        return;
+      }
+      this.camStatus = 'stopping';
+      this.initTRTC();
+      try {
+        await this.trtc.stopLocalVideo();
+        this.camStatus = 'stopped';
+        this.addSuccessLog('Local audio stopped successfully');
+        this.reportSuccessEvent('stopLocalVideo');
+      } catch (error) {
+        this.camStatus = 'started';
+        this.addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
+        this.reportFailedEvent('stopLocalVideo', error.message);
+        throw error;
+      }
+    },
+
+    async exitRoom() {
+      if (this.roomStatus !== 'entered') {
+        this.addFailedLog('The room has not been entered');
+        return;
+      }
+      this.roomStatus = 'exiting';
+      this.stopGetAudioLevel();
+
+      try {
+        await this.trtc.exitRoom();
+        this.roomStatus = 'exited';
+        this.remoteUsersViews = [];
+        this.uninstallEventHandlers();
+
+        this.addSuccessLog('Exit room success.');
+        this.reportSuccessEvent('exitRoom');
+      } catch (error) {
+        this.roomStatus = 'entered';
+        this.addFailedLog(`Exit room failed. Error: ${error.message}`);
+        this.reportFailedEvent('exitRoom', error);
+        throw error;
+      }
+
+      if (this.micStatus === 'started') this.handleStopLocalAudio();
+      if (this.camStatus === 'started') this.handleStopLocalVideo();
+      if (this.shareStatus === 'shared') this.handleStopScreenShare();
+    },
+
+    async muteVideo() {
+      try {
+        await this.trtc.updateLocalVideo({ mute: true });
+        this.isMutedVideo = true;
+        this.addSuccessLog('Mute video success.');
+      } catch (error) {
+        this.addFailedLog(`Mute video error: ${error.message}`);
+      }
+    },
+
+    async muteAudio() {
+      try {
+        await this.trtc.updateLocalAudio({ mute: true });
+        this.isMutedAudio = true;
+        this.addSuccessLog('Mute audio success.');
+      } catch (error) {
+        this.addFailedLog(`Mute audio error: ${error.message}`);
+      }
+    },
+
+    async unmuteVideo() {
+      try {
+        await this.trtc.updateLocalVideo({ mute: false });
+        this.isMutedVideo = false;
+        this.addSuccessLog('Unmute video success.');
+      } catch (error) {
+        this.addFailedLog(`Unmute video error: ${error.message}`);
+      }
+    },
+
+    async unmuteAudio() {
+      try {
+        await this.trtc.updateLocalAudio({ mute: false });
+        this.isMutedAudio = false;
+        this.addSuccessLog('Unmute audio success.');
+      } catch (error) {
+        this.addFailedLog(`Unmute audio error: ${error.message}`);
+      }
+    },
+
+    async switchDevice(type, deviceId) {
+      try {
+        if (type === 'video' && this.camStatus === 'started') {
+          await this.trtc.updateLocalVideo({
+            option: { cameraId: deviceId },
+          });
+          this.addSuccessLog(`Switch ${type} device success.`);
+        }
+        if (type === 'audio' && this.micStatus === 'started') {
+          await this.trtc.updateLocalAudio({
+            option: { microphoneId: deviceId },
+          });
           this.addSuccessLog(`Switch ${type} device success.`);
         }
       } catch (error) {
@@ -246,115 +225,110 @@ export default {
     },
 
     startGetAudioLevel() {
-      // 文档：https://web.sdk.qcloud.com/trtc/webrtc/doc/zh-cn/module-ClientEvent.html#.AUDIO_VOLUME
-      this.client.on('audio-volume', (event) => {
-        event.result.forEach(({ userId, audioVolume }) => {
-          if (audioVolume > 2) {
-            console.log(`user: ${userId} is speaking, audioVolume: ${audioVolume}`);
+      this.trtc.on(TRTC.EVENT.AUDIO_VOLUME, (event) => {
+        event.result.forEach(({ userId, volume }) => {
+          const isMe = userId === ''; // 当 userId 为空串时，代表本地麦克风音量。
+          if (isMe) {
+            console.log(`my volume: ${volume}`);
+          } else {
+            console.log(`user: ${userId} volume: ${volume}`);
           }
         });
       });
-      this.client.enableAudioVolumeEvaluation(200);
+      this.trtc.enableAudioVolumeEvaluation(2000);
     },
 
     stopGetAudioLevel() {
-      this.client && this.client.enableAudioVolumeEvaluation(-1);
+      this.trtc && this.trtc.enableAudioVolumeEvaluation(-1);
     },
 
-    handleClientEvents() {
-      this.client.on('error', (error) => {
-        console.error(error);
-        alert(error);
-      });
-      this.client.on('client-banned', async (event) => {
-        console.warn(`client has been banned for ${event.reason}`);
+    installEventHandlers() {
+      this.trtc.on(TRTC.EVENT.ERROR, this.handleError);
+      this.trtc.on(TRTC.EVENT.KICKED_OUT, this.handleKickedOut);
+      this.trtc.on(TRTC.EVENT.REMOTE_USER_ENTER, this.handleRemoteUserEnter);
+      this.trtc.on(TRTC.EVENT.REMOTE_USER_EXIT, this.handleRemoteUserExit);
+      this.trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, this.handleRemoteVideoAvailable);
+      this.trtc.on(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, this.handleRemoteVideoUnavailable);
+      this.trtc.on(TRTC.EVENT.REMOTE_AUDIO_UNAVAILABLE, this.handleRemoteAudioUnavailable);
+      this.trtc.on(TRTC.EVENT.REMOTE_AUDIO_AVAILABLE, this.handleRemoteAudioAvailable);
+      this.trtc.on(TRTC.EVENT.SCREEN_SHARE_STOPPED, this.handleScreenShareStopped);
+    },
 
-        this.isPublished = false;
-        this.localStream = null;
-        await this.leave();
-      });
-      // fired when a remote peer is joining the room
-      this.client.on('peer-join', (event) => {
-        const { userId } = event;
-        console.log(`peer-join ${userId}`, event);
-      });
-      // fired when a remote peer is leaving the room
-      this.client.on('peer-leave', (event) => {
-        const { userId } = event;
-        console.log(`peer-leave ${userId}`, event);
-      });
+    uninstallEventHandlers() {
+      this.trtc.off(TRTC.EVENT.ERROR, this.handleError);
+      this.trtc.off(TRTC.EVENT.KICKED_OUT, this.handleKickedOut);
+      this.trtc.off(TRTC.EVENT.REMOTE_USER_ENTER, this.handleRemoteUserEnter);
+      this.trtc.off(TRTC.EVENT.REMOTE_USER_EXIT, this.handleRemoteUserExit);
+      this.trtc.off(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, this.handleRemoteVideoAvailable);
+      this.trtc.off(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, this.handleRemoteVideoUnavailable);
+      this.trtc.off(TRTC.EVENT.REMOTE_AUDIO_UNAVAILABLE, this.handleRemoteAudioUnavailable);
+      this.trtc.off(TRTC.EVENT.REMOTE_AUDIO_AVAILABLE, this.handleRemoteAudioAvailable);
+      this.trtc.off(TRTC.EVENT.SCREEN_SHARE_STOPPED, this.handleScreenShareStopped);
+    },
 
-      // fired when a remote stream is added
-      this.client.on('stream-added', (event) => {
-        const { stream: remoteStream } = event;
-        const remoteUserId = remoteStream.getUserId();
-        if (remoteUserId === `share_${this.userId}`) {
-          // don't need screen shared by us
-          this.unSubscribe(remoteStream);
+    handleError(error) {
+      this.addFailedLog(`Local error: ${error.message}`);
+      alert(error);
+    },
+
+    async handleKickedOut(event) {
+      this.addFailedLog(`User has been kicked out for ${event.reason}`);
+      this.trtc = null;
+      await this.exitRoom();
+    },
+
+    handleRemoteUserEnter(event) {
+      const { userId } = event;
+      this.addSuccessLog(`Remote User [${userId}] entered`);
+    },
+
+    handleRemoteUserExit(event) {
+      this.addSuccessLog(`Remote User [${event.userId}] exit`);
+    },
+
+    handleRemoteVideoAvailable(event) {
+      const { userId, streamType } = event;
+      try {
+        this.addSuccessLog(`[${userId}] [${streamType}] video available`);
+        if (streamType === TRTC.TYPE.STREAM_TYPE_MAIN) {
+          this.remoteUsersViews.push(`${userId}_main`);
+          this.$nextTick(async () => {
+            await this.trtc.startRemoteVideo({ userId, streamType, view: `${userId}_main` });
+          });
         } else {
-          console.log(`remote stream added: [${remoteUserId}] type: ${remoteStream.getType()}`);
-          // subscribe to this remote stream
-          this.subscribe(remoteStream);
-          this.addSuccessLog(`RemoteStream added: [${remoteUserId}].`);
+          this.remoteUsersViews.push(`${userId}_screen`);
+          this.$nextTick(async () => {
+            await this.trtc.startRemoteVideo({ userId, streamType, view: `${userId}_screen` });
+          });
         }
-      });
-      // fired when a remote stream has been subscribed
-      this.client.on('stream-subscribed', (event) => {
-        const { stream: remoteStream } = event;
-        const remoteUserId = remoteStream.getUserId();
-        console.log('stream-subscribed userId: ', remoteUserId);
-        this.addSuccessLog(`RemoteStream subscribed: [${remoteUserId}].`);
-        this.remoteStreamList.push(remoteStream);
-        this.$nextTick(() => {
-          this.playRemoteStream(remoteStream, remoteUserId);
-        });
-      });
-      // fired when the remote stream is removed, e.g. the remote user called Client.unpublish()
-      this.client.on('stream-removed', (event) => {
-        const { stream: remoteStream } = event;
-        remoteStream.stop();
-        const index = this.remoteStreamList.indexOf(remoteStream);
-        if (index >= 0) {
-          this.remoteStreamList.splice(index, 1);
-        }
-        console.log(`stream-removed userId: ${remoteStream.getUserId()} type: ${remoteStream.getType()}`);
-      });
-
-      this.client.on('stream-updated', (event) => {
-        const { stream: remoteStream } = event;
-        console.log(`type: ${remoteStream.getType()} stream-updated hasAudio: ${remoteStream.hasAudio()} hasVideo: ${remoteStream.hasVideo()}`);
-        this.addSuccessLog(`RemoteStream updated: [${remoteStream.getUserId()}] audio:${remoteStream.hasAudio()}, video:${remoteStream.hasVideo()}.`);
-      });
-
-      this.client.on('mute-audio', (event) => {
-        const { userId } = event;
-        console.log(`${userId} mute audio`);
-        this.addSuccessLog(`[${event.userId}] mute audio.`);
-      });
-      this.client.on('unmute-audio', (event) => {
-        const { userId } = event;
-        console.log(`${userId} unmute audio`);
-        this.addSuccessLog(`[${event.userId}] unmute audio.`);
-      });
-      this.client.on('mute-video', (event) => {
-        const { userId } = event;
-        console.log(`${userId} mute video`);
-        this.addSuccessLog(`[${event.userId}] mute video.`);
-      });
-      this.client.on('unmute-video', (event) => {
-        const { userId } = event;
-        console.log(`${userId} unmute video`);
-        this.addSuccessLog(`[${event.userId}] unmute video.`);
-      });
-
-      this.client.on('connection-state-changed', (event) => {
-        console.log(`RtcClient state changed to ${event.state} from ${event.prevState}`);
-      });
-
-      this.client.on('network-quality', (event) => {
-        const { uplinkNetworkQuality, downlinkNetworkQuality } = event;
-        console.log(`network-quality uplinkNetworkQuality: ${uplinkNetworkQuality}, downlinkNetworkQuality: ${downlinkNetworkQuality}`);
-      });
+        this.addSuccessLog(`Play remote video success: [${userId}]`);
+      } catch (error) {
+        this.addFailedLog(`Play remote video failed: [${userId}], error: ${error.message}`);
+      }
     },
+
+    handleRemoteVideoUnavailable(event) {
+      this.addSuccessLog(`[${event.userId}] [${event.streamType}] video unavailable`);
+      const { streamType } = event;
+      this.trtc.stopRemoteVideo({ userId: event.userId, streamType });
+      if (streamType === TRTC.TYPE.STREAM_TYPE_MAIN) {
+        this.remoteUsersViews = this.remoteUsersViews.filter(userId => userId !== `${event.userId}_main`);
+      } else {
+        this.remoteUsersViews = this.remoteUsersViews.filter(userId => userId !== `${event.userId}_screen`);
+      }
+    },
+
+    handleRemoteAudioUnavailable(event) {
+      this.addSuccessLog(`[${event.userId}] audio unavailable`);
+    },
+
+    handleRemoteAudioAvailable(event) {
+      this.addSuccessLog(`[${event.userId}] audio available`);
+    },
+
+    handleScreenShareStopped() {
+      this.shareStatus = 'stopped';
+      this.addSuccessLog('Stop share screen success');
+    }
   },
 };

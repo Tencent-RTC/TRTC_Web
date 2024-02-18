@@ -7,17 +7,17 @@
         </div>
       </div>
       <div style='padding-top: 10px'>
-        <el-button type='primary' @click='handleJoin'>
-          Join
+        <el-button type='primary' @click='handleEnter'>
+          Enter
         </el-button>
-        <el-button type='primary' @click='handleLeave'>
-          Leave
+        <el-button type='primary' @click='handleExit'>
+          Exit
         </el-button>
       </div>
       <div id='local' style='max-width: 640px;margin-top: 20px'></div>
       <div class='remote-container'>
-        <template v-for='item in store.invitedRemoteStreams' :key='item.getId()'>
-          <div :id='item.getId()' style='max-width: 640px;margin-top: 20px'></div>
+        <template v-for='userId in store.invitedRemoteUsers' :key='userId'>
+          <div :id='userId' style='max-width: 640px;margin-top: 20px'></div>
         </template>
       </div>
     </el-col>
@@ -27,75 +27,99 @@
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus/es';
 import { nextTick } from 'vue';
+import TRTC from 'trtc-sdk-v5';
 import { getParamKey } from '@/utils/utils';
-import Client from '@/utils/client';
 import appStore from '@/store';
 
 const { t } = useI18n();
 const store = appStore();
 
 const sdkAppId = parseInt(getParamKey('sdkAppId'), 10);
-const userId = getParamKey('userId');
+const myUserId = getParamKey('userId');
 const userSig = getParamKey('userSig');
 const roomId = parseInt(getParamKey('roomId'), 10);
 
 const state = { url: window.location.href.split('?')[0] };
 window.history.pushState(state, '', 'index.html#/invite');
 
-if (!sdkAppId || !userId || !userSig || !roomId) {
+navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
+  stream.getTracks().forEach((track) => { track.stop(); });
+}).catch(() => {
+  ElMessage({ message: t('permit'), type: 'error' });
+});
+
+if (!sdkAppId || !myUserId || !userSig || !roomId) {
   ElMessage.error(t('check'));
 }
-let localClient: any;
+const trtc = TRTC.create();
 
-async function handleJoin() {
+async function handleEnter() {
   try {
-    localClient = new Client({
-      sdkAppId,
-      userSig,
-      userId,
+    await trtc.enterRoom({
       roomId,
+      sdkAppId,
+      userId: myUserId,
+      userSig,
     });
-    const client = localClient.getClient();
 
-    client.on('stream-subscribed', handleSubscribed);
-    client.on('stream-removed', handleRemoved);
+    trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, handleRemoteVideoAvailable);
+    trtc.on(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, handleRemoteVideoUnavailable);
 
-    await localClient.join();
-    await localClient.publish();
-    const localStream = localClient.getLocalStream();
-
-    await nextTick();
-    localStream.play('local');
+    await trtc.startLocalAudio();
+    await trtc.startLocalVideo({
+      view: 'local',
+      option: {
+        profile: '480p',
+      },
+    });
   } catch (error: any) {
     ElMessage({
-      message: error.message_,
+      message: error.message,
       type: 'error',
     });
   }
 }
 
-async function handleSubscribed(event: any) {
-  const remoteStream = event.stream;
-  const id = remoteStream.getId();
-  const remoteId = `${id}`;
-  console.log(1212, event);
-  store.invitedRemoteStreams.push(remoteStream);
-  await nextTick();
-  remoteStream.play(remoteId).then(() => {
-    console.log(`RemoteStream play success: [${userId}]`);
-  }).catch((error: any) => {
-    console.log(`RemoteStream play failed: [${userId}], error: ${error.message_}`);
-  });
+async function handleRemoteVideoAvailable(event: any) {
+  console.log('[demo] Video Available', event);
+  const { userId, streamType } = event;
+  try {
+    if (streamType === TRTC.TYPE.STREAM_TYPE_MAIN) {
+      store.invitedRemoteUsers.push(`${userId}_main`);
+      await nextTick();
+      await trtc.startRemoteVideo({ userId, streamType, view: `${userId}_main` });
+    } else {
+      store.invitedRemoteUsers.push(`${userId}_screen`);
+      await nextTick();
+      trtc.startRemoteVideo({ userId, streamType, view: `${userId}_screen` });
+    }
+    console.log(`startRemoteVideo success: [${userId}]`);
+  } catch (error: any) {
+    console.log(`startRemoteVideo failed: [${userId}], error: ${error.message}`);
+  }
 }
 
-async function handleRemoved(event: any) {
-  const remoteStream = event.stream;
-  const id = remoteStream.getId();
-  store.invitedRemoteStreams = store.invitedRemoteStreams.filter((stream: any) => stream.getId() !== id);
+async function handleRemoteVideoUnavailable(event: any) {
+  console.log('[demo] Video Unavailable', event);
+  const { streamType } = event;
+  trtc.stopRemoteVideo({ userId: event.userId, streamType });
+  if (streamType === TRTC.TYPE.STREAM_TYPE_MAIN) {
+    store.invitedRemoteUsers = store.invitedRemoteUsers.filter((userId: string) => userId !== `${event.userId}_main`);
+  } else {
+    store.invitedRemoteUsers = store.invitedRemoteUsers.filter((userId: string) => userId !== `${event.userId}_screen`);
+  }
 }
 
-async function handleLeave() {
-  await localClient.leave();
+async function handleExit() {
+  try {
+    trtc.off(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, handleRemoteVideoAvailable);
+    trtc.off(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, handleRemoteVideoUnavailable);
+    await trtc.exitRoom();
+    await trtc.stopLocalVideo();
+    await trtc.stopLocalAudio();
+  } catch (error: any) {
+    ElMessage({ message: `Exit room failed. Error: ${error.message}`, type: 'error' });
+  }
 }
 </script>
 <style lang='stylus' scoped>

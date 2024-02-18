@@ -1,0 +1,43 @@
+{
+  "name": "quick-vue2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npm install && npm run serve",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "eslint ./src",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
+    "lint:fix": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "aegis-web-sdk": "^1.35.26",
+    "core-js": "^3.8.3",
+    "element-ui": "^2.15.9",
+    "trtc-js-sdk": "latest",
+    "vue": "^2.7.9",
+    "vue-i18n": "^8.26.3",
+    "vue-router": "^3.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/eslint-parser": "^7.14.6",
+    "@intlify/vue-i18n-loader": "^1.1.0",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "babel-plugin-component": "^1.1.1",
+    "eslint": "^8.21.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "sass": "^1.52.2",
+    "sass-loader": "^13.0.0",
+    "svg-sprite-loader": "^6.0.11",
+    "vue-cli-plugin-i18n": "^2.3.1",
+    "vue-template-compiler": "^2.7.9"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

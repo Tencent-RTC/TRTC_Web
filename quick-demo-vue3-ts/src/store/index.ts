@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { genTestUserSig } from '@/utils/generateTestUserSig';
+import { genTestUserSig } from '../utils/generateTestUserSig';
 
 const appStore = defineStore('app', {
   state: () => ({
@@ -13,11 +13,8 @@ const appStore = defineStore('app', {
     cameraList: [],
     microphoneList: [],
     logs: [],
-    isJoined: false,
-    isPublished: false,
-    isShared: false,
-    remoteStreams: [],
-    invitedRemoteStreams: [],
+    remoteUsersViews: [],
+    invitedRemoteUsers: [],
   }),
   getters: {},
   actions: {

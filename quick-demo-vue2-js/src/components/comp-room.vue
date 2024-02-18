@@ -12,36 +12,67 @@
         <el-button
           class="button"
           type="primary"
-          size="small" :disabled="isJoining || isJoined" @click="handleJoinRoom">{{ $t('Join Room') }}</el-button>
+          size="small"
+          :loading="roomStatus === 'entering'"
+          :disabled="roomStatus === 'entered'"
+          @click="handleEnterRoom">{{ $t('Enter Room') }}</el-button>
+        <el-button
+          class="button"
+          type="primary"
+          size="small"
+          :loading="roomStatus === 'exiting'"
+          @click="handleExit">{{ $t('Exit Room') }}</el-button>
+      </div>
+      <div class="rtc-control-container">
         <el-button
           v-if="isHostMode"
           class="button"
           type="primary"
-          size="small" :disabled="isPublishing || isPublished" @click="handlePublish">{{ $t('Publish') }}</el-button>
+          :loading="micStatus === 'starting'"
+          :disabled="micStatus === 'started'"
+          size="small" @click="handleStartLocalAudio">{{ $t('Start Local Audio') }}
+        </el-button>
         <el-button
           v-if="isHostMode"
           class="button"
-          type="primary" size="small" @click="handleUnpublish">{{ $t('Unpublish') }}</el-button>
+          type="primary"
+          :loading="camStatus === 'starting'"
+          :disabled="camStatus === 'started'"
+          size="small" @click="handleStartLocalVideo">{{ $t('Start Local Video') }}
+        </el-button>
         <el-button
+          v-if="isHostMode"
           class="button"
-          type="primary" size="small" @click="handleLeave">{{ $t('Leave Room') }}</el-button>
+          :loading="micStatus === 'stopping'"
+          type="primary" size="small" @click="handleStopLocalAudio">{{ $t('Stop Local Audio') }}
+        </el-button>
+        <el-button
+          v-if="isHostMode"
+          class="button"
+          :loading="camStatus === 'stopping'"
+          type="primary" size="small" @click="handleStopLocalVideo">{{ $t('Stop Local Video') }}
+        </el-button>
       </div>
       <div v-if="isHostMode" class="screen-share-control-container">
         <el-button
           class="button"
           type="primary"
           size="small"
-          :disabled="isShareJoined && isSharePublished"
+          :loading="shareStatus === 'sharing'"
+          :disabled="shareStatus === 'shared'"
           @click="handleStartScreenShare">{{ $t('Start Screen Share') }}</el-button>
         <el-button
           class="button"
-          type="primary" size="small" @click="handleStopScreenShare">{{ $t('Stop Screen Share') }}</el-button>
+          type="primary"
+          size="small"
+          :loading="shareStatus === 'stopping'"
+          @click="handleStopScreenShare">{{ $t('Stop Screen Share') }}</el-button>
       </div>
     </div>
 
     <!-- 显示邀请链接 -->
     <div v-if="showInviteLink" class="invite-link-container">
-      <span v-if="isEnLang">Copy the link to invite friends to join the video call, one link can invite only one person,
+      <span v-if="isEnLang">Copy the link to invite friends to enter the video call, one link can invite only one person,
         the link will be updated automatically after copying.</span>
       <span v-else>复制链接邀请好友加入视频通话，一条链接仅可邀请一人，复制后自动更新链接。</span>
       <el-input class="invite-input" v-model="inviteLink">
@@ -73,11 +104,11 @@
       </div>
 
       <!-- 本地流区域 -->
-      <div v-if="localStream" class="local-stream-container">
+      <div v-show="camStatus === 'started'" class="local-stream-container">
         <!-- 本地流播放区域 -->
-        <div id="localStream" class="local-stream-content"></div>
+        <div id="local" class="local-stream-content"></div>
         <!-- 本地流操作栏 -->
-        <div v-if="isPlayingLocalStream" class="local-stream-control">
+        <div class="local-stream-control">
           <div class="video-control control">
             <span v-if="!isMutedVideo" @click="muteVideo">
               <svg-icon icon-name="video" class="icon-class"></svg-icon>
@@ -101,9 +132,9 @@
     <!-- 远端流区域 -->
     <div class="remote-container">
       <div
-        v-for="(item) in remoteStreamList"
-        :key="item.getUserId()"
-        :id="item.getUserId()"
+        v-for="(item) in remoteUsersViews"
+        :key="item"
+        :id="item"
         class="remote-stream-container">
       </div>
     </div>
@@ -112,12 +143,12 @@
 
 <script>
 import rtc from './mixins/rtc.js';
-import shareRtc from  './mixins/share-rtc.js';
+import TRTC from 'trtc-sdk-v5';
 import LibGenerateTestUserSig from '@/utils/lib-generate-test-usersig.min.js';
 
 export default {
   name: 'compRoom',
-  mixins: [rtc, shareRtc],
+  mixins: [rtc],
   props: {
     type: String,
     sdkAppId: Number,
@@ -135,6 +166,9 @@ export default {
       showCopiedTip: false,
     };
   },
+  mounted() {
+    this.trtc = TRTC.create();
+  },
   computed: {
     isHostMode() {
       return this.type !== 'invite';
@@ -143,7 +177,7 @@ export default {
       return this.$i18n.locale === 'en';
     },
     showInviteLink() {
-      return this.isHostMode && (this.isJoined || this.isShareJoined) && this.inviteLink;
+      return this.isHostMode && this.roomStatus === 'entered' && this.inviteLink;
     },
   },
   watch: {
@@ -173,8 +207,8 @@ export default {
       }, 1500);
       this.generateInviteLink();
     },
-    // 点击【Join Room】按钮
-    async handleJoinRoom() {
+    // 点击【Enter Room】按钮
+    async handleEnterRoom() {
       if (this.isHostMode) {
         if (!this.sdkAppId || !this.secretKey) {
           alert(this.$t('Please enter sdkAppId and secretKey'));
@@ -193,46 +227,46 @@ export default {
         }
         this.userSig = this.inviteUserSig;
       }
-      await this.initClient();
-      await this.join();
-      await this.initLocalStream();
-      await this.playLocalStream();
-      await this.publish();
+      await this.enterRoom();
+      this.handleStartLocalAudio();
+      this.handleStartLocalVideo();
       this.generateInviteLink();
     },
 
-    // 点击【Publish】按钮
-    async handlePublish() {
-      await this.publish();
+    async handleExit() {
+      await this.exitRoom();
     },
 
-    // 点击【Unpublish】按钮
-    async handleUnpublish() {
-      await this.unPublish();
-    },
-
-    // 点击【Leave Room】按钮
-    async handleLeave() {
-      await this.leave();
-    },
-
-    // 点击【开始屏幕分享】按钮
     async handleStartScreenShare() {
       if (!this.sdkAppId || !this.secretKey) {
         alert(this.$t('Please enter sdkAppId and secretKey'));
         return;
       }
-      await this.initShareClient();
-      await this.initShareLocalStream();
-      await this.handleShareJoin();
-      await this.handleSharePublish();
-      this.generateInviteLink();
+      this.shareStatus = 'sharing';
+      try {
+        await this.trtc.startScreenShare();
+        this.shareStatus = 'shared';
+        this.addSuccessLog('Start share screen success');
+      } catch (error) {
+        this.shareStatus = 'stopped';
+        this.addFailedLog(`Start share error: ${error.message}`);
+      }
     },
 
-    // 点击【停止屏幕分享按钮】
     async handleStopScreenShare() {
-      await this.handleShareUnpublish();
-      await this.handleShareLeave();
+      if (this.shareStatus !== 'shared') {
+        this.addFailedLog('The Share is not started');
+        return;
+      }
+      this.shareStatus = 'stopping';
+      try {
+        await this.trtc.stopScreenShare();
+        this.shareStatus = 'stopped';
+        this.addSuccessLog('Stop share screen success');
+      } catch (error) {
+        this.shareStatus = 'shared';
+        this.addFailedLog(`Stop share error: ${error.message}`);
+      }
     },
 
     // 显示成功的 Log
@@ -402,22 +436,26 @@ export default {
 {
 	"en": {
 		"Operation": "Operation",
-    "Join Room": "Join Room",
-    "Publish": "Publish",
-    "Unpublish": "Unpublish",
-    "Leave Room": "Leave Room",
+    "Enter Room": "Enter Room",
+    "Start Local Audio": "Start Local Audio",
+    "Stop Local Audio": "Stop Local Audio",
+    "Start Local Video": "Start Local Video",
+    "Stop Local Video": "Stop Local Video",
+    "Exit Room": "Exit Room",
     "Start Screen Share": "Start Screen Share",
     "Stop Screen Share": "Stop Screen Share",
     "Please enter sdkAppId and secretKey": "Please enter sdkAppId and secretKey",
     "Please enter userId and roomId": "Please enter userId and roomId",
     "Please reacquire the invitation link": "Please reacquire the invitation link!"
 	},
-	"zh": {
+	"zh-cn": {
 		"Operation": "操作",
-    "Join Room": "进入房间",
-    "Publish": "发布流",
-    "Unpublish": "取消发布流",
-    "Leave Room": "离开房间",
+    "Enter Room": "进入房间",
+    "Start Local Audio": "采集麦克风",
+    "Stop Local Audio": "终止采集麦克风",
+    "Start Local Video": "采集摄像头",
+    "Stop Local Video": "终止采集摄像头",
+    "Exit Room": "离开房间",
     "Start Screen Share": "开始共享屏幕",
     "Stop Screen Share": "停止共享屏幕",
     "Please enter sdkAppId and secretKey": "请输入 sdkAppId 和 secretKey",

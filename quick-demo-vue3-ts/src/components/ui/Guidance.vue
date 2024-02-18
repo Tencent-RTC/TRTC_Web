@@ -14,12 +14,7 @@
       <el-collapse-item :title="t('step2')" class="header" name="2">
         <div class="item">
           <ul v-if="isEnLang" class="collapse-content">
-            <li>Login <a target="_blank" href="https://console.cloud.tencent.com/trtc">TRTC Console</a>, choose Development Assistance > <a
-              target="_blank" href="https://console.cloud.tencent.com/trtc/quickstart">Demo Quick Run</a></li>
-            <li>Click New, enter a name for the application, such as TestTRTC.
-              If you have already created an application, click Existing.</li>
-            <li>Add or edit tags according to actual needs, click Create.</li>
-            <img src="../../assets/image/step1-en.png" alt="Create App" style="width: 400px"/>
+            Please visit the <a href="https://console.tencentcloud.com/trtc/app" target="_blank" rel="noopener noreferrer"> TRTC console </a> and create an RTC Engine application.
           </ul>
           <ul v-if="isZhLang" class="collapse-content">
             <li>登录<a target="_blank" href="https://console.cloud.tencent.com/trtc">实时音视频控制台</a>，选择【开发辅助】 > 【<a
@@ -46,21 +41,19 @@
         <div class="item">
           <ul v-if="isEnLang" class="collapse-content">
             <li>Input userId and roomId</li>
-            <li>Click Join Room to enter the room</li>
-            <li>Click Publish to publish LocalStream</li>
-            <li>Click Unpublish to unpublish LocalStream</li>
-            <li>Click Leave Room to leave the room</li>
-            <li>Click Start Share Screen to publish screen stream</li>
-            <li>Click Stop Share Screen to unpublish screen stream</li>
+            <li>Click the "Enter Room" button to enter the room</li>
+            <li>Click the "Start Local Audio/Video" button to capture microphone or camera</li>
+            <li>Click the "Stop Local Audio/Video" button to stop capturing microphone or camera</li>
+            <li>Click the "Start Screen Share" button to start screen sharing</li>
+            <li>Click the "Stop Screen Share" button to stop screen sharing</li>
           </ul>
           <ul v-if="isZhLang" class="collapse-content">
             <li>输入 userId 和 roomId</li>
             <li>点击【进入房间】按钮进入房间</li>
-            <li>点击【发布流】按钮发布音视频</li>
-            <li>点击【取消发布流】按钮取消发布音视频</li>
-            <li>点击【离开房间】按钮离开房间</li>
-            <li>点击【开始共享屏幕】按钮布屏幕分享</li>
-            <li>点击【停止共享屏幕】按钮取消发布屏幕分享</li>
+            <li>点击【采集麦克风】/ 【采集摄像头】按钮，可采集麦克风或摄像头</li>
+            <li>点击【终止采集麦克风】/ 【终止采集摄像头】按钮，可终止采集麦克风或摄像头</li>
+            <li>点击【开始共享屏幕】按钮开始屏幕分享</li>
+            <li>点击【停止共享屏幕】按钮取消屏幕分享</li>
           </ul>
         </div>
       </el-collapse-item>
@@ -74,7 +67,7 @@ import { useI18n } from 'vue-i18n';
 
 const { locale, t } = useI18n();
 const isEnLang = computed(() => locale.value === 'en');
-const isZhLang = computed(() => locale.value === 'zh');
+const isZhLang = computed(() => locale.value === 'zh-cn');
 
 const active = ref<Array<string>>(['1', '4']);
 
