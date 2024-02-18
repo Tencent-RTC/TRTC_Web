@@ -4,7 +4,7 @@ English | [简体中文](./README-zh_CN.md)
 
 ## Tryout
 
-We offer an [online web demo (Vue.js 2.0)](https://web.sdk.qcloud.com/trtc/webrtc/demo/quick-demo-vue2-js/index.html) for you to try out TRTC features.
+We offer an [online web demo (Vue.js 2.0)](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue2-js/index.html) for you to try out TRTC features.
 
 Enter your application’s `SDKAppID` and secret key on the webpage to enter a room. For how to get the `SDKAppID` and secret key, see <a href="#getAppInfo">[Getting Application Information]</a>.
 
@@ -14,7 +14,7 @@ After joining a room, you can use a share link to invite others to try the audio
 
 #### Download the demo source code
 
-Download the source code of the TRTC web quick demo (Vue.js 2.0) at [GitHub](https://github.com/LiteAVSDK/TRTC_Web) (in `TRTC_Web/quick-demo-vue2-js`).
+Download the source code of the TRTC web quick demo (Vue.js 2.0) at [GitHub](https://github.com/LiteAVSDK/TRTC_Web/v5) (in `TRTC_Web/v5/quick-demo-vue2-js`).
 
 #### Run the demo
 
@@ -42,12 +42,12 @@ Note: A node environment of v14.16.0 and above is recommended.
 
 #### Try the demo
 
-- Click **Join Room** to enter a room.
-- Click **Publish** to publish the local stream.
-- Click **Unpublish** to stop publishing the local stream.
-- Click **Leave Room** to leave the room.
-- Click **Start Screen Share** to share the screen.
-- Click **Stop Screen Share** to stop sharing the screen.
+- Input userId and roomId
+- Click the "Enter Room" button to enter the room
+- Click the "Start Local Audio/Video" button to capture microphone or camera
+- Click the "Stop Local Audio/Video" button to stop capturing microphone or camera
+- Click the "Start Share Screen" button to start screen sharing
+- Click the "Stop Share Screen" button to stop screen sharing
 
 #### Others
 

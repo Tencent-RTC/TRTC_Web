@@ -145,7 +145,7 @@ export default {
     "Click": "View documents",
     "Url": "https://intl.cloud.tencent.com/document/product/647/35166"
 	},
-	"zh": {
+	"zh-cn": {
 		"Params": "参数",
     "Device Select": "设备选择",
     "Alert": "注意️：本 Demo 仅用于调试，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。",

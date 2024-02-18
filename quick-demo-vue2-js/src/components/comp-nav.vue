@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     isZhLang() {
-      return this.$i18n.locale === 'zh';
+      return this.$i18n.locale === 'zh-cn';
     },
     isEnLang() {
       return this.$i18n.locale === 'en';
@@ -39,12 +39,12 @@ export default {
     toggleLanguage() {
       switch (this.$i18n.locale) {
         case 'en':
-          this.$i18n.locale = 'zh';
-          localStorage.setItem('trtc-quick-vue2-language', 'zh');
+          this.$i18n.locale = 'zh-cn';
+          localStorage.setItem('trtc-v5-quick-demo-vue2-js', 'zh-cn');
           break;
-        case 'zh':
+        case 'zh-cn':
           this.$i18n.locale = 'en';
-          localStorage.setItem('trtc-quick-vue2-language', 'en');
+          localStorage.setItem('trtc-v5-quick-demo-vue2-js', 'en');
           break;
       }
       document.title = this.$i18n.t('title');

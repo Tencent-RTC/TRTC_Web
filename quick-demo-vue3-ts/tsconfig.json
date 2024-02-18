@@ -13,9 +13,12 @@
 		"strictNullChecks": false,
 		"useDefineForClassFields": true,
 		"sourceMap": true,
-		"baseUrl": ".",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"baseUrl": "/",
 		"types": [
-			"webpack-env"
+			"vite/client"
+			// if using vite
 		],
 		"paths": {
 			"@/*": [
@@ -24,9 +27,7 @@
 		},
 		"lib": [
 			"esnext",
-			"dom",
-			"dom.iterable",
-			"scripthost"
+			"dom"
 		]
 	},
 	"include": [
@@ -36,7 +37,9 @@
 		"tests/**/*.ts",
 		"tests/**/*.tsx"
 	],
-	"exclude": [
-		"node_modules"
+	"references": [
+		{
+			"path": "./tsconfig.node.json"
+		}
 	]
 }

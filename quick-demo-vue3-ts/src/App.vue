@@ -1,10 +1,10 @@
 <template>
-  <NavBar/>
-  <router-view/>
+  <NavBar />
+  <router-view />
 </template>
 
 <script lang="ts" setup>
-import TRTC from 'trtc-js-sdk';
+import TRTC from 'trtc-sdk-v5';
 import { ElMessage } from 'element-plus/es';
 import { inject } from 'vue';
 import NavBar from '@/components/ui/NavBar.vue';
@@ -12,9 +12,9 @@ import NavBar from '@/components/ui/NavBar.vue';
 const $aegis: any = inject('$aegis');
 
 // check current environment is supported TRTC or not
-TRTC.checkSystemRequirements().then((checkResult) => {
+TRTC.isSupported().then((checkResult: any) => {
+  console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
   if (!checkResult.result) {
-    console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
     ElMessage({ message: 'Your browser does not supported TRTC!', type: 'error' });
     window.location.href = 'https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html';
   }

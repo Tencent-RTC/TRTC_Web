@@ -1,18 +1,10 @@
-import { getLanguage } from '@/utils/utils';
 import { createI18n } from 'vue-i18n';
+import { getLanguage } from '../utils/utils';
 
-function loadLocaleMessages() {
-  const locales = require.context('./lang', true, /[A-Za-z0-9-_,\s]+\.json$/i);
-  const messages: any = {};
-  locales.keys().forEach((key) => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
-    if (matched && matched.length > 1) {
-      const locale = matched[1];
-      messages[locale] = locales(key);
-    }
-  });
-  return messages;
-}
+import en from './lang/en.json';
+import zh from './lang/zh-cn.json';
+
+document.title = getLanguage() === 'en' ? 'Quick demo Vue 3 | Tencent RTC' : 'Quick demo Vue 3 | TRTC 实时音视频';
 
 const i18n = createI18n({
   locale: getLanguage() || 'en',
@@ -20,7 +12,10 @@ const i18n = createI18n({
   globalInjection: true,
   global: true,
   fallbackLocale: 'en',
-  messages: loadLocaleMessages(),
+  messages: {
+    en,
+    'zh-cn': zh,
+  },
 });
 
 export default i18n;

@@ -51,15 +51,15 @@
 </div>
 <div id='console'>Open vConsole</div>
 <script src='https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js'></script>
-<script src='https://web.sdk.qcloud.com/trtc/webrtc/demo/latest/dist/trtc.js'></script>
+<script src='https://web.sdk.qcloud.com/trtc/webrtc/v5/dist/trtc.js'></script>
 <script src='https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js'></script>
-<script src='inviteClient.js'></script>
 <script>
   window.lang_ = getLanguageKey();
 
   const joinBtn = document.getElementById('join');
   const leaveBtn = document.getElementById('leave');
   const language = document.getElementById('language');
+  let trtc = TRTC.create();
 
   language.addEventListener('click', () => {
     if (window.lang_ === 'zh-cn') {
@@ -98,14 +98,33 @@
   const state = { url:window.location.href.split("?")[0] };
   window.history.pushState(state,'', 'invite.html');
   initDevice();
-  let client = new Client({ sdkAppId, userId, userSig, roomId });
   joinBtn.addEventListener('click', async () => {
-    await client.join();
-    await client.publish();
+    trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
+      // 为了播放视频画面，您需在 DOM 中放置一个 HTMLElement，可以是一个 div 标签，假设其 id 为 `${userId}_${streamType}`
+      const elementId = `${userId}_${streamType}`;
+      addStreamView(elementId);
+      trtc.startRemoteVideo({ userId, streamType, view: elementId });
+    });
+    trtc.on(TRTC.EVENT.REMOTE_VIDEO_UNAVAILABLE, ({ userId, streamType }) => {
+      const elementId = `${userId}_${streamType}`;
+      removeStreamView(elementId);
+      trtc.stopRemoteVideo({ userId, streamType: TRTC.TYPE.STREAM_TYPE_MAIN});
+    });
+    await trtc.enterRoom({ roomId, sdkAppId, userId, userSig })
+    await trtc.startLocalAudio();
+    await trtc.startLocalVideo({
+      view: document.getElementById('local')
+    });
+    joinBtn.disabled = true;
   });
   leaveBtn.addEventListener('click', async () => {
-    if (client) {
-      await client.leave();
+    if (trtc) {
+      await trtc.stopLocalVideo();
+      await trtc.stopLocalAudio();
+      await trtc.stopRemoteVideo({userId: '*'})
+      await trtc.exitRoom();
+      trtc.off('*');
+      joinBtn.disabled = false;
     }
   });
   function getQueryString(name) {

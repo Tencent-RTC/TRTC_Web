@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import TRTC from 'trtc-js-sdk';
+import TRTC from 'trtc-sdk-v5';
 export default {
   name: 'compDeviceSelect',
   props: {
@@ -41,13 +41,13 @@ export default {
     async getDeviceList() {
       switch (this.deviceType) {
         case 'camera':
-          this.deviceList = await TRTC.getCameras();
+          this.deviceList = await TRTC.getCameraList();
           break;
         case 'microphone':
-          this.deviceList = await TRTC.getMicrophones();
+          this.deviceList = await TRTC.getMicrophoneList();
           break;
         case 'speaker':
-          this.deviceList = await TRTC.getSpeakers();
+          this.deviceList = await TRTC.getSpeakerList();
           break;
         default:
           break;
@@ -61,7 +61,8 @@ export default {
     },
   },
   mounted() {
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(() => {
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
+      stream.getTracks().forEach(track => track.stop());
       this.getDeviceList();
     });
     navigator.mediaDevices.addEventListener('devicechange', this.getDeviceList);

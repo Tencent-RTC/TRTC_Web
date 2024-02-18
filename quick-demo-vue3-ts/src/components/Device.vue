@@ -40,7 +40,7 @@
 <script lang='ts' setup>
 import { defineEmits } from 'vue';
 import { useI18n } from 'vue-i18n';
-import TRTC from 'trtc-js-sdk';
+import TRTC from 'trtc-sdk-v5';
 import { ElMessage } from 'element-plus/es';
 import appStore from '@/store/index';
 import { DeviceItem } from '@/types/type';
@@ -51,9 +51,9 @@ const emit = defineEmits(['switchDevice']);
 
 const updateDevice = async () => {
   console.log('updateDevice');
-  const cameraItems: DeviceItem[] = await TRTC.getCameras();
+  const cameraItems: DeviceItem[] = await TRTC.getCameraList();
   cameraItems.forEach((item) => { item.value = item.deviceId; });
-  const microphoneItems: DeviceItem[] = await TRTC.getMicrophones();
+  const microphoneItems: DeviceItem[] = await TRTC.getMicrophoneList();
   microphoneItems.forEach((item) => { item.value = item.deviceId; });
 
   store.$patch({

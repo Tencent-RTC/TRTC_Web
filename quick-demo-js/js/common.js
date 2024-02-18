@@ -1,15 +1,12 @@
 /* eslint-disable*/
-
-function getLanguageKey () {
-	let lang = (navigator.language || navigator.userLanguage).toLowerCase();
-	if (lang.indexOf('zh') > -1) {
-		lang = 'zh-cn';
-	} else {
-		lang = 'en';
-	}
+const localStorageLangId = 'trtc-v5-quick-demo-js';
+function getLanguage(localStorageLangId = 'trtc-v5-quick-demo-js') {
+	let lang = getQueryString('lang') || localStorage.getItem(localStorageLangId) || window.navigator.language?.toLowerCase();
+	lang = lang.indexOf('zh') > -1 ? 'zh-cn' : 'en';
 	return lang;
 }
-window.lang_ = getLanguageKey();
+window.lang_ = getLanguage(localStorageLangId);
+changeLanguageTo(window.lang_);
 
 const VISIBLE = document.visibilityState === 'visible'
 
@@ -18,10 +15,13 @@ let logContainer = document.getElementById('log');
 let language = document.getElementById('language');
 
 let consoleBtn = document.getElementById('console')
-let joinBtn = document.getElementById('join')
-let leaveBtn = document.getElementById('leave')
-let publishBtn = document.getElementById('publish')
-let unpublishBtn = document.getElementById('unpublish')
+let enterBtn = document.getElementById('enter')
+let startLocalAudioBtn = document.getElementById('startLocalAudio')
+let startLocalVideoBtn = document.getElementById('startLocalVideo')
+let stopLocalAudioBtn = document.getElementById('stopLocalAudio')
+let stopLocalVideoBtn = document.getElementById('stopLocalVideo')
+let exitBtn = document.getElementById('exit')
+
 let startShareBtn = document.getElementById('startShare')
 let stopShareBtn = document.getElementById('stopShare')
 let cameraSelect = document.getElementById('camera-select');
@@ -39,29 +39,30 @@ github.addEventListener('click', () => {
 	});
 })
 
-language.addEventListener('click', () => {
-	if (window.lang_ === 'zh-cn') {
-		const zhList = document.querySelectorAll('.zh-cn');
-		for (const item of zhList) {
-			item.style.display = 'none';
-		}
-		const enList = document.querySelectorAll('.en');
-		for (const item of enList) {
-			item.style.display = 'block';
-		}
-		window.lang_ = 'en'
-	} else if (window.lang_ === 'en') {
-		const zhList = document.querySelectorAll('.zh-cn');
-		for (const item of zhList) {
-			item.style.display = 'block';
-		}
-		const enList = document.querySelectorAll('.en');
-		for (const item of enList) {
-			item.style.display = 'none';
-		}
-		window.lang_ = 'zh-cn';
+language.addEventListener('click', handleChangeLanguageClick)
+
+function handleChangeLanguageClick() {
+	const currentLanguage = window.lang_;
+	const nextLanguage = currentLanguage === 'en' ? 'zh-cn' : 'en';
+	console.log(`language: ${currentLanguage} -> ${nextLanguage}`);
+
+	window.lang_ = nextLanguage;
+	localStorage.setItem(localStorageLangId, nextLanguage);
+	
+	changeLanguageTo(nextLanguage);
+}
+
+function changeLanguageTo(lang) {
+	const currentElementList = document.querySelectorAll('.zh-cn, .en');
+	for (const item of currentElementList) {
+		item.style.display = 'none';
 	}
-})
+	const nextElementList = document.querySelectorAll(`.${lang}`);
+	for (const item of nextElementList) {
+		item.style.display = 'block';
+	}
+	document.title = lang === 'en' ? 'Quick demo js | Tencent RTC' : 'Quick demo js | TRTC 实时音视频';
+}
 
 function addStreamView(remoteId) {
 	let remoteDiv = document.getElementById(remoteId);
@@ -80,35 +81,47 @@ function removeStreamView(remoteId) {
 	}
 }
 
+function setButtonDisabled(id, status) {
+	const button = document.getElementById(id);
+	button.disabled = status;
+}
+
+function setButtonLoading(id, status) {
+	const button = document.getElementById(id);
+	const loadingElement = button.getElementsByClassName('loading-icon')[0];
+	button.disabled = status;
+	loadingElement.style.display = status ? 'inline-block' : 'none';
+}
+
 function addSuccessLog(log) {
 	const logItem = document.createElement('div');
-	
+
 	const success = document.createElement('span');
 	success.setAttribute('class', 'success');
 	success.innerText = '🟩 ';
-	
+
 	const logDiv = document.createElement('span');
 	logDiv.innerText = log;
-	
+
 	logItem.appendChild(success);
 	logItem.appendChild(logDiv);
-	
+
 	logContainer.appendChild(logItem);
 	logContainer.scrollTop = logContainer.scrollHeight;
 }
 
 function addFailedLog(log) {
 	const logItem = document.createElement('div');
-	
+
 	const success = document.createElement('span');
 	success.innerText = '🟥 '
-	
+
 	const logDiv = document.createElement('span');
 	logDiv.innerText = log;
-	
+
 	logItem.appendChild(success);
 	logItem.appendChild(logDiv);
-	
+
 	logContainer.appendChild(logItem);
 	logContainer.scrollTop = logContainer.scrollHeight;
 }
@@ -125,15 +138,15 @@ function getQueryString(name) {
 const DEMOKEY = 'webrtcQuickDemoJs';
 const isProd = location.origin === 'https://web.sdk.qcloud.com';
 const AEGIS_ID = {
-	dev: 'iHWefAYqvXVdajviap',
-	prod: 'iHWefAYqpBFdmIMeDi',
+	dev: 'iHWefAYqBEHVFrSxnV',
+	prod: 'iHWefAYqVGQzlNLveU',
 };
 
 const aegis = new Aegis({
 	id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
 	uin: '', // 用户唯一 ID（可选）
-	reportApiSpeed: true, // 接口测速
-	reportAssetSpeed: true // 静态资源测速
+	reportApiSpeed: false, // 接口测速
+	reportAssetSpeed: false // 静态资源测速
 })
 
 
