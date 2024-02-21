@@ -1,8 +1,3 @@
-<!--
- * @Description: 邀请页面
- * @Date: 2022-03-16 16:58:10
- * @LastEditTime: 2022-03-29 15:57:33
--->
 <template>
   <div class="invite-container">
     <comp-nav></comp-nav>
@@ -10,7 +5,6 @@
       <div class="invite-tips">
         {{ $t("You've been invited to a video call")}}
       </div>
-      <!-- rtc 房间 -->
       <comp-room
         type="invite"
         :sdkAppId="Number(sdkAppId)"

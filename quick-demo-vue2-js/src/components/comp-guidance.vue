@@ -1,8 +1,3 @@
-<!--
- * @Description: 指引组件
- * @Date: 2022-03-14 16:56:36
- * @LastEditTime: 2022-03-29 15:27:22
--->
 <template>
 	<div class="guidance-container">
 		<el-collapse v-model="activeNames">

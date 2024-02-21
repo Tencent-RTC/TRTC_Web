@@ -1,8 +1,3 @@
-<!--
- * @Description: 设备选择组件
- * @Date: 2022-03-10 15:47:24
- * @LastEditTime: 2022-03-29 17:02:21
--->
 <template>
   <div class="select-container">
     <span class="label">{{ deviceType }}</span>

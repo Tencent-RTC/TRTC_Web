@@ -1,8 +1,3 @@
-<!--
- * @Description: 导航栏组件
- * @Date: 2022-03-09 16:47:13
- * @LastEditTime: 2022-04-07 17:34:23
--->
 <template>
   <div class="nav-container">
     <div class="right-region">

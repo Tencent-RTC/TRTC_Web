@@ -8,7 +8,7 @@ document.title = getLanguage() === 'en' ? 'Quick demo Vue 3 | Tencent RTC' : 'Qu
 
 const i18n = createI18n({
   locale: getLanguage() || 'en',
-  legacy: false, // 使用Composition API，这里必须设置为false
+  legacy: false,
   globalInjection: true,
   global: true,
   fallbackLocale: 'en',
