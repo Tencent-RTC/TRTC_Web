@@ -1,8 +1,3 @@
-/*
- * @Description: 音视频通话集成
- * @Date: 2022-03-14 17:15:23
- * @LastEditTime: 2022-03-23 17:47:14
- */
 import TRTC from 'trtc-sdk-v5';
 
 export default {
@@ -227,7 +222,7 @@ export default {
     startGetAudioLevel() {
       this.trtc.on(TRTC.EVENT.AUDIO_VOLUME, (event) => {
         event.result.forEach(({ userId, volume }) => {
-          const isMe = userId === ''; // 当 userId 为空串时，代表本地麦克风音量。
+          const isMe = userId === '';
           if (isMe) {
             console.log(`my volume: ${volume}`);
           } else {

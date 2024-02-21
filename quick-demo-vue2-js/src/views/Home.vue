@@ -1,16 +1,8 @@
-<!--
- * @Description: quick demo - vue2 版本页面
- * @Date: 2022-03-14 16:56:36
- * @LastEditTime: 2022-03-29 17:01:32
--->
 <template>
   <div id="app">
-    <!-- 头部栏 -->
     <comp-nav></comp-nav>
     <div class="content" :class="$isMobile && 'content-mobile'">
-      <!-- quick demo 使用指引 -->
       <comp-guidance></comp-guidance>
-      <!-- sdkAppId、secretKey、userId、roomId 参数输入区域 -->
       <p class="label">{{ $t('Params') }}</p>
       <div class="param-container" :class="$isMobile && 'param-container-mobile'">
         <comp-info-input
@@ -30,7 +22,6 @@
           <span>{{ $t("Alert")}} <a target="_blank" :href="$t('Url')">{{ $t("Click")}}</a></span>
         </el-alert>
       </div>
-      <!-- 设备选择区域 -->
       <p class="label">{{ $t('Device Select') }}</p>
       <div class="param-container" :class="$isMobile && 'param-container-mobile'">
         <comp-device-select
@@ -38,7 +29,6 @@
         <comp-device-select
           deviceType="microphone" @change="handleValueChange($event, 'microphoneId')"></comp-device-select>
       </div>
-      <!-- rtc 房间 -->
       <comp-room
         :sdkAppId="Number(sdkAppId)"
         :secretKey="secretKey"

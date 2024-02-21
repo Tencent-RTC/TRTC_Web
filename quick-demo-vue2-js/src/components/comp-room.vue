@@ -1,11 +1,5 @@
-<!--
- * @Description: 房间显示
- * @Date: 2022-03-16 17:40:28
- * @LastEditTime: 2022-03-29 16:13:06
--->
 <template>
   <div class="rtc-container">
-    <!-- 进房操作区域 -->
     <p v-if="isHostMode" class="label">{{ $t('Operation') }}</p>
     <div class="control-container">
       <div class="rtc-control-container">
@@ -70,7 +64,6 @@
       </div>
     </div>
 
-    <!-- 显示邀请链接 -->
     <div v-if="showInviteLink" class="invite-link-container">
       <span v-if="isEnLang">Copy the link to invite friends to enter the video call, one link can invite only one person,
         the link will be updated automatically after copying.</span>
@@ -93,7 +86,6 @@
     </div>
 
     <div class="info-container" :class="$isMobile && 'info-container-mobile'">
-      <!-- Log 展示区域 -->
       <div v-if="isHostMode" class="log-container" ref="logContainer">
         <p class="log-label">Log:</p>
         <div v-for="(item, index) in logList" :key="index">
@@ -103,11 +95,8 @@
         </div>
       </div>
 
-      <!-- 本地流区域 -->
       <div v-show="camStatus === 'started'" class="local-stream-container">
-        <!-- 本地流播放区域 -->
         <div id="local" class="local-stream-content"></div>
-        <!-- 本地流操作栏 -->
         <div class="local-stream-control">
           <div class="video-control control">
             <span v-if="!isMutedVideo" @click="muteVideo">
@@ -129,7 +118,6 @@
       </div>
     </div>
 
-    <!-- 远端流区域 -->
     <div class="remote-container">
       <div
         v-for="(item) in remoteUsersViews"
@@ -207,7 +195,6 @@ export default {
       }, 1500);
       this.generateInviteLink();
     },
-    // 点击【Enter Room】按钮
     async handleEnterRoom() {
       if (this.isHostMode) {
         if (!this.sdkAppId || !this.secretKey) {
@@ -269,7 +256,6 @@ export default {
       }
     },
 
-    // 显示成功的 Log
     addSuccessLog(log) {
       if (!this.isHostMode) {
         return;
@@ -282,7 +268,6 @@ export default {
       this.$refs.logContainer.scrollTop = scrollHeight;
     },
 
-    // 显示失败的 Log
     addFailedLog(log) {
       if (!this.isHostMode) {
         return;

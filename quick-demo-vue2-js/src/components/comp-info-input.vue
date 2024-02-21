@@ -1,8 +1,3 @@
-<!--
- * @Description: 信息输出框
- * @Date: 2022-03-10 15:21:23
- * @LastEditTime: 2022-03-21 18:07:11
--->
 <template>
   <el-input :placeholder="label" :type="type" v-model="infoValue">
     <template slot="prepend">

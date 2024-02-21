@@ -144,9 +144,9 @@ const AEGIS_ID = {
 
 const aegis = new Aegis({
 	id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
-	uin: '', // 用户唯一 ID（可选）
-	reportApiSpeed: false, // 接口测速
-	reportAssetSpeed: false // 静态资源测速
+	uin: '',
+	reportApiSpeed: false,
+	reportAssetSpeed: false
 })
 
 

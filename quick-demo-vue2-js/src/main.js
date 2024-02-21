@@ -1,8 +1,3 @@
-/*
- * @Description: 全局样式
- * @Date: 2022-03-09 16:42:16
- * @LastEditTime: 2022-03-29 16:36:04
- */
 import Vue from 'vue';
 import App from './App.vue';
 import TRTC from 'trtc-sdk-v5';
@@ -29,9 +24,6 @@ import {
 import router from './router';
 import i18n from './locales/i18n';
 
-/**
- *  重写ElementUI的Message
- */
 const showMessage = Symbol('showMessage');
 class DonMessage {
   success(options, single = true) {
