@@ -2,43 +2,41 @@ This document describes how to run the TRTC web quick demo (Vue3.x js).
 
 English | [简体中文](./README.zh.md)
 
-## Tryout
+## Online Demo
 
 We offer an [online web demo (Vue3.x js)](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue3-ts/index.html) for you to try out TRTC features.
 
-Enter your application’s `SDKAppID` and secret key on the webpage to enter a room. For how to get the `SDKAppID` and secret key, see <a href="#getAppInfo">[Getting Application Information]</a>.
+Enter your application’s `SDKAppID` and `SecretKey` on the webpage to enter a room. For how to get the `SDKAppID` and `SecretKey`, see [TRTC RTC Engine](https://console.trtc.io/engine).
 
-After joining a room, you can use a share link to invite others to try the audio/video call feature with you.
+When entered the room, you can use the share link to invite others to try the audio/video call feature with you.
 
-## Local Run
+## How to Run
 
 #### Download the demo source code
 
-Download the source code of the TRTC web quick demo (Vue3.x ts) at [GitHub](https://github.com/LiteAVSDK/v5/TRTC_Web) (in `TRTC_Web/v5/quick-demo-vue3-ts`).
+1. Clone this repository
 
-#### Run the demo
+```bash
+git clone https://github.com/LiteAVSDK/TRTC_Web.git
+```
 
-Note: A node environment of v14.16.0 and above is recommended.
+2. Enter this folder
 
-- Run the demo locally
+```bash
+cd ./TRTC_Web/quick-demo-vue3-ts
+```
 
-  ```shell
-  npm start
-  ```
+3. Run the demo
 
-- The [http://localhost:3000/](http://localhost:3000/) address will be opened in your default browser automatically.
+    Note: A node environment of v14.16.0 and above is recommended.
 
-  > !
-  >
-  > The default port number is 3000. Please use the number of the actual port used to run the demo locally.
-  >
-  > For the browsers supported by the TRTC web SDK, see [Supported Platforms](https://intl.cloud.tencent.com/document/product/647/41664#supported-platforms).
-  >
-  > For the URL protocols supported by the TRTC web SDK, see [URL Protocol Support](https://intl.cloud.tencent.com/document/product/647/41664#url-protocol-support).
-  >
-  > For information about the ports and domain names used by the TRTC web SDK, see [Dealing with Firewall Restrictions](https://intl.cloud.tencent.com/document/product/647/35164#what-ports-and-domain-names-should-i-add-to-the-allowlist-of-my-firewall-for-webrtc.3F).
+    ```shell
+    npm start
+    ```
 
-+ Enter the `SDKAppID` and secret key. For detailed directions, see <a href="#getAppInfo">[Getting Application Information]</a>.
+    The [http://localhost:3000/](http://localhost:3000/) address will be opened in your default browser automatically.
+
+4. Enter the `SDKAppID` and `SecretKey`. For detailed directions, see [TRTC RTC Engine](https://console.trtc.io/engine).
 
 #### Try the demo
 
@@ -62,24 +60,3 @@ Note: A node environment of v14.16.0 and above is recommended.
   ```shell
   npm run lint:fix
   ```
-
-<span id="getAppInfo"></span>
-
-## Getting Application Information
-
-#### Create an application
-
-- Log in to the [TRTC console](https://console.cloud.tencent.com/trtc), and select **Development Assistance > [Demo Quick Run](https://console.cloud.tencent.com/trtc/quickstart)** on the left sidebar.
-
-- Select **New** and enter an application name such as `TestTRTC`. If you have already created an application, select **Existing**.
-
-- Add or edit tags according to your actual needs and click **Create**.
-
-  ![img](https://qcloudimg.tencent-cloud.cn/raw/7805a202a8e0c96b748116f17aa8524c.png)
-
-#### Get the `SDKAppID` and `userSig`
-
-- Copy the `SDKApppID` and secret key.
-
-  ![img](https://qcloudimg.tencent-cloud.cn/raw/85489ab5999afbd64604a4e3c76f2249.png)
-
