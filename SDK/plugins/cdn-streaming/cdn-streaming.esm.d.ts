@@ -32,8 +32,8 @@ export declare interface Mix {
 
 export declare interface User {
     userId: string;
-    roomId: number;
-    strRoomId: string;
+    roomId?: number;
+    strRoomId?: string;
 }
 
 export declare interface VideoLayout {
@@ -58,7 +58,7 @@ export declare enum PublishMode {
     PublishMixStreamToCDN = 'PublishMixStreamToCDN'
 }
 
-export declare class CDNStreaming {
+declare class CDNStreaming {
     static TYPE: {
         PublishMode: {
             PublishMainStreamToCDN: PublishMode.PublishMainStreamToCDN;
