@@ -260,13 +260,13 @@ async function handleStopLocalAudio() {
 }
 
 async function handleStartLocalVideo() {
-    camStatus.value = 'starting';
+  camStatus.value = 'starting';
   try {
     await trtc.startLocalVideo({
       view: 'local',
       option: {
         cameraId: store.videoDeviceId,
-        profile: '480p',
+        profile: '1080p',
       },
     });
     videoMuted.value = false;

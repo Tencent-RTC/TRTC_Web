@@ -2,7 +2,7 @@
 // -------document events--------
 
 document.getElementById('sdkAppId').value = getQueryString('sdkAppId');
-document.getElementById('secretKey').value = getQueryString('secretKey');
+document.getElementById('sdkSecretKey').value = getQueryString('sdkSecretKey');
 document.getElementById('userId').value = getQueryString('userId') || Math.floor(Math.random() * 1000000);
 document.getElementById('roomId').value = getQueryString('roomId') || Math.floor(Math.random() * 1000);
 const state = { url:window.location.href.split("?")[0] };
@@ -10,7 +10,7 @@ window.history.pushState(state,'', 'index.html');
 
 // --------global variables----------
 let sdkAppId;
-let secretKey;
+let sdkSecretKey;
 let roomId;
 let trtc = TRTC.create()
 
@@ -49,7 +49,7 @@ TRTC.isSupported().then((checkResult) => {
 
 function initParams() {
 	sdkAppId = parseInt(document.getElementById('sdkAppId').value);
-	secretKey = document.getElementById('secretKey').value;
+	sdkSecretKey = document.getElementById('sdkSecretKey').value;
 	roomId = parseInt(document.getElementById('roomId').value);
 	userId = document.getElementById('userId').value;
 	shareUserId = 'share_' + userId;
@@ -63,14 +63,14 @@ function initParams() {
 		ext3: sdkAppId,
 	});
 
-	if (!(sdkAppId && secretKey && roomId && userId)) {
+	if (!(sdkAppId && sdkSecretKey && roomId && userId)) {
 		if (window.lang_ === 'zh-cn') {
-			alert('请检查参数 SDKAppId, secretKey, userId, roomId 是否输入正确！');
+			alert('请检查参数 SDKAppId, SDKSecretKey, userId, roomId 是否输入正确！');
 		} else if (window.lang_ === 'en') {
-			alert('Please enter the correct SDKAppId, secretKey, userId, roomId！');
+			alert('Please enter the correct SDKAppId, SDKSecretKey, userId, roomId!');
 		}
 
-		throw new Error('Please enter the correct SDKAppId, secretKey, userId, roomId');
+		throw new Error('Please enter the correct SDKAppId, SDKSecretKey, userId, roomId');
 	}
 }
 
@@ -78,7 +78,7 @@ async function enterRoom() {
 	initParams()
 	setButtonLoading('enter', true);
 	try {
-		const { userSig } = genTestUserSig({ sdkAppId, userId, secretKey });
+		const { userSig } = genTestUserSig({ sdkAppId, userId, sdkSecretKey });
 		await trtc.enterRoom({ roomId, sdkAppId, userId, userSig })
 		reportSuccessEvent('enterRoom', sdkAppId)
 		refreshLink()
@@ -156,7 +156,7 @@ async function startLocalVideo() {
 		try {
 			await trtc.startLocalVideo({
 				view: document.getElementById('local'), // Preview the video on the element with the elementId "localVideo" in the DOM.
-				option: { cameraId: cameraSelect.value }
+				option: { cameraId: cameraSelect.value, profile: '1080p' }
 			});
 			video = true;
 			isCamOpened = true;
@@ -377,7 +377,7 @@ function refreshLink() {
 
 function createShareLink() {
 	const userId = String(Math.floor(Math.random() * 1000000));
-	const { userSig } = genTestUserSig({ sdkAppId, userId, secretKey });
+	const { userSig } = genTestUserSig({ sdkAppId, userId, sdkSecretKey });
 	const { origin } = window.location;
 	const pathname = window.location.pathname.replace('index.html', 'invite/invite.html');
 	return `${origin}${pathname}?userSig=${userSig}&&SDKAppId=${sdkAppId}&&userId=${userId}&&roomId=${roomId}`;

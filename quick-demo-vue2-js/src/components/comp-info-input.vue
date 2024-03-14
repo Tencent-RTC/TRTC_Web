@@ -46,9 +46,9 @@ export default {
         this.infoValue = sdkAppId ? sdkAppId : '';
         break;
       }
-      case 'secretKey': {
-        const secretKey = getUrlParam('secretKey');
-        this.infoValue = secretKey ? secretKey : '';
+      case 'sdkSecretKey': {
+        const sdkSecretKey = getUrlParam('sdkSecretKey');
+        this.infoValue = sdkSecretKey ? sdkSecretKey : '';
         break;
       }
       default:

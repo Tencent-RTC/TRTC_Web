@@ -2,7 +2,7 @@
 interface Login {
   sdkAppId: number;
   userId: string;
-  secretKey: string;
+  sdkSecretKey: string;
 }
 
 interface UserSig {
@@ -10,21 +10,21 @@ interface UserSig {
   sdkAppId: number;
 }
 
-export function genTestUserSig({ sdkAppId, userId, secretKey }: Login): UserSig {
+export function genTestUserSig({ sdkAppId, userId, sdkSecretKey }: Login): UserSig {
   const SDKAPPID = sdkAppId;
 
   const EXPIRETIME = 604800;
 
-  const SECRETKEY = secretKey;
+  const SDKSECRETKEY = sdkSecretKey;
 
-  // a soft reminder to guide developer to configure sdkAppId/secretKey
-  if (SDKAPPID == undefined || SECRETKEY === '') {
+  // a soft reminder to guide developer to configure sdkAppId/sdkSecretKey
+  if (SDKAPPID == undefined || SDKSECRETKEY === '') {
     alert(
-      '请先配置好您的账号信息： SDKAPPID 及 SECRETKEY ' +
-      '\r\n\r\nPlease configure your SDKAPPID/SECRETKEY in js/debug/GenerateTestUserSig.js'
+      '请先配置好您的账号信息： SDKAPPID 及 SDKSECRETKEY ' +
+      '\r\n\r\nPlease configure your SDKAPPID/SDKSECRETKEY in js/debug/GenerateTestUserSig.js'
     );
   }
-  const generator = new (<any>window).LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+  const generator = new (<any>window).LibGenerateTestUserSig(SDKAPPID, SDKSECRETKEY, EXPIRETIME);
   const userSig = generator.genTestUserSig(userId);
   return {
     sdkAppId: SDKAPPID,

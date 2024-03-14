@@ -1,7 +1,7 @@
 <!-- eslint-disable max-len -->
 <template>
   <div class='text-white header'>
-    <img :src="t('logo')" alt="TRTC" style='height: 100%'/>
+    <img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png" alt="TRTC" style='height: 100%'/>
     <div style='flex-direction: row;display: flex;justify-content: center;align-items: center'>
       <div id='language' @click='toggleLanguage'>中/En</div>
       <div class='github' @click="goToGithub">

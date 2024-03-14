@@ -6,7 +6,7 @@ English | [简体中文](./README.zh.md)
 
 We offer an [online web demo (Vue3.x js)](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue3-ts/index.html) for you to try out TRTC features.
 
-Enter your application’s `SDKAppID` and `SecretKey` on the webpage to enter a room. For how to get the `SDKAppID` and `SecretKey`, see [TRTC RTC Engine](https://console.trtc.io/engine).
+Enter your application’s `SDKAppID` and `SDKSecretKey` on the webpage to enter a room. For how to get the `SDKAppID` and `SDKSecretKey`, see [TRTC RTC Engine](https://console.trtc.io/engine).
 
 When entered the room, you can use the share link to invite others to try the audio/video call feature with you.
 
@@ -36,7 +36,7 @@ cd ./TRTC_Web/quick-demo-vue3-ts
 
     The [http://localhost:3000/](http://localhost:3000/) address will be opened in your default browser automatically.
 
-4. Enter the `SDKAppID` and `SecretKey`. For detailed directions, see [TRTC RTC Engine](https://console.trtc.io/engine).
+4. Enter the `SDKAppID` and `SDKSecretKey`. For detailed directions, see [TRTC RTC Engine](https://console.trtc.io/engine).
 
 #### Try the demo
 
