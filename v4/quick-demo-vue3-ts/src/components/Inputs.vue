@@ -8,8 +8,8 @@
         </el-input>
       </el-col>
       <el-col :span="12">
-        <el-input v-model="store.secretKey" placeholder="secretKey" type='string'>
-          <template #prepend><div class='key'>SecretKey</div></template>
+        <el-input v-model="store.SDKSecretKey" placeholder="SDKSecretKey" type='string'>
+          <template #prepend><div class='key'>SDKSecretKey</div></template>
         </el-input>
       </el-col>
     </el-row>
@@ -46,7 +46,7 @@ const { t } = useI18n();
 const store = appStore();
 store.$patch({
   sdkAppId: getParamKey('sdkAppId'),
-  secretKey: getParamKey('secretKey'),
+  SDKSecretKey: getParamKey('SDKSecretKey'),
   userId: getParamKey('userId'),
   roomId: getParamKey('roomId'),
 });

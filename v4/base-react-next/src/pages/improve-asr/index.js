@@ -47,7 +47,7 @@ export default function BasicRtc(props) {
   const [scene, setScene] = useState('caption');
   const [appId, setAppId] = useState(0);
   const [secretId, setSecretId] = useState('');
-  const [secretKey, setSecretKey] = useState('');
+  const [SDKSecretKey, setSecretKey] = useState('');
   const [token, setToken] = useState('');
   const asrFormRef = React.useRef();
 
@@ -63,10 +63,10 @@ export default function BasicRtc(props) {
     const param = new URLSearchParams(location.search);
     const appId = param.get('appId');
     const secretId = param.get('secretId');
-    const secretKey = param.get('secretKey');
+    const SDKSecretKey = param.get('SDKSecretKey');
     appId && setAppId(appId);
     secretId && setSecretId(secretId);
-    secretKey && setSecretKey(secretKey);
+    SDKSecretKey && setSecretKey(SDKSecretKey);
   }, []);
 
   const handleStartASR = () => {
@@ -94,7 +94,7 @@ export default function BasicRtc(props) {
       return;
     }
     const asr = new ASR({
-      secretKey,
+      SDKSecretKey,
       secretId,
       appId,
       token: token || undefined,
@@ -568,7 +568,7 @@ export default function BasicRtc(props) {
               <form ref={asrFormRef}>
                 <TextField required label="语音识别 appId" value={appId} onChange={event => setAppId(event.target.value)}  style={{ width: '100%' }} />
                 <TextField required label='语音识别 secretId' value={secretId} onChange={event => setSecretId(event.target.value)}  style={{ width: '100%' }} />
-                <TextField required label='语音识别 secretKey' value={secretKey} onChange={event => setSecretKey(event.target.value)}  style={{ width: '100%' }} />
+                <TextField required label='语音识别 SDKSecretKey' value={SDKSecretKey} onChange={event => setSecretKey(event.target.value)}  style={{ width: '100%' }} />
                 <TextField label='语音识别 setToken' value={token} onChange={event => setToken(event.target.value)}  style={{ width: '100%' }} />
               </form>
               <br></br>

@@ -6,7 +6,7 @@ const appStore = defineStore('app', {
     sdkAppId: '',
     userId: '',
     roomId: '',
-    secretKey: '',
+    SDKSecretKey: '',
     userSig: '',
     audioDeviceId: '',
     videoDeviceId: '',
@@ -22,13 +22,13 @@ const appStore = defineStore('app', {
   getters: {},
   actions: {
     getInitParamsStates() {
-      return !!(this.sdkAppId && this.secretKey && this.roomId && this.userId);
+      return !!(this.sdkAppId && this.SDKSecretKey && this.roomId && this.userId);
     },
     getUserSig() {
       return this.userSig || genTestUserSig({
         sdkAppId: parseInt(this.sdkAppId, 10),
         userId: this.userId,
-        secretKey: this.secretKey,
+        SDKSecretKey: this.SDKSecretKey,
       }).userSig;
     },
     createShareLink() {
@@ -36,7 +36,7 @@ const appStore = defineStore('app', {
       const { userSig } = genTestUserSig({
         sdkAppId: parseInt(this.sdkAppId, 10),
         userId,
-        secretKey: this.secretKey,
+        SDKSecretKey: this.SDKSecretKey,
       });
       const { origin } = window.location;
       const { pathname } = window.location;

@@ -11,7 +11,7 @@ class LocalClient {
 
   private userId: string;
 
-  private secretKey: string;
+  private SDKSecretKey: string;
 
   private roomId: number;
 
@@ -37,11 +37,11 @@ class LocalClient {
 
   constructor(options: ClientOptions) {
     const {
-      sdkAppId, userId, roomId, secretKey, userSig,
+      sdkAppId, userId, roomId, SDKSecretKey, userSig,
     } = options;
     this.sdkAppId = sdkAppId;
     this.userId = userId;
-    this.secretKey = secretKey;
+    this.SDKSecretKey = SDKSecretKey;
     this.userSig = userSig;
     this.roomId = roomId;
 
@@ -65,7 +65,7 @@ class LocalClient {
     const userSig = this.userSig || genTestUserSig({
       sdkAppId: this.sdkAppId,
       userId: this.userId,
-      secretKey: this.secretKey,
+      SDKSecretKey: this.SDKSecretKey,
     }).userSig;
 
     try {
@@ -84,7 +84,7 @@ class LocalClient {
     const { userSig } = genTestUserSig({
       sdkAppId: this.sdkAppId,
       userId,
-      secretKey: this.secretKey,
+      SDKSecretKey: this.SDKSecretKey,
     });
     const { origin } = window.location;
     const pathname = window.location.pathname.replace('index.html', 'invite/invite.html');

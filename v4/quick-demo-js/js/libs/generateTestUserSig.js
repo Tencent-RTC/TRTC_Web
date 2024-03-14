@@ -8,7 +8,7 @@
  * Attention: 请不要将如下代码发布到您的线上正式版本的 App 中，原因如下：
  *
  *            本文件中的代码虽然能够正确计算出 UserSig，但仅适合快速调通 SDK 的基本功能，不适合线上产品，
- *            这是因为客户端代码中的 SECRETKEY 很容易被反编译逆向破解，尤其是 Web 端的代码被破解的难度几乎为零。
+ *            这是因为客户端代码中的 SDK_SECRETKEY 很容易被反编译逆向破解，尤其是 Web 端的代码被破解的难度几乎为零。
  *            一旦您的密钥泄露，攻击者就可以计算出正确的 UserSig 来盗用您的腾讯云流量。
  *
  *            正确的做法是将 UserSig 的计算代码和加密密钥放在您的业务服务器上，然后由 App 按需向您的服务器获取实时算出的 UserSig。
@@ -16,7 +16,7 @@
  *
  * Reference：https://cloud.tencent.com/document/product/647/17275#Server
  */
-function genTestUserSig({ sdkAppId, userId, secretKey }) {
+function genTestUserSig({ sdkAppId, userId, SDKSecretKey }) {
   /**
    * 腾讯云 SDKAppId，需要替换为您自己账号下的 SDKAppId。
    *
@@ -43,16 +43,16 @@ function genTestUserSig({ sdkAppId, userId, secretKey }) {
    * 注意：该方案仅适用于调试Demo，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。
    * 文档：https://cloud.tencent.com/document/product/647/17275#Server
    */
-  const SECRETKEY = secretKey;
+  const SDK_SECRETKEY = SDKSecretKey;
 
-  // a soft reminder to guide developer to configure sdkAppId/secretKey
-  if (SDKAPPID === '' || SECRETKEY === '') {
+  // a soft reminder to guide developer to configure sdkAppId/SDKSecretKey
+  if (SDKAPPID === '' || SDK_SECRETKEY === '') {
     alert(
-      '请先配置好您的账号信息： SDKAPPID 及 SECRETKEY ' +
-        '\r\n\r\nPlease configure your SDKAPPID/SECRETKEY in js/debug/GenerateTestUserSig.js'
+      '请先配置好您的账号信息： SDKAPPID 及 SDK_SECRETKEY ' +
+        '\r\n\r\nPlease configure your SDKAPPID/SDK_SECRETKEY in js/debug/GenerateTestUserSig.js'
     );
   }
-  const generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+  const generator = new LibGenerateTestUserSig(SDKAPPID, SDK_SECRETKEY, EXPIRETIME);
   const userSig = generator.genTestUserSig(userId);
   return {
     sdkAppId: SDKAPPID,

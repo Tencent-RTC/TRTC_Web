@@ -23,7 +23,7 @@ export const getParamKey: any = (key: string) => {
       return Math.floor(Math.random() * 100000);
     case 'sdkAppId':
       return undefined;
-    case 'secretKey':
+    case 'SDKSecretKey':
       return undefined;
     default:
       return undefined;

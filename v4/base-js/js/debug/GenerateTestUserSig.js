@@ -8,7 +8,7 @@
  * Attention: 请不要将如下代码发布到您的线上正式版本的 App 中，原因如下：
  *
  *            本文件中的代码虽然能够正确计算出 UserSig，但仅适合快速调通 SDK 的基本功能，不适合线上产品，
- *            这是因为客户端代码中的 SECRETKEY 很容易被反编译逆向破解，尤其是 Web 端的代码被破解的难度几乎为零。
+ *            这是因为客户端代码中的 SDK_SECRETKEY 很容易被反编译逆向破解，尤其是 Web 端的代码被破解的难度几乎为零。
  *            一旦您的密钥泄露，攻击者就可以计算出正确的 UserSig 来盗用您的腾讯云流量。
  *
  *            正确的做法是将 UserSig 的计算代码和加密密钥放在您的业务服务器上，然后由 App 按需向您的服务器获取实时算出的 UserSig。
@@ -27,7 +27,7 @@
  *
  * The code may be able to calculate UserSig correctly, but it is only for quick testing of the SDK’s
  * basic features, not for commercial apps.
- * `SECRETKEY` in client code can be easily decompiled and reversed, especially on web.
+ * `SDK_SECRETKEY` in client code can be easily decompiled and reversed, especially on web.
  * Once your key is disclosed, attackers will be able to steal your Tencent Cloud traffic.
  *
  * The correct method is to deploy the `UserSig` calculation code and encryption key on your project
@@ -86,16 +86,16 @@ function genTestUserSig(userID) {
    * and key to your backend server to prevent key disclosure and traffic stealing.
    * Reference: https://cloud.tencent.com/document/product/647/17275#Server
    */
-  const SECRETKEY = '';
+  const SDK_SECRETKEY = '';
 
-  // a soft reminder to guide developer to configure sdkAppId/secretKey
-  if (SDKAPPID === '' || SECRETKEY === '') {
+  // a soft reminder to guide developer to configure sdkAppId/SDKSecretKey
+  if (SDKAPPID === '' || SDK_SECRETKEY === '') {
     alert(
-      '请先配置好您的账号信息： SDKAPPID 及 SECRETKEY ' +
-        '\r\n\r\nPlease configure your SDKAPPID/SECRETKEY in js/debug/GenerateTestUserSig.js'
+      '请先配置好您的账号信息： SDKAPPID 及 SDK_SECRETKEY ' +
+        '\r\n\r\nPlease configure your SDKAPPID/SDK_SECRETKEY in js/debug/GenerateTestUserSig.js'
     );
   }
-  const generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+  const generator = new LibGenerateTestUserSig(SDKAPPID, SDK_SECRETKEY, EXPIRETIME);
   const userSig = generator.genTestUserSig(userID);
   return {
     sdkAppId: SDKAPPID,

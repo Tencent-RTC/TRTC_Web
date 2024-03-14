@@ -9609,7 +9609,7 @@ var ASR = /*#__PURE__*/function () {
     this.speechRecognizer = null;
     this.isCanSendData = false;
     this.audioData = [];
-    this.secretkey = options.secretKey;
+    this.secretkey = options.SDKSecretKey;
     this.params = {
       secretid: options.secretId,
       appid: options.appId,
@@ -9643,8 +9643,8 @@ var ASR = /*#__PURE__*/function () {
   _createClass(ASR, [{
     key: "signCallback",
     value: function signCallback(signStr) {
-      var secretKey = this.secretkey;
-      var hash = window.CryptoJSTest.HmacSHA1(signStr, secretKey);
+      var SDKSecretKey = this.secretkey;
+      var hash = window.CryptoJSTest.HmacSHA1(signStr, SDKSecretKey);
       var bytes = Uint8ArrayToString(toUint8Array(hash));
       return window.btoa(bytes);
     }

@@ -1,4 +1,4 @@
-import { SDKAPPID, SECRETKEY } from '@app/config';
+import { SDKAPPID, SDK_SECRETKEY } from '@app/config';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { getUrlParam, getUrlParamObj } from '@utils/utils';
@@ -48,16 +48,16 @@ export function goToPage(pathUrl, withoutHistory = false) {
 /**
  * 确定页面跳转
  * 情况一：使用 api 接口获取 userSig 时，判断页面是否需要跳转到登录页面
- * 情况二：使用本地 SECRETKEY 获取 userSig 时，跳转到指定页面
+ * 情况二：使用本地 SDK_SECRETKEY 获取 userSig 时，跳转到指定页面
  */
 export function handlePageUrl(path) {
-  const hasLoginPage = SDKAPPID && SECRETKEY.length === 0;
+  const hasLoginPage = SDKAPPID && SDK_SECRETKEY.length === 0;
   // 使用 api 接口获取 userSig ，且 Cookies 中没有 token 或 token 失效跳转到登录页面
   if (hasLoginPage) {
     Cookies.get('trtc-api-example-token') ? (path && goToPage(path)) : goToPage('login');
     return;
   }
-  // 使用本地 SECRETKEY 获取 userSig 时跳转到指定页面
+  // 使用本地 SDK_SECRETKEY 获取 userSig 时跳转到指定页面
   if (!hasLoginPage) {
     path && goToPage(path);
     return;

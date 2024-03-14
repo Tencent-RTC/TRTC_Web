@@ -33,11 +33,11 @@
       <el-collapse-item :title="t('step3')" class="header" name="3">
         <div class="item">
           <ul v-if="isEnLang" class="collapse-content">
-            <li>Copy the SDKAppId and SecretKey into the input box</li>
+            <li>Copy the SDKAppId and SDKSecretKey into the input box</li>
             <img src="../../assets/image/step2-en.png" alt="SDKAppId" style="width: 400px"/>
           </ul>
           <ul v-if="isZhLang" class="collapse-content">
-            <li>复制 SDKAppId 和密钥（secretKey）填入输入框</li>
+            <li>复制 SDKAppId 和密钥（SDKSecretKey）填入输入框</li>
             <img src="../../assets/image/step2.png" alt="SDKAppId" style="width: 400px"/>
           </ul>
         </div>

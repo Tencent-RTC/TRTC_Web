@@ -7,7 +7,7 @@ class ShareClient {
 
   private userId: string;
 
-  private secretKey: string;
+  private SDKSecretKey: string;
 
   private roomId: number;
 
@@ -23,12 +23,12 @@ class ShareClient {
 
   constructor(options: ClientOptions) {
     const {
-      sdkAppId, userId, roomId, secretKey,
+      sdkAppId, userId, roomId, SDKSecretKey,
     } = options;
 
     this.sdkAppId = sdkAppId;
     this.userId = userId;
-    this.secretKey = secretKey;
+    this.SDKSecretKey = SDKSecretKey;
     this.roomId = roomId;
 
     this.isJoined = false;
@@ -42,7 +42,7 @@ class ShareClient {
     const { userSig } = genTestUserSig({
       sdkAppId: this.sdkAppId,
       userId: this.userId,
-      secretKey: this.secretKey,
+      SDKSecretKey: this.SDKSecretKey,
     });
 
     try {

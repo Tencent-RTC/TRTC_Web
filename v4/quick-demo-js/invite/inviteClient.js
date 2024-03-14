@@ -40,7 +40,7 @@ class Client {
     const { userSig } = genTestUserSig({
       sdkAppId: this.sdkAppId,
       userId: this.userId,
-      secretKey: this.secretKey,
+      SDKSecretKey: this.SDKSecretKey,
     });
     return `https://web.sdk.qcloud.com/trtc/webrtc/demo/quick/share.html?sdkAppId=${this.sdkAppId}&&userId=${userId}&&userSig=${userSig}`;
   }

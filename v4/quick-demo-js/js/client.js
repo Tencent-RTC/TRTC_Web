@@ -7,10 +7,10 @@
 
 class Client {
   constructor(options) {
-    const { sdkAppId, userId, roomId, secretKey, cameraId, microphoneId, userSig } = options;
+    const { sdkAppId, userId, roomId, SDKSecretKey, cameraId, microphoneId, userSig } = options;
     this.sdkAppId = sdkAppId;
     this.userId = userId;
-    this.secretKey = secretKey;
+    this.SDKSecretKey = SDKSecretKey;
     this.userSig = userSig;
     this.roomId = roomId;
 
@@ -33,7 +33,7 @@ class Client {
     const userSig = this.userSig || genTestUserSig({
       sdkAppId: this.sdkAppId,
       userId: this.userId,
-      secretKey: this.secretKey,
+      SDKSecretKey: this.SDKSecretKey,
     }).userSig;
 
     try {
@@ -50,7 +50,7 @@ class Client {
     const { userSig } = genTestUserSig({
       sdkAppId: this.sdkAppId,
       userId,
-      secretKey: this.secretKey,
+      SDKSecretKey: this.SDKSecretKey,
     });
     const { origin } = window.location;
     const pathname = window.location.pathname.replace('index.html', 'invite/invite.html');

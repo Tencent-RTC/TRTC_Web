@@ -37,7 +37,7 @@ You have [signed up for a Tencent Cloud account](https://intl.cloud.tencent.com/
 1. Find and open `src/app/config.js`.
 2. Configure the following parameters:
   <ul><li>SDKAPPID: `0` by default. Set it to the actual `SDKAppID`.</li>
-  <li>SECRETKEY: Left empty by default. Set it to the actual key.</li></ul> 
+  <li>SDK_SECRETKEY: Left empty by default. Set it to the actual key.</li></ul> 
 	<img src="https://main.qcloudimg.com/raw/87dc814a675692e76145d76aab91b414.png">
 3. Return to the TRTC console and click **Next**.  
 4. Click **Return to Overview Page**.

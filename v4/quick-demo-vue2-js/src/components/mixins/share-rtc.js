@@ -21,8 +21,8 @@ export default {
       return `share_${this.userId}`;
     },
     shareUserSig() {
-      if (this.sdkAppId && this.secretKey && this.shareUserId) {
-        const generator = new LibGenerateTestUserSig(this.sdkAppId, this.secretKey, 604800);
+      if (this.sdkAppId && this.SDKSecretKey && this.shareUserId) {
+        const generator = new LibGenerateTestUserSig(this.sdkAppId, this.SDKSecretKey, 604800);
         return generator.genTestUserSig(this.shareUserId);
       }
       return '';

@@ -4,7 +4,7 @@
 
 为了方便快速体验，TRTC 提供了 [Web quick demo (vue3 版本) 在线体验地址](https://web.sdk.qcloud.com/trtc/webrtc/demo/quick-demo-vue3-ts/index.html) 。
 
-在体验页面中，输入您应用的 SDKAppId 及 密钥（SecretKey）即可加入房间。获取 SDKAppId 及 SecretKey 请参考 <a href="#getAppInfo">[获取应用信息]</a>。
+在体验页面中，输入您应用的 SDKAppId 及 密钥（SDKSecretKey）即可加入房间。获取 SDKAppId 及 SDKSecretKey 请参考 <a href="#getAppInfo">[获取应用信息]</a>。
 
 加入房间后您可以通过分享邀请链接与被邀请人一起体验 TRTC Web 语音及视频互通功能。
 
@@ -34,7 +34,7 @@
   >
   > TRTC Web SDK 域名及端口白名单配置请参考：[TRTC Web SDK 域名及端口白名单配置](https://cloud.tencent.com/document/product/647/34399#webrtc-.E9.9C.80.E8.A6.81.E9.85.8D.E7.BD.AE.E5.93.AA.E4.BA.9B.E7.AB.AF.E5.8F.A3.E6.88.96.E5.9F.9F.E5.90.8D.E4.B8.BA.E7.99.BD.E5.90.8D.E5.8D.95.EF.BC.9F);
 
-+ 填写 SDKAppId 和 SecretKey。获取 SDKAppId 及 SecretKey 请参考 <a href="#getAppInfo">[获取应用信息]</a>。
++ 填写 SDKAppId 和 SDKSecretKey。获取 SDKAppId 及 SDKSecretKey 请参考 <a href="#getAppInfo">[获取应用信息]</a>。
 
 #### 体验 Demo
 
@@ -75,7 +75,7 @@
 
 #### 获取 sdkAppId 和 userSig
 
-- 复制 SDKAppId 和密钥（secretKey）。
+- 复制 SDKAppId 和密钥（SDKSecretKey）。
 
   ![img](https://qcloudimg.tencent-cloud.cn/raw/fae7429a873a5d42df3f9dd701db2685.png)
 

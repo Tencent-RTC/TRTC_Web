@@ -2,7 +2,7 @@
 // -------document events--------
 
 document.getElementById('sdkAppId').value = getQueryString('sdkAppId');
-document.getElementById('secretKey').value = getQueryString('secretKey');
+document.getElementById('SDKSecretKey').value = getQueryString('SDKSecretKey');
 document.getElementById('userId').value = getQueryString('userId') || Math.floor(Math.random() * 1000000);
 document.getElementById('roomId').value = getQueryString('roomId') || Math.floor(Math.random() * 1000);
 const state = { url:window.location.href.split("?")[0] };
@@ -10,7 +10,7 @@ window.history.pushState(state,'', 'index.html');
 
 // --------global variables----------
 let sdkAppId;
-let secretKey;
+let SDKSecretKey;
 let roomId;
 
 let userId;
@@ -41,7 +41,7 @@ TRTC.checkSystemRequirements().then((checkResult) => {
 
 function initParams() {
 	sdkAppId = parseInt(document.getElementById('sdkAppId').value);
-	secretKey = document.getElementById('secretKey').value;
+	SDKSecretKey = document.getElementById('SDKSecretKey').value;
 	roomId = parseInt(document.getElementById('roomId').value);
 	userId = document.getElementById('userId').value;
 	shareUserId = 'share_' + userId;
@@ -56,20 +56,20 @@ function initParams() {
 		ext3: sdkAppId,
 	});
 	
-	if (!(sdkAppId && secretKey && roomId && userId)) {
+	if (!(sdkAppId && SDKSecretKey && roomId && userId)) {
 		if (window.lang_ === 'zh-cn') {
-			alert('请检查参数 SDKAppId, secretKey, userId, roomId 是否输入正确！');
+			alert('请检查参数 SDKAppId, SDKSecretKey, userId, roomId 是否输入正确！');
 		} else if (window.lang_ === 'en') {
-			alert('Please enter the correct SDKAppId, secretKey, userId, roomId！');
+			alert('Please enter the correct SDKAppId, SDKSecretKey, userId, roomId！');
 		}
 		
-		throw new Error('Please enter the correct SDKAppId, secretKey, userId, roomId');
+		throw new Error('Please enter the correct SDKAppId, SDKSecretKey, userId, roomId');
 	}
 }
 
 async function joinRoom() {
 	initParams()
-	client = new Client({sdkAppId, userId, roomId, secretKey, cameraId, microphoneId});
+	client = new Client({sdkAppId, userId, roomId, SDKSecretKey, cameraId, microphoneId});
 	try {
 		await client.join();
 		reportSuccessEvent('joinRoom', sdkAppId)
@@ -138,7 +138,7 @@ async function unpublish() {
 
 async function startShare() {
 	initParams()
-	shareClient = new ShareClient({ sdkAppId, userId: shareUserId, roomId, secretKey, cameraId, microphoneId })
+	shareClient = new ShareClient({ sdkAppId, userId: shareUserId, roomId, SDKSecretKey, cameraId, microphoneId })
 	try {
 		await shareClient.join();
 		await shareClient.publish();

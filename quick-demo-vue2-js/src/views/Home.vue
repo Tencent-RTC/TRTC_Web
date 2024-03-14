@@ -8,7 +8,7 @@
         <comp-info-input
           label="sdkAppId" type="number" @change="handleValueChange($event, 'sdkAppId')"></comp-info-input>
         <comp-info-input
-          label="secretKey" @change="handleValueChange($event, 'secretKey')"></comp-info-input>
+          label="SDKSecretKey" @change="handleValueChange($event, 'SDKSecretKey')"></comp-info-input>
         <comp-info-input
           label="userId" @change="handleValueChange($event, 'userId')"></comp-info-input>
         <comp-info-input
@@ -31,7 +31,7 @@
       </div>
       <comp-room
         :sdkAppId="Number(sdkAppId)"
-        :secretKey="secretKey"
+        :SDKSecretKey="SDKSecretKey"
         :userId="userId"
         :roomId="Number(roomId)"
         :cameraId="cameraId"
@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       sdkAppId: 0,
-      secretKey: '',
+      SDKSecretKey: '',
       userId: '',
       roomId: 0,
       cameraId: '',

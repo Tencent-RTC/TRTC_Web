@@ -124,7 +124,7 @@ async function handleStartShare() {
     sdkAppId: parseInt(store.sdkAppId, 10),
     userId: `share${store.userId}`,
     roomId: parseInt(store.roomId, 10),
-    secretKey: store.secretKey,
+    SDKSecretKey: store.SDKSecretKey,
   });
   try {
     await shareClient.join();
