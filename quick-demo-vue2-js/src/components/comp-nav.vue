@@ -1,8 +1,8 @@
 <template>
   <div class="nav-container">
     <div class="right-region">
-      <img v-if="isZhLang" :class="$isMobile ? 'logo-mobile' : 'logo'" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/trtc-logo-cn-w.png" />
-      <img v-if="isEnLang" :class="$isMobile ? 'logo-mobile' : 'logo'" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/trtc-logo-en-w.png" />
+      <img v-if="isZhLang" :class="$isMobile ? 'logo-mobile' : 'logo'" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png" />
+      <img v-if="isEnLang" :class="$isMobile ? 'logo-mobile' : 'logo'" src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png" />
     </div>
     <div class="left-region">
       <span class="language" @click="toggleLanguage">

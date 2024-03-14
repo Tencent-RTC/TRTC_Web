@@ -69,7 +69,7 @@ async function handleEnter() {
     await trtc.startLocalVideo({
       view: 'local',
       option: {
-        profile: '480p',
+        profile: '1080p',
       },
     });
   } catch (error: any) {

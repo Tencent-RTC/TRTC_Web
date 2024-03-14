@@ -31,15 +31,15 @@
 			</el-collapse-item>
 			<el-collapse-item name="3">
 				<template slot="title">
-					<span v-if="isEnLang" class="collapse-title">Step 3 : Get SDKAppID and SecretKey</span>
-					<span v-if="isZhLang" class="collapse-title">步骤 3 : 获取 SDKAppID 和 密钥 SecretKey</span>
+					<span v-if="isEnLang" class="collapse-title">Step 3 : Get SDKAppID and SDKSecretKey</span>
+					<span v-if="isZhLang" class="collapse-title">步骤 3 : 获取 SDKAppID 和 密钥 SDKSecretKey</span>
 				</template>
         <ul v-if="isEnLang" class="collapse-content">
-					<li>Copy the SDKAppId and SecretKey into the input box</li>
+					<li>Copy the SDKAppId and SDKSecretKey into the input box</li>
 					<img src="@/assets/image/step2-en.png" alt="SDKAppId" style="width: 400px"/>
 				</ul>
 				<ul v-if="isZhLang" class="collapse-content">
-					<li>复制 SDKAppId 和密钥（secretKey）填入输入框</li>
+					<li>复制 SDKAppId 和密钥（SDKSecretKey）填入输入框</li>
 					<img src="@/assets/image/step2.png" alt="SDKAppId" style="width: 400px"/>
 				</ul>
 			</el-collapse-item>

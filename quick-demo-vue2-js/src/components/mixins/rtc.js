@@ -96,7 +96,7 @@ export default {
           view: 'local',
           option: {
             cameraId: this.cameraId,
-            profile: '480p',
+            profile: '1080p',
           },
         });
         this.camStatus = 'started';
