@@ -1123,10 +1123,10 @@ declare interface TRTCEventTypes {
      * @param {boolean} [config.option.useFrontCamera] - Whether to use the front camera.
      * @param {MediaStreamTrack} [config.option.videoTrack] - Custom videoTrack. {@tutorial 20-advanced-customized-capture-rendering}.
      * @param {'view' | 'publish' | 'both' | boolean} [config.option.mirror] - Video mirroring mode, default is 'view'.
-     * - 'view': Local preview mirroring
-     * - 'publish': Remote viewing of self mirroring
-     * - 'both': Both local preview and remote viewing of self mirroring
-     * - false: Boolean value, represents no mirroring
+     * - 'view': You see yourself as a mirror image, and the other person sees you as a non-mirror image.
+     * - 'publish': The other person sees you as a mirror image, and you see yourself as a non-mirror image.
+     * - 'both': You see yourself as a mirror image, and the other person sees you as a mirror image.
+     * - false: Boolean value, represents no mirroring.
      *
      * <font color="orange"> Note: Before version 5.3.2, only boolean can be passed, where true represents local preview mirroring, and false represents no mirroring.</font>
      * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `cover`. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
@@ -1186,7 +1186,11 @@ declare interface TRTCEventTypes {
      * @param {string} [config.option.cameraId] - Specify which camera to use
      * @param {boolean} [config.option.useFrontCamera] - Whether to use the front camera
      * @param {MediaStreamTrack} [config.option.videoTrack] - Custom videoTrack. {@tutorial 20-advanced-customized-capture-rendering}.
-     * @param {boolean} [config.option.mirror] - Whether to enable mirror
+     * @param {'view' | 'publish' | 'both' | boolean} [config.option.mirror] - Video mirroring mode, default is 'view'.
+     * - 'view': You see yourself as a mirror image, and the other person sees you as a non-mirror image.
+     * - 'publish': The other person sees you as a mirror image, and you see yourself as a non-mirror image.
+     * - 'both': You see yourself as a mirror image, and the other person sees you as a mirror image.
+     * - false: Boolean value, represents no mirroring.
      * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit| CSS object-fit} property
      * @param {VideoProfile} [config.option.profile] - Video encoding parameters for the main stream
      * @param {VideoProfile|boolean} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
@@ -1290,7 +1294,7 @@ declare interface TRTCEventTypes {
      * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
      * @example
      * // Stop screen sharing, but keep the local preview of screen sharing
-     * await trtc.updateScreenShare({publish:false});
+     * await trtc.updateScreenShare({ publish:false });
      * @memberof TRTC
      */
     updateScreenShare(config: UpdateScreenShareConfig): Promise<void>;
@@ -1478,9 +1482,9 @@ declare interface TRTCEventTypes {
      *
      * @param {string} [config] If not passed, get the local camera videoTrack
      * @param {string} [config.userId] If not passed or passed an empty string, get the local videoTrack. Pass the userId of the remote user to get the remote user's videoTrack.
-     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - Remote stream type:
-     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (remote user's camera)(default)
-     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (remote user's screen sharing)
+     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - stream type:
+     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (user's camera)(default)
+     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (user's screen sharing)
      * @returns {MediaStreamTrack|null} Video track
      * @memberof TRTC
      * @example
@@ -1501,10 +1505,24 @@ declare interface TRTCEventTypes {
      * Get audio track
      *
      * @returns {MediaStreamTrack?} Audio track
-     * @param {string} [userId] If not passed, get the local audioTrack
+     * @param {Object|string} [config] If not passed, get the local microphone audioTrack
+     * @param {string} [config.userId] If not passed or passed an empty string, get the local audioTrack. Pass the userId of the remote user to get the remote user's audioTrack.
+     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - stream type:
+     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (user's microphone)(default)
+     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (user's screen sharing audio). Only works for local screen sharing audio because there is only one remote audioTrack, and there is no distinction between Main and Sub for remote audioTrack.
      * @memberof TRTC
+     * @example
+     * // Version before v5.4.3
+     * trtc.getAudioTrack(); // Get local microphone audioTrack, captured by trtc.startLocalAudio()
+     * trtc.getAudioTrack('remoteUserId'); // Get remote audioTrack
+     *
+     * // Since v5.4.3+, you can get local screen audioTrack by passing the streamType = TRTC.STREAM_TYPE_SUB
+     * trtc.getAudioTrack({ streamType: TRTC.STREAM_TYPE_SUB });
      */
-    getAudioTrack(userId?: string): MediaStreamTrack | null;
+    getAudioTrack(configOrUserId?: {
+        userId?: string;
+        streamType?: TRTCStreamType;
+    } | string): MediaStreamTrack | null;
     setCurrentSpeaker(speakerId: string): void;
     /**
      * Send SEI Message <br>
