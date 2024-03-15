@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/watermark",
-  "version": "5.4.2",
+  "version": "5.4.3",
   "description": "TRTC Web SDK 5.x watermark plugin",
   "main": "./watermark.esm.js",
   "author": "longyuqi <longyuqi@tencent.com>",
