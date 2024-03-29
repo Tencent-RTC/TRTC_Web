@@ -1130,8 +1130,8 @@ declare interface TRTCEventTypes {
      *
      * <font color="orange"> Note: Before version 5.3.2, only boolean can be passed, where true represents local preview mirroring, and false represents no mirroring.</font>
      * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `cover`. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
-     * @param {VideoProfile} [config.option.profile] - Video encoding parameters for the main video.
-     * @param {VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
+     * @param {string | VideoProfile} [config.option.profile] - Video encoding parameters for the main video.
+     * @param {string | boolean | VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
      * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first(default) ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
      * @throws
      * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
@@ -1192,8 +1192,8 @@ declare interface TRTCEventTypes {
      * - 'both': You see yourself as a mirror image, and the other person sees you as a mirror image.
      * - false: Boolean value, represents no mirroring.
      * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit| CSS object-fit} property
-     * @param {VideoProfile} [config.option.profile] - Video encoding parameters for the main stream
-     * @param {VideoProfile|boolean} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
+     * @param {string | VideoProfile} [config.option.profile] - Video encoding parameters for the main stream
+     * @param {string | boolean | VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
      * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
      * @throws
      * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}

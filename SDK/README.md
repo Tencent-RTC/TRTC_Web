@@ -14,13 +14,15 @@ An object-oriented WebRTC SDK library
 
 </div>
 
-<div align="center"> English | <a href="https://github.com/LiteAVSDK/TRTC_Web/blob/main/v5/SDK/README-zh_CN.md" target="_blank"> 简体中文</a> </div>
+<div align="center"> English | <a href="https://github.com/LiteAVSDK/TRTC_Web/blob/main/README-zh_CN.md" target="_blank"> 简体中文</a> </div>
 
 ## Introduction
 
 TRTC Web SDK is an object-oriented WebRTC SDK of Tencent Cloud's real-time communication solution. Web developers can use TRTC Web SDK to establish an audio/video calls or live streaming services on your website.
 
-- [Online Demo](https://trtc.io/demo/homepage/#/home)
+- [Online Demo](https://trtc.io/demo/homepage/#/home).
+- [Changelog](https://trtc.io/document/53626).
+- We offer SDKs for Web, Android, iOS, Windows, Flutter, explore more in [trtc.io](https://trtc.io/).
 
 ## Environment Supports
 
@@ -51,10 +53,10 @@ Download manually：
 
 Refer to the following two tutorials for a quick run-through of the demo and how to use the SDK to implement basic audio and video calling functionality.
 
-- [Demo Quick Run](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-10-basic-get-started-with-demo.html)
-- [Basic Audio/Video Call](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-11-basic-video-call.html)
+- [Demo Quick Run](https://trtc.io/document/35607).
+- [Integration Quick Start](https://trtc.io/document/35096).
 
-Explore SDK documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/index.html)
+Explore SDK API documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/index.html).
 
 ## API Overview
 
@@ -80,7 +82,3 @@ Explore SDK documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5
 ├── index.d.ts // ts declaration file
 └── plugins // trtc plugins
 ```
-
-## Changelog
-
-- [Changelog](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-01-info-changelog.html)
