@@ -7,12 +7,12 @@ English | [简体中文](./README-zh_CN.md)
 TRTC Web SDK is an object-oriented WebRTC SDK of Tencent Cloud's real-time communication solution. Web developers can use TRTC Web SDK to establish an audio/video calls or live streaming services on your website.
 
 - [Online Demo](https://trtc.io/demo).
-- [Changelog](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-01-info-changelog.html).
+- [Changelog](https://trtc.io/document/53626).
 - We offer SDKs for Web, Android, iOS, Windows, Flutter, explore more in [trtc.io](https://trtc.io/).
 
 ## Environment Supports
 
-TRTC Web SDK supports major modern browsers. For details, please refer to [Browsers Supported](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-05-info-browser.html).
+TRTC Web SDK supports major modern browsers. For details, please refer to [Browsers Supported](https://trtc.io/document/59733).
 
 | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/> Edge | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Opera |
 | --------- | --------- | --------- | --------- | --------- | --------- |
@@ -40,9 +40,9 @@ Download manually：
 Refer to the following two tutorials for a quick run-through of the demo and how to use the SDK to implement basic audio and video calling functionality.
 
 - [Demo Quick Run](https://trtc.io/document/35607).
-- [Integration](https://trtc.io/document/35096).
+- [Integration Quick Start](https://trtc.io/document/35096).
 
-Explore SDK documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/index.html).
+Explore SDK API documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/index.html).
 
 ## API Overview
 
