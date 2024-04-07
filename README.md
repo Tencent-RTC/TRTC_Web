@@ -10,7 +10,7 @@ TRTC Web SDK is an object-oriented WebRTC SDK of Tencent Cloud's real-time commu
 - [Changelog](https://trtc.io/document/53626).
 - We offer SDKs for Web, Android, iOS, Windows, Flutter, explore more in [trtc.io](https://trtc.io/).
 
-## Environment Supports
+## Supported Browsers
 
 TRTC Web SDK supports major modern browsers. For details, please refer to [Browsers Supported](https://trtc.io/document/59733).
 
