@@ -4,6 +4,12 @@ export interface AuthParam {
     userSig: string;
 }
 
+export interface Effect {
+    id: string;
+    intensity?: number;
+    filterIntensity?: number;
+}
+
 export interface BeautyOptions {
     sdkAppId: number;
     userId: string;
@@ -14,6 +20,7 @@ export interface BeautyOptions {
     shave?: number;
     eye?: number;
     chin?: number;
+    effect?: Effect[];
     onError?: () => {}
 }
 
@@ -25,6 +32,7 @@ export interface UpdateBeautyOptions {
     shave?: number;
     eye?: number;
     chin?: number;
+    effect?: Effect[];
 }
 
 export declare class Beauty {
