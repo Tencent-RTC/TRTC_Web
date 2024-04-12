@@ -304,11 +304,13 @@ declare type PluginStartOptionsMap = {
     'CDNStreaming': CDNStreamingOptions;
     'VirtualBackground': VirtualBackgroundOptions;
     'Watermark': WatermarkOptions;
+    'Beauty': BeautyOptions;
 };
 declare type PluginUpdateOptionsMap = {
     'AudioMixer': UpdateAudioMixerOptions;
     'CDNStreaming': CDNStreamingOptions;
     'VirtualBackground': UpdateVirtualBackgroundOptions;
+    'Beauty': UpdateBeautyOptions;
 };
 declare type PluginStopOptionsMap = {
     'AudioMixer': StopAudioMixerOptions;
@@ -316,6 +318,7 @@ declare type PluginStopOptionsMap = {
     'CDNStreaming': CDNStreamingOptions;
     'VirtualBackground': undefined;
     'Watermark': undefined;
+    'Beauty': undefined;
 };
 declare interface TRTCStatistics {
     rtt: number;
