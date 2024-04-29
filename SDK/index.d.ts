@@ -1,9 +1,11 @@
 /// <reference path="./core.d.ts" />
 
+declare type PluginWithAssets = {
+    plugin: IPlugin;
+    assetsPath?: string;
+};
 declare interface TRTCOptions {
-    plugins?: Array<{
-        new (core: Core): IPlugin;
-    }>;
+    plugins?: Array<IPlugin>;
     enableSEI?: boolean;
     assetsPath?: string;
 }
@@ -492,7 +494,7 @@ declare const TRTCEvent: {
      *
      * - By default, the SDK automatically plays remote audio, and you do not need to call the API to play remote audio. You can listen for this event and {@link module:EVENT.REMOTE_AUDIO_UNAVAILABLE REMOTE_AUDIO_UNAVAILABLE} to update the UI icon for "whether the remote microphone is turned on".
      * - Note: If the user has not interacted with the page before entering the room, automatic audio playback may fail due to the [browser's automatic playback policy restrictions](./tutorial-21-advanced-auto-play-policy.html). You need to refer to the [suggestions for handling automatic playback restrictions](./tutorial-21-advanced-auto-play-policy.html) for processing.
-     * - If you do not want the SDK to automatically play audio, you can set receiveMode = {@link module:TYPE.RECEIVE_MODE_MANUAL TRTC.TYPE.RECEIVE_MODE_MANUAL} to turn off automatic audio playback when {@link TRTC#enterRoom trtc.enterRoom()}.
+     * - If you do not want the SDK to automatically play audio, you can set `autoReceiveAudio` to `false` to turn off automatic audio playback when calling {@link TRTC#enterRoom trtc.enterRoom()}.
      * - Listen for the {@link module:EVENT.REMOTE_AUDIO_AVAILABLE TRTC.EVENT.REMOTE_AUDIO_AVAILABLE} event, record the userId with remote audio, and call the {@link TRTC#muteRemoteAudio trtc.muteRemoteAudio(userId, false)} method when you need to play audio.
      * @default 'remote-audio-available'
      * @memberof module:EVENT
@@ -874,6 +876,25 @@ declare interface TRTCEventTypes {
      * @returns {TRTC} TRTC object
      */
     static create(options?: TRTCOptions): TRTC;
+    /**
+     * @private
+     * 注册插件 <br>
+     *
+     * @example
+     * import { VirtualBackground } from 'trtc-sdk-v5/plugins/video-effect/virtual-background';
+     * trtc.use({ plugin: VirtualBackground });
+     *
+     * @example
+     * import { VirtualBackground } from 'trtc-sdk-v5/plugins/video-effect/virtual-background';
+     * trtc.use({ plugin: VirtualBackground, assetsPath: './js/assets/' });
+     *
+     * @example
+     * // 简写使用
+     * import { VirtualBackground } from 'trtc-sdk-v5/plugins/video-effect/virtual-background';
+     * trtc.use(VirtualBackground);
+     */
+    use(pluginObject: PluginWithAssets | IPlugin): void;
+    _use(pluginClass: IPlugin, assetsPath?: string): void;
     /**
      * @typedef TurnServer
      * @property {string} url TURN server url
