@@ -745,6 +745,22 @@ declare const TRTCEvent: {
      */
     readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
     /**
+     * @since v5.3.0
+     * @description a new MediaStreamTrack object received.
+     * @default 'track'
+     * @memberof module:EVENT
+     * @example
+     * trtc.on(TRTC.EVENT.TRACK, event => {
+     *   // userId === '' means event.track is a local track, otherwise it's a remote track
+     *   const isLocal = event.userId === '';
+     *   // Usually the sub stream is a screen-sharing video stream.
+     *   const isSubStream = event.streamType === TRTC.TYPE.STREAM_TYPE_SUB;
+     *   const mediaStreamTrack = event.track;
+     *   const kind = event.track.kind; // audio or video
+     * })
+     */
+    readonly TRACK: "track";
+    /**
      * @description TRTC statistics.<br>
      *
      * - SDK will fires this event once every 2s.
@@ -770,21 +786,19 @@ declare const TRTCEvent: {
      */
     readonly SEI_MESSAGE: "sei-message";
     /**
-     * @since v5.3.0
-     * @description a new MediaStreamTrack object received.
-     * @default 'track'
+     * @since v5.6.0
+     * @description received a new custom message.
+     * @default 'custom-message'
      * @memberof module:EVENT
      * @example
-     * trtc.on(TRTC.EVENT.TRACK, event => {
-     *   // userId === '' means event.track is a local track, otherwise it's a remote track
-     *   const isLocal = event.userId === '';
-     *   // Usually the sub stream is a screen-sharing video stream.
-     *   const isSubStream = event.streamType === TRTC.TYPE.STREAM_TYPE_SUB;
-     *   const mediaStreamTrack = event.track;
-     *   const kind = event.track.kind; // audio or video
+     * trtc.on(TRTC.EVENT.CUSTOM_MESSAGE, event => {
+     *    // event.userId: remote userId.
+     *    // event.cmdId: message cmdId.
+     *    // event.seq: message sequence number.
+     *    // event.data: custom message data, type is ArrayBuffer.
      * })
      */
-    readonly TRACK: "track";
+    readonly CUSTOM_MESSAGE: "custom-message";
 };
 declare interface TRTCEventTypes {
     [TRTCEvent.ERROR]: [RtcError];
@@ -862,6 +876,7 @@ declare interface TRTCEventTypes {
         streamType?: TRTCStreamType;
         track: MediaStreamTrack;
     }];
+    [TRTCEvent.CUSTOM_MESSAGE]: [CustomMessage];
 }
  class TRTC extends EventEmitter<TRTCEventTypes> {
     /**
@@ -940,7 +955,8 @@ declare interface TRTCEventTypes {
      * - {@link module:TYPE.ROLE_AUDIENCE TRTC.TYPE.ROLE_AUDIENCE} Audience
      * Note: The audience role does not have the permission to publish local audio and video, only the permission to watch remote streams. If the audience wants to interact with the anchor by connecting to the microphone, please switch the role to the anchor through {@link TRTC#switchRole switchRole()} before publishing local audio and video.
      * @param {boolean} [options.autoReceiveAudio=true] Whether to automatically receive audio. When a remote user publishes audio, the SDK automatically plays the remote user's audio.
-     * @param {boolean} [options.autoReceiveVideo=true] Whether to automatically receive video. When a remote user publishes video, the SDK automatically subscribes and decodes the remote video. You need to call {@link TRTC#startLocalVideo startLocalVideo} to play the remote video.
+     * @param {boolean} [options.autoReceiveVideo=false] Whether to automatically receive video. When a remote user publishes video, the SDK automatically subscribes and decodes the remote video. You need to call {@link TRTC#startRemoteVideo startRemoteVideo} to play the remote video.
+     * - The default value was changed to `false` since v5.6.0. Refer to [Breaking Changed for v5.6.0](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-00-info-update-guideline.html).
      * @param {boolean} [options.enableAutoPlayDialog] Whether to enable the SDK's automatic playback failure dialog box, default: true.
      * - Enabled by default. When automatic playback fails, the SDK will pop up a dialog box to guide the user to click the page to restore audio and video playback.
      * - Can be set to false in order to turn off. Refer to {@tutorial 21-advanced-auto-play-policy}.
@@ -1502,6 +1518,28 @@ declare interface TRTCEventTypes {
      */
     off<T extends keyof TRTCEventTypes>(event: T | '*', handler: T extends '*' ? never : (...args: TRTCEventTypes[T]) => void, context?: any): this;
     /**
+     * Get audio track
+     *
+     * @returns {MediaStreamTrack?} Audio track
+     * @param {Object|string} [config] If not passed, get the local microphone audioTrack
+     * @param {string} [config.userId] If not passed or passed an empty string, get the local audioTrack. Pass the userId of the remote user to get the remote user's audioTrack.
+     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - stream type:
+     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (user's microphone)(default)
+     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (user's screen sharing audio). Only works for local screen sharing audio because there is only one remote audioTrack, and there is no distinction between Main and Sub for remote audioTrack.
+     * @memberof TRTC
+     * @example
+     * // Version before v5.4.3
+     * trtc.getAudioTrack(); // Get local microphone audioTrack, captured by trtc.startLocalAudio()
+     * trtc.getAudioTrack('remoteUserId'); // Get remote audioTrack
+     *
+     * // Since v5.4.3+, you can get local screen audioTrack by passing the streamType = TRTC.STREAM_TYPE_SUB
+     * trtc.getAudioTrack({ streamType: TRTC.STREAM_TYPE_SUB });
+     */
+    getAudioTrack(configOrUserId?: {
+        userId?: string;
+        streamType?: TRTCStreamType;
+    } | string): MediaStreamTrack | null;
+    /**
      * Get video track
      *
      * @param {string} [config] If not passed, get the local camera videoTrack
@@ -1526,27 +1564,23 @@ declare interface TRTCEventTypes {
         streamType?: TRTCStreamType;
     }): MediaStreamTrack | null;
     /**
-     * Get audio track
-     *
-     * @returns {MediaStreamTrack?} Audio track
-     * @param {Object|string} [config] If not passed, get the local microphone audioTrack
-     * @param {string} [config.userId] If not passed or passed an empty string, get the local audioTrack. Pass the userId of the remote user to get the remote user's audioTrack.
-     * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - stream type:
-     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (user's microphone)(default)
-     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (user's screen sharing audio). Only works for local screen sharing audio because there is only one remote audioTrack, and there is no distinction between Main and Sub for remote audioTrack.
-     * @memberof TRTC
+     * Get video snapshot <br>
+     * Notice: must play the video before it can obtain the snapshot. If there is no playback, an empty string will be returned.
+     * @param {string} config.userId - Remote user ID
+     * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType
+     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream
+     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream
+     * @since 5.4.0
      * @example
-     * // Version before v5.4.3
-     * trtc.getAudioTrack(); // Get local microphone audioTrack, captured by trtc.startLocalAudio()
-     * trtc.getAudioTrack('remoteUserId'); // Get remote audioTrack
-     *
-     * // Since v5.4.3+, you can get local screen audioTrack by passing the streamType = TRTC.STREAM_TYPE_SUB
-     * trtc.getAudioTrack({ streamType: TRTC.STREAM_TYPE_SUB });
+     * // get self main stream video frame
+     * trtc.getVideoSnapshot()
+     * // get self sub stream video frame
+     * trtc.getVideoSnapshot({streamType:TRTC.TYPE.STREAM_TYPE_SUB})
+     * // get remote user main stream video frame
+     * trtc.getVideoSnapshot({userId: 'remote userId', streamType:TRTC.TYPE.STREAM_TYPE_MAIN})
+     * @memberof TRTC
      */
-    getAudioTrack(configOrUserId?: {
-        userId?: string;
-        streamType?: TRTCStreamType;
-    } | string): MediaStreamTrack | null;
+    getVideoSnapshot(config?: VideoFrameConfig): string;
     setCurrentSpeaker(speakerId: string): void;
     /**
      * Send SEI Message <br>
@@ -1599,23 +1633,38 @@ declare interface TRTCEventTypes {
         seiPayloadType: number;
     }): void;
     /**
-     * Get video snapshot <br>
-     * Notice: must play the video before it can obtain the snapshot. If there is no playback, an empty string will be returned.
-     * @param {string} config.userId - Remote user ID
-     * @param {TRTC.TYPE.STREAM_TYPE_MAIN|TRTC.TYPE.STREAM_TYPE_SUB} config.streamType
-     * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream
-     * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream
-     * @since 5.4.0
+     * Send Custom Message to all remote users in the room. <br>
+     *
+     * Note:
+     *
+     * 1. Only {@link module:TYPE.ROLE_ANCHOR TRTC.TYPE.ROLE_ANCHOR} can call sendCustomMessage.
+     * 2. You should call this api after {@link TRTC#enterRoom TRTC.enterRoom} successfully.
+     * 3. The custom message will be sent in order and as reliably as possible, but it's possible to loss messages in a very bad network. The receiver will also receive the message in order.
+     * @since v5.6.0
+     * @see Listen for the event {@link module:EVENT.CUSTOM_MESSAGE TRTC.EVENT.CUSTOM_MESSAGE} to receive custom message.
+     * @param {object} message
+     * @param {number} message.cmdId message Id. Integer, range [1, 10]. You can set different cmdId for different types of messages to reduce the delay of transferring message.
+     * @param {ArrayBuffer} message.data - message content. <br/>
+     * - Maximum 1KB(Byte) sent in a single call.
+     * - Maximum 30 calls per second
+     * - Maximum 8KB sent per second.
      * @example
-     * // get self main stream video frame
-     * trtc.getVideoSnapshot()
-     * // get self sub stream video frame
-     * trtc.getVideoSnapshot({streamType:TRTC.TYPE.STREAM_TYPE_SUB})
-     * // get remote user main stream video frame
-     * trtc.getVideoSnapshot({userId: 'remote userId', streamType:TRTC.TYPE.STREAM_TYPE_MAIN})
-     * @memberof TRTC
+     * // send custom message
+     * trtc.sendCustomMessage({
+     *   cmdId: 1,
+     *   data: new TextEncoder().encode('hello').buffer
+     * });
+     *
+     * // receive custom message
+     * trtc.on(TRTC.EVENT.CUSTOM_MESSAGE, event => {
+     *    // event.userId: remote userId.
+     *    // event.cmdId: message cmdId.
+     *    // event.seq: message sequence number.
+     *    // event.data: custom message data, type is ArrayBuffer.
+     *    console.log(`received custom msg from ${event.userId}, message: ${new TextDecoder().decode(event.data)}`)
+     * })
      */
-    getVideoSnapshot(config?: VideoFrameConfig): string;
+    sendCustomMessage(message: CustomMessageData): void;
     static EVENT: {
         readonly ERROR: "error";
         readonly AUTOPLAY_FAILED: "autoplay-failed";
@@ -1634,9 +1683,10 @@ declare interface TRTCEventTypes {
         readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
         readonly DEVICE_CHANGED: "device-changed";
         readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
+        readonly TRACK: "track";
         readonly STATISTICS: "statistics";
         readonly SEI_MESSAGE: "sei-message";
-        readonly TRACK: "track";
+        readonly CUSTOM_MESSAGE: "custom-message";
     };
     static ERROR_CODE: {
         INVALID_PARAMETER: number;
