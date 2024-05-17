@@ -133,7 +133,7 @@ export default {
     "Device Select": "Device Select",
     "Alert": "Notes: this Demo is only applicable for debugging. Before official launch, please migrate the UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the leakage of encryption key.",
     "Click": "View documents",
-    "Url": "https://intl.cloud.tencent.com/document/product/647/35166"
+    "Url": "https://trtc.io/document/35166"
 	},
 	"zh-cn": {
 		"Params": "参数",

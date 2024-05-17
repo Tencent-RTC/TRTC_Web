@@ -19,7 +19,7 @@
 					<span v-if="isZhLang" class="collapse-title">步骤 2 : 创建新的应用</span>
 				</template>
         <ul v-if="isEnLang" class="collapse-content">
-			Please visit the <a href="https://console.tencentcloud.com/trtc/app" target="_blank" rel="noopener noreferrer"> TRTC console </a> and create an RTC Engine application.
+			Please visit the <a href="https://console.trtc.io/?quickclaim=engine_trial" target="_blank" rel="noopener noreferrer"> TRTC console </a> and create an RTC Engine application.
 				</ul>
 				<ul v-if="isZhLang" class="collapse-content">
 					<li>登录<a target="_blank" href="https://console.cloud.tencent.com/trtc">实时音视频控制台</a>，选择【开发辅助】 > 【<a

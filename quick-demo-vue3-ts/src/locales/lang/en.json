@@ -7,7 +7,7 @@
   "param": "Params",
   "alert": "Notes: this Demo is only applicable for debugging. Before official launch, please migrate the UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the leakage of encryption key.",
   "click": "View documents",
-  "url": "https://intl.cloud.tencent.com/document/product/647/35166",
+  "url": "https://trtc.io/document/35166",
   "device": "Device",
   "operation": "Operation",
   "permit": "Please enable your microphone and camera for current page.",
