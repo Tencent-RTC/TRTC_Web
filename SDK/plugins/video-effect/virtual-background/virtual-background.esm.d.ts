@@ -9,12 +9,14 @@ export interface VirtualBackgroundOptions {
     userId: string;
     userSig: string;
     type?: 'image' | 'blur';
+    blurLevel?: number;
     src?: string;
 }
 
 
 export interface UpdateVirtualBackgroundOptions {
     type: 'image' | 'blur';
+    blurLevel?: number;
     src?: string;
 }
 
