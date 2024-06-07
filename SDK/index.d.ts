@@ -43,6 +43,7 @@ declare interface EnterRoomConfig {
     autoReceiveAudio?: boolean;
     autoReceiveVideo?: boolean;
     privateMapKey?: string;
+    latencyLevel?: number;
     businessInfo?: string;
     enableAutoPlayDialog?: boolean;
     proxy?: ProxyServer | string;
@@ -1020,7 +1021,8 @@ declare interface TRTCEventTypes {
      * await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR, { privateMapKey: 'your new privateMapKey' });
      */
     switchRole(role: UserRole, option?: {
-        privateMapKey: string;
+        privateMapKey?: string;
+        latencyLevel?: number;
     }): Promise<void>;
     /**
      * Destroy the TRTC instance <br/>
