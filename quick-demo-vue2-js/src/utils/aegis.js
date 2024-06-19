@@ -8,6 +8,7 @@ import Vue from 'vue';
 import Aegis from 'aegis-web-sdk';
 
 const isProd = location.origin === 'https://web.sdk.qcloud.com';
+const DEMOKEY = isProd ? 'v5QuickDemoVue2' : 'v5QuickDemoVue2Dev';
 
 const AEGIS_ID = {
   dev: 'iHWefAYqBEHVFrSxnV',
@@ -20,4 +21,5 @@ const aegis = new Aegis({
   reportAssetSpeed: false,
 });
 
+Vue.prototype.$DEMOKEY = DEMOKEY;
 Vue.prototype.$aegis = aegis;

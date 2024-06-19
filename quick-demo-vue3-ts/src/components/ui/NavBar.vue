@@ -44,7 +44,7 @@ function goToGithub() {
   proxy.$aegis.reportEvent({
     name: 'jumpGithub',
     ext1: 'jumpGithub',
-    ext2: 'webrtcQuickDemoVue3',
+    ext2: proxy.$aegis.DEMOKEY,
     // ext3: sdkAppId,
   });
   window.open('https://github.com/LiteAVSDK/TRTC_Web', '_blank');

@@ -83,7 +83,7 @@ function reportSuccessEvent(name: string) {
   $aegis.reportEvent({
     name,
     ext1: `${name}-success`,
-    ext2: 'webrtcQuickDemoVue3',
+    ext2: $aegis.DEMOKEY,
     ext3: store.sdkAppId,
   });
 }
@@ -91,7 +91,7 @@ function reportFailedEvent(name: string, message: string) {
   $aegis.reportEvent({
     name,
     ext1: `${name}-failed#${store.roomId}**${store.userId}*${message}`,
-    ext2: 'webrtcQuickDemoVue3',
+    ext2: $aegis.DEMOKEY,
     ext3: store.sdkAppId,
   });
 }

@@ -1,6 +1,7 @@
 import Aegis from 'aegis-web-sdk';
 
 const isProd = window.location.origin === 'https://web.sdk.qcloud.com';
+const DEMOKEY = isProd ? 'v5QuickDemoVue3' : 'v5QuickDemoVue3Dev';
 
 const AEGIS_ID = {
   dev: 'iHWefAYqBEHVFrSxnV',
@@ -13,4 +14,5 @@ const aegis = new Aegis({
   reportAssetSpeed: true,
 });
 
+(aegis as any).DEMOKEY = DEMOKEY;
 export default aegis;

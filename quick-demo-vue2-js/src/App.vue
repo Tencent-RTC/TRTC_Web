@@ -9,7 +9,7 @@ export default {
     this.$aegis.reportEvent({
       name: 'loaded',
       ext1: 'loaded-success',
-      ext2: 'webrtcQuickDemoVue2',
+      ext2: this.$DEMOKEY,
     });
   },
 };

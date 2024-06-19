@@ -30,15 +30,6 @@ let invite = document.getElementById('invite')
 let inviteUrl = document.getElementById('inviteUrl')
 let github = document.getElementById('github')
 
-github.addEventListener('click', () => {
-	aegis.reportEvent({
-		name: 'jumpGithub',
-		ext1: 'jumpGithub',
-		ext2: 'webrtcQuickDemoJs',
-		ext3: sdkAppId,
-	});
-})
-
 language.addEventListener('click', handleChangeLanguageClick)
 
 function handleChangeLanguageClick() {
@@ -135,12 +126,21 @@ function getQueryString(name) {
 	return null;
 }
 
-const DEMOKEY = 'webrtcQuickDemoJs';
 const isProd = location.origin === 'https://web.sdk.qcloud.com';
+const DEMOKEY = isProd ? 'v5QuickDemoJs' : 'v5QuickDemoJsDev';
 const AEGIS_ID = {
 	dev: 'iHWefAYqBEHVFrSxnV',
 	prod: 'iHWefAYqVGQzlNLveU',
 };
+
+github.addEventListener('click', () => {
+	aegis.reportEvent({
+		name: 'jumpGithub',
+		ext1: 'jumpGithub',
+		ext2: DEMOKEY,
+		ext3: sdkAppId,
+	});
+})
 
 const aegis = new Aegis({
 	id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
