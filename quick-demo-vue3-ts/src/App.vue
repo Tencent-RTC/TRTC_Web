@@ -23,7 +23,7 @@ TRTC.isSupported().then((checkResult: any) => {
 $aegis.reportEvent({
   name: 'loaded',
   ext1: 'loaded-success',
-  ext2: 'webrtcQuickDemoVue3',
+  ext2: $aegis.DEMOKEY,
 });
 </script>
 

@@ -283,7 +283,7 @@ export default {
       this.$aegis.reportEvent({
         name,
         ext1: `${name}-success`,
-        ext2: 'webrtcQuickDemoVue2',
+        ext2: this.$DEMOKEY,
         ext3: this.sdkAppId,
       });
     },
@@ -291,7 +291,7 @@ export default {
       this.$aegis.reportEvent({
         name,
         ext1: `${name}-failed#${this.roomId}*${type === 'share' ? this.shareUserId : this.userId}*${error.message}`,
-        ext2: 'webrtcQuickDemoVue2',
+        ext2: this.$DEMOKEY,
         ext3: this.sdkAppId,
       });
     },
