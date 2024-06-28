@@ -1775,8 +1775,8 @@ declare interface TRTCEventTypes {
      * <br>
      * **Note**
      * - This interface does not support use under the http protocol, please use the https protocol to deploy your website. {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
-     * - Calling this method may temporarily open the camera to ensure that the camera list can be normally obtained, and the SDK will automatically stop the camera capture later.
      * - You can call the browser's native interface [getCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/InputDeviceInfo/getCapabilities) to get the maximum resolutions supported by the camera, frame rate, mobile devices to distinguish between front and rear cameras, etc. This interface supports Chrome 67+, Edge 79+, Safari 17+, Opera 54+.
+     * @param {boolean} [requestPermission=true] `Since v5.6.3`. Whether to request permission to use the camera. If requestPermission is true, calling this method may temporarily open the camera to ensure that the camera list can be normally obtained, and the SDK will automatically stop the camera capture later.
      * @example
      * const cameraList = await TRTC.getCameraList();
      * if (cameraList[0] && cameraList[0].getCapabilities) {
@@ -1792,14 +1792,14 @@ declare interface TRTCEventTypes {
      * }
      * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
      */
-    static getCameraList(): Promise<DeviceInfo[]>;
+    static getCameraList(requestPermission?: boolean): Promise<DeviceInfo[]>;
     /**
      * Returns the list of microphone devices
      * <br>
      * **Note**
      * - This interface does not support use under the http protocol, please use the https protocol to deploy your website. {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
-     * - Calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically stop the microphone capture later.
      * - You can call the browser's native interface [getCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/InputDeviceInfo/getCapabilities) to get information about the microphone's capabilities, e.g. the maximum number of channels supported, etc. This interface supports Chrome 67+, Edge 79+, Safari 17+, Opera 54+.
+     * @param {boolean} [requestPermission=true] `Since v5.6.3`. Whether to request permission to use the microphone. If requestPermission is true, calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically stop the microphone capture later.
      * @example
      * const microphoneList = await TRTC.getMicrophoneList();
      * if (microphoneList[0] && microphoneList[0].getCapabilities) {
@@ -1808,14 +1808,14 @@ declare interface TRTCEventTypes {
      * }
      * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
      */
-    static getMicrophoneList(): Promise<DeviceInfo[]>;
+    static getMicrophoneList(requestPermission?: boolean): Promise<DeviceInfo[]>;
     /**
-     * Returns the list of speaker devices
+     * Returns the list of speaker devices. Only support PC browser, not support mobile browser.
      * <br>
-     * Calling this method may temporarily open the microphone to ensure that the speaker list can be normally obtained, and the SDK will automatically release the microphone capture later.
+     * @param {boolean} [requestPermission=true] `Since v5.6.3`. Whether to request permission to use the microphone. If requestPermission is true, calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically stop the microphone capture later.
      * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
      */
-    static getSpeakerList(): Promise<DeviceInfo[]>;
+    static getSpeakerList(requestPermission?: boolean): Promise<DeviceInfo[]>;
     /**
      *  Set the current speaker for audio playback
      *
