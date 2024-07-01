@@ -60,7 +60,7 @@ function initParams() {
 		name: 'loaded',
 		ext1: 'loaded-success',
 		ext2: DEMOKEY,
-		ext3: sdkAppId,
+		ext3: 0,
 	});
 
 	if (!(sdkAppId && sdkSecretKey && roomId && userId)) {
@@ -110,7 +110,7 @@ async function exitRoom() {
 	if (trtc) {
 		try {
 			await trtc.exitRoom();
-			reportSuccessEvent('exitRoom', sdkAppId);
+			reportSuccessEvent('exitRoom', 0);
 			addSuccessLog(`[${userId}] exitRoom.`);
 			setButtonLoading('exit', false);
 			setButtonDisabled('enter', false);
@@ -140,7 +140,7 @@ async function startLocalAudio() {
 			isMicOpened = true;
 			setButtonLoading('startLocalAudio', false);
 			setButtonDisabled('startLocalAudio', true);
-			reportSuccessEvent('startLocalAudio', sdkAppId);
+			reportSuccessEvent('startLocalAudio', 0);
 			addSuccessLog(`${userId ? `[${userId}]` : ''} startLocalAudio.`);
 		} catch (error) {
 			reportFailedEvent({ name: 'startLocalAudio', sdkAppId, roomId, error })
@@ -162,7 +162,7 @@ async function startLocalVideo() {
 			isCamOpened = true;
 			setButtonLoading('startLocalVideo', false);
 			setButtonDisabled('startLocalVideo', true);
-			reportSuccessEvent('startLocalVideo', sdkAppId);
+			reportSuccessEvent('startLocalVideo', 0);
 			addSuccessLog(`${userId ? `[${userId}]` : ''} startLocalVideo.`);
 			addLocalControlView();
 		} catch (error) {
@@ -185,7 +185,7 @@ async function stopLocalAudio() {
 			isMicOpened = false;
 			setButtonLoading('stopLocalAudio', false);
 			setButtonDisabled('startLocalAudio', false);
-			reportSuccessEvent('stopLocalAudio', sdkAppId)
+			reportSuccessEvent('stopLocalAudio', 0)
 			addSuccessLog(`${userId ? `[${userId}]` : ''} stopLocalAudio.`);
 		} catch (error) {
 			setButtonLoading('stopLocalAudio', false);
@@ -207,7 +207,7 @@ async function stopLocalVideo() {
 			isCamOpened = false;
 			setButtonLoading('stopLocalVideo', false);
 			setButtonDisabled('startLocalVideo', false);
-			reportSuccessEvent('stopLocalVideo', sdkAppId)
+			reportSuccessEvent('stopLocalVideo', 0)
 			addSuccessLog(`${userId ? `[${userId}]` : ''} stopLocalVideo.`);
 			const local = document.getElementById('local')
 			local.removeChild(local.children[0]);
@@ -228,7 +228,7 @@ async function startShare() {
 		isShared = true;
 		setButtonLoading('startShare', false);
 		setButtonDisabled('startShare', true);
-		reportSuccessEvent('startScreenShare', sdkAppId)
+		reportSuccessEvent('startScreenShare', 0)
 		addSuccessLog(`${userId ? `[${userId}]` : ''} startScreenShare.`);
 	} catch (error) {
 		console.log('startShare error', error);
@@ -255,7 +255,7 @@ async function stopShare() {
 		isShared = false;
 		setButtonLoading('stopShare', false);
 		setButtonDisabled('startShare', false);
-		reportSuccessEvent('stopScreenShare', sdkAppId)
+		reportSuccessEvent('stopScreenShare', 0)
 		addSuccessLog(`${userId ? `[${userId}]` : ''} stopScreenShare.`);
 	} catch (error) {
 		console.log('stopShare error', error);
