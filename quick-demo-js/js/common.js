@@ -138,7 +138,7 @@ github.addEventListener('click', () => {
 		name: 'jumpGithub',
 		ext1: 'jumpGithub',
 		ext2: DEMOKEY,
-		ext3: sdkAppId,
+		ext3: 0,
 	});
 })
 
@@ -164,6 +164,6 @@ function reportFailedEvent({name, error, type = 'rtc', sdkAppId, roomId}) {
 		name,
 		ext1: `${name}-failed#${roomId}*${type}*${error.message}`,
 		ext2: DEMOKEY,
-		ext3: sdkAppId,
+		ext3: 0, // 仅 success 事件需要传 sdkAppId，原因是只有成功的 sdkAppId 有意义
 	});
 }

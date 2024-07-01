@@ -80,11 +80,12 @@ import appStore from '@/store/index';
 
 const $aegis: any = inject('$aegis');
 function reportSuccessEvent(name: string) {
+  const ext3 = name === 'enterRoom' ? store.sdkAppId : 0;
   $aegis.reportEvent({
     name,
     ext1: `${name}-success`,
     ext2: $aegis.DEMOKEY,
-    ext3: store.sdkAppId,
+    ext3,
   });
 }
 function reportFailedEvent(name: string, message: string) {
@@ -92,7 +93,7 @@ function reportFailedEvent(name: string, message: string) {
     name,
     ext1: `${name}-failed#${store.roomId}**${store.userId}*${message}`,
     ext2: $aegis.DEMOKEY,
-    ext3: store.sdkAppId,
+    ext3: 0,
   });
 }
 

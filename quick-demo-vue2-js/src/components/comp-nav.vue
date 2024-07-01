@@ -49,7 +49,7 @@ export default {
         name: 'jumpGithub',
         ext1: 'jumpGithub',
         ext2: this.$DEMOKEY,
-        ext3: this.sdkAppId,
+        ext3: 0,
       });
       window.open('https://github.com/LiteAVSDK/TRTC_Web', '_blank');
     },

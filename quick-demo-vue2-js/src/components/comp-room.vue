@@ -280,11 +280,12 @@ export default {
       this.$refs.logContainer.scrollTop = scrollHeight;
     },
     reportSuccessEvent(name) {
+      const ext3 = name === 'enterRoom' ? this.sdkAppId : 0;
       this.$aegis.reportEvent({
         name,
         ext1: `${name}-success`,
         ext2: this.$DEMOKEY,
-        ext3: this.sdkAppId,
+        ext3,
       });
     },
     reportFailedEvent(name, error, type = 'rtc') {
@@ -292,7 +293,7 @@ export default {
         name,
         ext1: `${name}-failed#${this.roomId}*${type === 'share' ? this.shareUserId : this.userId}*${error.message}`,
         ext2: this.$DEMOKEY,
-        ext3: this.sdkAppId,
+        ext3: 0
       });
     },
   },
