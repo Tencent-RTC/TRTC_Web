@@ -28,6 +28,18 @@ body{
   padding: 10px;
 }
 
+#document {
+  margin: 0 20px;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  font-size: 14px;
+}
+
+#document:hover {
+  color: #007bff;
+}
+
 a {
   text-decoration: none;
 }

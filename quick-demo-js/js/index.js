@@ -36,6 +36,7 @@ TRTC.setLogLevel(1);
 
 // init device
 initDevice();
+handleEvent();
 
 // check current environment is supported TRTC or not
 TRTC.isSupported().then((checkResult) => {
@@ -56,7 +57,7 @@ function initParams() {
 	cameraId = document.getElementById('camera-select').value;
 	microphoneId = document.getElementById('microphone-select').value;
 
-	aegis.reportEvent({
+	aegis?.reportEvent({
 		name: 'loaded',
 		ext1: 'loaded-success',
 		ext2: DEMOKEY,
@@ -86,8 +87,6 @@ async function enterRoom() {
 		addSuccessLog(`[${userId}] enterRoom.`);
 		setButtonLoading('enter', false);
 		setButtonDisabled('enter', true);
-
-		handleEvent();
 	} catch (error) {
 		console.log('enterRoom error', error);
 		setButtonLoading('enter', false);
@@ -114,7 +113,6 @@ async function exitRoom() {
 			addSuccessLog(`[${userId}] exitRoom.`);
 			setButtonLoading('exit', false);
 			setButtonDisabled('enter', false);
-			trtc.off('*');
 		} catch (error) {
 			reportFailedEvent({
 				name: 'exitRoom',
@@ -271,6 +269,32 @@ async function stopShare() {
 	}
 }
 
+const getDevices = async () => {
+	await getCamera();
+	await getMicrophone();
+}
+
+const getCamera = async () => {
+	cameras = await TRTC.getCameraList();
+	cameraSelect.innerHTML = '';
+	cameras?.forEach(camera => {
+		const option = document.createElement('option');
+		option.value = camera.deviceId;
+		option.text = camera.label;
+		cameraSelect.appendChild(option);
+	});
+}
+
+const getMicrophone = async () => {
+	microphones = await TRTC.getMicrophoneList();
+	microphoneSelect.innerHTML = '';
+	microphones?.forEach(microphone => {
+		const option = document.createElement('option');
+		option.value = microphone.deviceId;
+		option.text = microphone.label;
+		microphoneSelect.appendChild(option);
+	});
+}
 
 async function initDevice() {
 	try {
@@ -291,27 +315,7 @@ async function initDevice() {
 			}
 			enterBtn.disabled = true;
 		}
-		const updateDevice = async () => {
-			cameras = await TRTC.getCameraList();
-			cameras?.forEach(camera => {
-				const option = document.createElement('option');
-				option.value = camera.deviceId;
-				option.text = camera.label;
-				cameraSelect.appendChild(option);
-			});
-
-			microphones = await TRTC.getMicrophoneList();
-			microphones?.forEach(microphone => {
-				const option = document.createElement('option');
-				option.value = microphone.deviceId;
-				option.text = microphone.label;
-				microphoneSelect.appendChild(option);
-			});
-		}
-		await updateDevice();
-		navigator.mediaDevices.addEventListener('devicechange', async () => {
-			await updateDevice();
-		});
+		await getDevices();
 	} catch (e) {
 		console.error('get device failed', e);
 	}
@@ -331,9 +335,12 @@ function handleEvent() {
 	});
 	trtc.on(TRTC.EVENT.SCREEN_SHARE_STOPPED, () => {
 		console.log('screen sharing was stopped');
-		isShared = false;
+		stopShare();
 	});
-
+	trtc.on(TRTC.EVENT.DEVICE_CHANGED, async ({ type }) => {
+		if (type === 'camera') getCamera();
+		if (type === 'microphone') getMicrophone();
+	});
 }
 consoleBtn.addEventListener('click', () => {
 	window.vconsole = new VConsole();

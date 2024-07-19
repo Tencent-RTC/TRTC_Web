@@ -2,9 +2,27 @@
 <html>
 
 <head>
-  <title>TRTC 实时音视频</title>
+  <!-- HTML Meta Tags -->
+  <title>Quick Demo JS | Tencent RTC</title>
+  <meta name="description" content="This demo uses pure JavaScript to quickly test essential Tencent RTC features.">
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
   <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no'>
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:url" content="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/qer/og/cloud-quick-js/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Quick Demo JS | Tencent RTC">
+  <meta property="og:description" content="This demo uses pure JavaScript to quickly test essential Tencent RTC features.">
+  <meta property="og:image" content="https://web.sdk.qcloud.com/trtc/webrtc/assets/og-image-js.png">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="web.sdk.qcloud.com">
+  <meta property="twitter:url" content="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/qer/og/cloud-quick-js/index.html">
+  <meta name="twitter:title" content="Quick Demo JS | Tencent RTC">
+  <meta name="twitter:description" content="This demo uses pure JavaScript to quickly test essential Tencent RTC features.">
+  <meta name="twitter:image" content="https://web.sdk.qcloud.com/trtc/webrtc/assets/og-image-js.png">
+
   <!-- CSS only -->
   <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'
     integrity='sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3' crossorigin='anonymous'>
@@ -20,10 +38,21 @@
 
   <!--nav bar-->
   <div class='container-fluid text-white header'>
-    <img class='zh-cn' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png'
-      style='height: 100%' />
+    <img class='zh-cn' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png' style='height: 100%' />
     <img class='en' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png' style='height: 100%' />
-    <div style='flex-direction: row;display: flex;justify-content: center;align-items: center'>
+    <div style='display: flex;align-items: center;'>
+      <span id='document'>
+        <span class="en">Documentation</span>
+        <span class="zh-cn">文档</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+          class="icon icon-tabler icons-tabler-outline icon-tabler-external-link">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
+          <path d="M11 13l9 -9" />
+          <path d="M15 4h5v5" />
+        </svg>
+      </span>
       <div id='language'>中/En</div>
       <a target="_blank" class='github' id="github" href='https://github.com/LiteAVSDK/TRTC_Web'>
         <svg height='32' aria-hidden='true' viewBox='0 0 16 16' version='1.1' width='32' data-view-component='true'
@@ -184,8 +213,8 @@
         <div class="alert alert-danger" role="alert">
           <span class='en'>Notes: this Demo is only applicable for debugging. Before official launch, please migrate the
             UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the
-            leakage of encryption key. <a target="_blank"
-              href='https://trtc.io/document/35166'>View Documents</a></span>
+            leakage of encryption key. <a target="_blank" href='https://trtc.io/document/35166'>View
+              Documents</a></span>
           <span class='zh-cn'>注意️：本 Demo 仅用于调试，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。<a target="_blank"
               href='https://cloud.tencent.com/document/product/647/17275'>查看文档</a></span>
         </div>
@@ -216,46 +245,46 @@
         </h1>
         <div class='wrapper'>
           <button id='enter' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en">Enter Room</span>
             <span class='zh-cn'> 进入房间 </span>
           </button>
           <button id='exit' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en">Exit Room </span>
             <span class='zh-cn'> 离开房间 </span>
           </button>
         </div>
         <div class='wrapper'>
           <button id='startLocalAudio' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en"> Start Local Audio </span>
             <span class='zh-cn'> 采集麦克风 </span>
           </button>
           <button id='startLocalVideo' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en"> Start Local Video </span>
             <span class='zh-cn'> 采集摄像头 </span>
           </button>
           <button id='stopLocalAudio' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en"> Stop Local Audio </span>
             <span class='zh-cn'> 终止采集麦克风 </span>
           </button>
           <button id='stopLocalVideo' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en"> Stop Local Video </span>
             <span class='zh-cn'> 终止采集摄像头 </span>
           </button>
         </div>
         <div class='wrapper'>
           <button id='startShare' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en"> Start Share Screen </span>
             <span class='zh-cn'> 开始共享屏幕 </span>
           </button>
           <button id='stopShare' type='button' class='btn btn-primary btn-sm'>
-            <span class="loading-icon"> </span> 
+            <span class="loading-icon"> </span>
             <span class="en"> Stop Share Screen </span>
             <span class='zh-cn'> 停止共享屏幕 </span>
           </button>

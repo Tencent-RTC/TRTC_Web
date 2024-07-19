@@ -6,7 +6,7 @@
 export default {
   name: 'App',
   mounted() {
-    this.$aegis.reportEvent({
+    this.$aegis?.reportEvent({
       name: 'loaded',
       ext1: 'loaded-success',
       ext2: this.$DEMOKEY,

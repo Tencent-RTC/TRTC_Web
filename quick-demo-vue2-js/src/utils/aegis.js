@@ -8,6 +8,7 @@ import Vue from 'vue';
 import Aegis from 'aegis-web-sdk';
 
 const isProd = location.origin === 'https://web.sdk.qcloud.com';
+const isDev = location.origin.includes('localhost') || location.origin.includes('127.0.0.1');
 const DEMOKEY = isProd ? 'v5QuickDemoVue2' : 'v5QuickDemoVue2Dev';
 
 const AEGIS_ID = {
@@ -15,11 +16,15 @@ const AEGIS_ID = {
   prod: 'iHWefAYqVGQzlNLveU',
 };
 
-const aegis = new Aegis({
-  id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
-  reportApiSpeed: false,
-  reportAssetSpeed: false,
-});
+let aegis;
+
+if (isProd || isDev) {
+  aegis = new Aegis({
+    id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
+    reportApiSpeed: false,
+    reportAssetSpeed: false,
+  });
+}
 
 Vue.prototype.$DEMOKEY = DEMOKEY;
 Vue.prototype.$aegis = aegis;
