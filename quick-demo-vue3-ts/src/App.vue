@@ -20,10 +20,10 @@ TRTC.isSupported().then((checkResult: any) => {
   }
 });
 
-$aegis.reportEvent({
+$aegis?.reportEvent({
   name: 'loaded',
   ext1: 'loaded-success',
-  ext2: $aegis.DEMOKEY,
+  ext2: $aegis?.DEMOKEY,
 });
 </script>
 

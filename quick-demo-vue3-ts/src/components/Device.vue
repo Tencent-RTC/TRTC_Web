@@ -38,7 +38,6 @@
 </template>
 
 <script lang='ts' setup>
-import { defineEmits } from 'vue';
 import { useI18n } from 'vue-i18n';
 import TRTC from 'trtc-sdk-v5';
 import { ElMessage } from 'element-plus/es';

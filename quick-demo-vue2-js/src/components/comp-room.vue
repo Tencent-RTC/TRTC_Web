@@ -281,7 +281,7 @@ export default {
     },
     reportSuccessEvent(name) {
       const ext3 = name === 'enterRoom' ? this.sdkAppId : 0;
-      this.$aegis.reportEvent({
+      this.$aegis?.reportEvent({
         name,
         ext1: `${name}-success`,
         ext2: this.$DEMOKEY,
@@ -289,7 +289,7 @@ export default {
       });
     },
     reportFailedEvent(name, error, type = 'rtc') {
-      this.$aegis.reportEvent({
+      this.$aegis?.reportEvent({
         name,
         ext1: `${name}-failed#${this.roomId}*${type === 'share' ? this.shareUserId : this.userId}*${error.message}`,
         ext2: this.$DEMOKEY,

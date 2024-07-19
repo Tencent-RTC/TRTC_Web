@@ -39,7 +39,7 @@ function handleChangeLanguageClick() {
 
 	window.lang_ = nextLanguage;
 	localStorage.setItem(localStorageLangId, nextLanguage);
-	
+
 	changeLanguageTo(nextLanguage);
 }
 
@@ -125,8 +125,8 @@ function getQueryString(name) {
 	}
 	return null;
 }
-
 const isProd = location.origin === 'https://web.sdk.qcloud.com';
+const isDev = location.origin.includes('localhost') || location.origin.includes('127.0.0.1');
 const DEMOKEY = isProd ? 'v5QuickDemoJs' : 'v5QuickDemoJsDev';
 const AEGIS_ID = {
 	dev: 'iHWefAYqBEHVFrSxnV',
@@ -134,7 +134,7 @@ const AEGIS_ID = {
 };
 
 github.addEventListener('click', () => {
-	aegis.reportEvent({
+	aegis?.reportEvent({
 		name: 'jumpGithub',
 		ext1: 'jumpGithub',
 		ext2: DEMOKEY,
@@ -142,16 +142,19 @@ github.addEventListener('click', () => {
 	});
 })
 
-const aegis = new Aegis({
-	id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
-	uin: '',
-	reportApiSpeed: false,
-	reportAssetSpeed: false
-})
+let aegis;
 
+if (isProd || isDev) {
+	aegis = new Aegis({
+		id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
+		uin: '',
+		reportApiSpeed: false,
+		reportAssetSpeed: false
+	})
+}
 
 function reportSuccessEvent(name, sdkAppId) {
-	aegis.reportEvent({
+	aegis?.reportEvent({
 		name,
 		ext1: `${name}-success`,
 		ext2: DEMOKEY,
@@ -160,7 +163,7 @@ function reportSuccessEvent(name, sdkAppId) {
 }
 
 function reportFailedEvent({name, error, type = 'rtc', sdkAppId, roomId}) {
-	aegis.reportEvent({
+	 aegis?.reportEvent({
 		name,
 		ext1: `${name}-failed#${roomId}*${type}*${error.message}`,
 		ext2: DEMOKEY,

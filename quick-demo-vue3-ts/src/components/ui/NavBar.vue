@@ -2,7 +2,10 @@
 <template>
   <div class='text-white header'>
     <img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png" alt="TRTC" style='height: 100%'/>
-    <div style='flex-direction: row;display: flex;justify-content: center;align-items: center'>
+    <div class="buttons">
+      <div id="document" @click="goToDocument">
+        {{ t('Documentation') }}
+      </div>
       <div id='language' @click='toggleLanguage'>中/En</div>
       <div class='github' @click="goToGithub">
         <svg aria-hidden='true' class='octicon octicon-mark-github v-align-middle' data-view-component='true'
@@ -41,13 +44,25 @@ function toggleLanguage() {
 }
 
 function goToGithub() {
-  proxy.$aegis.reportEvent({
+  proxy.$aegis?.reportEvent({
     name: 'jumpGithub',
     ext1: 'jumpGithub',
-    ext2: proxy.$aegis.DEMOKEY,
+    ext2: proxy.$aegis?.DEMOKEY,
     // ext3: sdkAppId,
   });
   window.open('https://github.com/LiteAVSDK/TRTC_Web', '_blank');
+}
+
+function goToDocument() {
+  proxy.$aegis.reportEvent({
+    name: 'jumpDocument',
+    ext1: 'jumpDocument',
+    ext2: proxy.$aegis.DEMOKEY,
+  });
+  const url = locale.value === 'zh-cn'
+        ? 'https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-11-basic-video-call.html'
+        : 'https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-11-basic-video-call.html';
+  window.open(url, '_blank');
 }
 </script>
 
@@ -76,4 +91,11 @@ function goToGithub() {
 #language
   cursor pointer
 
+#document
+  cursor pointer
+
+.buttons
+  display flex
+  align-items center
+  gap 20px
 </style>
