@@ -308,12 +308,14 @@ declare type PluginStartOptionsMap = {
     'VirtualBackground': VirtualBackgroundOptions;
     'Watermark': WatermarkOptions;
     'Beauty': BeautyOptions;
+    'BasicBeauty': BasicBeautyOptions;
 };
 declare type PluginUpdateOptionsMap = {
     'AudioMixer': UpdateAudioMixerOptions;
     'CDNStreaming': CDNStreamingOptions;
     'VirtualBackground': UpdateVirtualBackgroundOptions;
     'Beauty': UpdateBeautyOptions;
+    'BasicBeauty': BasicBeautyOptions;
 };
 declare type PluginStopOptionsMap = {
     'AudioMixer': StopAudioMixerOptions;
@@ -322,6 +324,7 @@ declare type PluginStopOptionsMap = {
     'VirtualBackground': undefined;
     'Watermark': undefined;
     'Beauty': undefined;
+    'BasicBeauty': undefined;
 };
 declare interface TRTCStatistics {
     rtt: number;
@@ -1632,7 +1635,8 @@ declare interface TRTCEventTypes {
      * })
      */
     sendSEIMessage(buffer: ArrayBuffer, options?: {
-        seiPayloadType: number;
+        seiPayloadType?: number;
+        toSubStream?: boolean;
     }): void;
     /**
      * Send Custom Message to all remote users in the room. <br>
@@ -1755,21 +1759,7 @@ declare interface TRTCEventTypes {
      * | checkResult.detail.isVp8EncodeSupported    | boolean | Whether the current browser supports VP8 encoding for uplink          |
      * | checkResult.detail.isVp8DecodeSupported    | boolean | Whether the current browser supports VP8 decoding for downlink          |
      */
-    static isSupported(): Promise<{
-        result: boolean;
-        detail: {
-            isBrowserSupported: boolean;
-            isWebRTCSupported: boolean;
-            isWebCodecsSupported: boolean;
-            isMediaDevicesSupported: boolean;
-            isScreenShareSupported: boolean;
-            isSmallStreamSupported: boolean;
-            isH264EncodeSupported: boolean;
-            isVp8EncodeSupported: boolean;
-            isH264DecodeSupported: boolean;
-            isVp8DecodeSupported: boolean;
-        };
-    }>;
+    static isSupported(): Promise<any> | null;
     /**
      * Returns the list of camera devices
      * <br>
