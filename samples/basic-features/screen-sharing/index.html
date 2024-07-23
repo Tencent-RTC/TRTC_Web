@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen Sharing</title>
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="../../components/header.js" defer></script>
+    <script
+      src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
+      defer
+    ></script>
+    <script src="../../libs/lib-generate-test-usersig.min.js" defer></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/dist/trtc.js"
+      defer
+    ></script>
+    <script src="../../libs/clipboard.min.js" defer></script>
+    <script src="../../util/utils.js" defer></script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <header-nav></header-nav>
+    <main>
+      <div class="feature-container">
+        <h1 style="color: #1c66e5">Screen Sharing</h1>
+        <section>
+          <h3>Step-1: Fill in the blanks</h3>
+          <span class="note"
+            >Get SDKAppId and SDKSecretKey from
+            <a
+              target="_top"
+              href="https://console.trtc.io/?quickclaim=engine_trial"
+              >TRTC Console</a
+            >
+          </span>
+          <span class="warning"
+            >Note: This demo is for demonstration purposes only. Before official
+            launch, please migrate SDKSecretKey and the UserSig calculation code
+            to your own backend server to avoid unauthorized traffic use caused
+            by the key leakage.
+            <a target="_top" href="https://trtc.io/document/35166"
+              >View Documents</a
+            ></span
+          >
+          <div class="input-list">
+            <div class="input-group">
+              <label for="sdk-app-id">SDKAppId</label>
+              <input
+                id="sdk-app-id"
+                type="number"
+                class="form-control"
+                placeholder="SDKAppId"
+              />
+            </div>
+            <div class="input-group">
+              <label for="sdk-secret-key">SDKSecretKey</label>
+              <input
+                id="sdk-secret-key"
+                type="text"
+                class="form-control"
+                placeholder="SDKSecretKey"
+              />
+            </div>
+          </div>
+          <div class="input-list">
+            <div class="input-group">
+              <label for="user-id">UserId</label>
+              <input id="user-id" type="text" class="form-control" />
+            </div>
+            <div class="input-group">
+              <label for="room-id">RoomId</label>
+              <input id="room-id" type="number" class="form-control" />
+            </div>
+          </div>
+        </section>
+        <section>
+          <h3>Step-2: Enter the room</h3>
+          <div class="btn-list">
+            <button id="enter-btn" class="btn" onclick="enterRoom()">
+              <span class="btn-text">Enter Room</span>
+            </button>
+            <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
+              <span class="btn-text">Exit Room</span>
+            </button>
+          </div>
+        </section>
+        <section>
+          <h3>Step-3: Start screen sharing</h3>
+          <span id="iframe-note" class="note" style="display: none"
+            >You are running demo inside iframe. Therefore, capture HTMLElement
+            is not supported.
+          </span>
+          <div class="option-container">
+            <div class="option-item">
+              <input type="checkbox" id="system-audio" checked />
+              <label for="system-audio">Use System Audio</label>
+            </div>
+            <div class="option-item">
+              <label for="profile">Screen Profile:</label>
+              <select id="profile">
+                <option value="480p">480p</option>
+                <option value="480p_2">480p_2</option>
+                <option value="720p">720p</option>
+                <option value="720p_2">720p_2</option>
+                <option value="1080p" selected>1080p (default)</option>
+                <option value="1080p_2">1080p_2</option>
+              </select>
+            </div>
+            <div class="option-item">
+              <label for="capture-element">Capture HTMLElement:</label>
+              <select id="capture-element">
+                <option value="enter-btn">HTML button</option>
+                <option value="" selected>None</option>
+              </select>
+            </div>
+            <div class="option-item">
+              <label for="display-surface">Display Surface:</label>
+              <select id="display-surface">
+                <option value="current-tab">current-tab</option>
+                <option value="tab">tab</option>
+                <option value="window">window</option>
+                <option value="monitor" selected>monitor (default)</option>
+              </select>
+            </div>
+          </div>
+          <div class="btn-list">
+            <button id="start-share-btn" class="btn" onclick="startShare()">
+              <span class="btn-text">Start Screen Share</span>
+            </button>
+            <button
+              id="stop-share-btn"
+              class="btn"
+              onclick="stopShare()"
+              disabled
+            >
+              <span class="btn-text">Stop Screen Share</span>
+            </button>
+          </div>
+        </section>
+        <section>
+          <h3>Activate remote stream</h3>
+          <div>
+            <span class="note"
+              >Use the link below to join the room as another user. The link
+              will be updated after being copied.</span
+            >
+            <div class="copy">
+              <button id="invite-btn" data-clipboard-target="#invite-url">
+                <img
+                  src="https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/icons/clippy.svg"
+                  width="12px"
+                  height="12px"
+                  alt="Copy to clipboard"
+                />
+              </button>
+              <input id="invite-url" class="invite-input" readonly />
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="video-container">
+        <div class="video-sub-container">
+          <h2>Local Screen</h2>
+          <div id="local-screen-view" class="video-view"></div>
+        </div>
+        <div class="video-sub-container">
+          <h2>Remote Screen</h2>
+          <div id="remote-screen-view" class="video-view"></div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

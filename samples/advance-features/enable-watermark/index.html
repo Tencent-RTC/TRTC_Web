@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Enable Watermark</title>
+    <script src="../../components/header.js" defer></script>
+    <script
+      src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
+      defer
+    ></script>
+    <script src="../../libs/lib-generate-test-usersig.min.js" defer></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/dist/trtc.js"
+      defer
+    ></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/dist/plugins/video-effect/watermark/watermark.iife.js"
+      defer
+    ></script>
+    <script src="../../libs/clipboard.min.js" defer></script>
+    <script src="../../util/utils.js" defer></script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <header-nav></header-nav>
+    <main>
+      <div class="feature-container">
+        <h1 style="color: #1c66e5">Enable Watermark</h1>
+        <section>
+          <h3>Step-1: Fill in the blanks</h3>
+          <span class="note"
+            >Get SDKAppId and SDKSecretKey from
+            <a
+              target="_top"
+              href="https://console.trtc.io/?quickclaim=engine_trial"
+              >TRTC Console</a
+            >
+          </span>
+          <span class="warning"
+            >Note: This demo is for demonstration purposes only. Before official
+            launch, please migrate SDKSecretKey and the UserSig calculation code
+            to your own backend server to avoid unauthorized traffic use caused
+            by the key leakage.
+            <a target="_top" href="https://trtc.io/document/35166"
+              >View Documents</a
+            ></span
+          >
+          <div class="input-list">
+            <div class="input-group">
+              <label for="sdk-app-id">SDKAppId</label>
+              <input
+                id="sdk-app-id"
+                type="number"
+                class="form-control"
+                placeholder="SDKAppId"
+              />
+            </div>
+            <div class="input-group">
+              <label for="sdk-secret-key">SDKSecretKey</label>
+              <input
+                id="sdk-secret-key"
+                type="text"
+                class="form-control"
+                placeholder="SDKSecretKey"
+              />
+            </div>
+          </div>
+          <div class="input-list">
+            <div class="input-group">
+              <label for="user-id">UserId</label>
+              <input id="user-id" type="text" class="form-control" />
+            </div>
+            <div class="input-group">
+              <label for="room-id">RoomId</label>
+              <input id="room-id" type="number" class="form-control" />
+            </div>
+          </div>
+        </section>
+        <section>
+          <h3>Step-2: Enter the room</h3>
+          <div class="btn-list">
+            <button id="enter-btn" class="btn" onclick="enterRoom()">
+              <span class="btn-text">Enter Room</span>
+            </button>
+            <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
+              <span class="btn-text">Exit Room</span>
+            </button>
+          </div>
+        </section>
+        <section>
+          <h3>Step-3: Start watermark plugin</h3>
+          <div class="option-container">
+            <div class="option-item">
+              <label for="size">Size:</label>
+              <select id="size">
+                <option value="cover" selected>cover (default)</option>
+                <option value="contain">contain</option>
+              </select>
+            </div>
+            <div class="option-item">
+              <label for="image-url">Watermark URL:</label>
+              <input
+                type="text"
+                id="image-url"
+                class="url-input"
+                value="https://web.sdk.qcloud.com/trtc/webrtc/test/qer-test/watermark/tv2.png"
+              />
+            </div>
+          </div>
+          <div class="btn-list">
+            <button
+              id="start-watermark-btn"
+              class="btn"
+              onclick="startWatermark()"
+              disabled
+            >
+              <span class="btn-text">Start Watermark</span>
+            </button>
+            <button
+              id="stop-watermark-btn"
+              class="btn"
+              onclick="stopWatermark()"
+              disabled
+            >
+              <span class="btn-text">Stop Watermark</span>
+            </button>
+          </div>
+        </section>
+        <section>
+          <h3>Activate remote stream</h3>
+          <div>
+            <span class="note"
+              >Copy the link to send invitation. Each link can only invite one
+              person, and the link will be updated after being copied.</span
+            >
+            <div class="copy">
+              <button id="invite-btn" data-clipboard-target="#invite-url">
+                <img
+                  src="https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/icons/clippy.svg"
+                  width="12px"
+                  height="12px"
+                  alt="Copy to clipboard"
+                />
+              </button>
+              <input id="invite-url" class="invite-input" readonly />
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="video-container">
+        <div class="video-sub-container">
+          <h2>Local Video</h2>
+          <div id="local-video-view" class="video-view"></div>
+        </div>
+        <div class="video-sub-container">
+          <h2>Remote Video</h2>
+          <div id="remote-video-view" class="video-view"></div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
