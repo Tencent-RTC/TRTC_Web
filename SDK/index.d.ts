@@ -83,6 +83,7 @@ declare interface RemoteVideoConfig {
         small?: boolean;
         receiveWhenViewVisible?: boolean;
         viewRoot?: HTMLElement;
+        canvasRender?: boolean;
     };
 }
 declare interface StopRemoteVideoConfig {
@@ -470,7 +471,8 @@ declare const TRTCEvent: {
     /**
      * Remote user enters the room event.
      *
-     * - In `live` mode, only the anchor has the notification of entering and leaving the room, and the audience does not have the notification of entering and leaving the room. The audience can receive the notification of entering and leaving the room of the anchor.
+     * - In `rtc` mode, all users will receive the notification of entering and exiting the room of the other user.
+     * - In `live` mode, only the anchor has the notification of entering and exiting the room, and the audience does not have the notification of entering and exiting the room. The audience can receive the notification of entering and exiting the room of the anchor.
      * @default 'remote-user-enter'
      * @memberof module:EVENT
      * @example
@@ -483,7 +485,8 @@ declare const TRTCEvent: {
     /**
      * Remote user exits the room event.
      *
-     * - In `live` mode, only the anchor has the notification of entering and leaving the room, and the audience does not have the notification of entering and leaving the room. The audience can receive the notification of entering and leaving the room of the anchor.
+     * - In `rtc` mode, all users will receive the notification of entering and exiting the room of the other user.
+     * - In `live` mode, only the anchor has the notification of entering and exiting the room, and the audience does not have the notification of entering and exiting the room. The audience can receive the notification of entering and exiting the room of the anchor.
      * @default 'remote-user-exit'
      * @memberof module:EVENT
      * @example
@@ -627,7 +630,7 @@ declare const TRTCEvent: {
      * @default 'connection-state-changed'
      * @memberof module:EVENT
      * @example
-     * trtc.on(TRTC.CONNECTION_STATE_CHANGED, event => {
+     * trtc.on(TRTC.EVENT.CONNECTION_STATE_CHANGED, event => {
      *   const prevState = event.prevState;
      *   const curState = event.state;
      * });
@@ -1405,8 +1408,9 @@ declare interface TRTCEventTypes {
      * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
      * @example
      * const config = {
-     *  view: document.getElementById(userId),
+     *  view: document.getElementById(userId), // you can use a new view to update the position of video.
      *  userId,
+     *  streamType: TRTC.TYPE.STREAM_TYPE_MAIN
      * }
      * await trtc.updateRemoteVideo(config);
      * @memberof TRTC
@@ -1596,13 +1600,13 @@ declare interface TRTCEventTypes {
      *
      * Applicable scenarios: synchronization of lyrics, live answering questions, etc.
      *
-     * When to call: call after {@link TRTC#startLocalVideo trtc.startLocalVideo} successfully.
+     * When to call: call after {@link TRTC#startLocalVideo trtc.startLocalVideo} or {@link TRTC#startLocalScreen trtc.startLocalScreen} when set 'toSubStream' option to true successfully.
      *
      * Note:
      * 1. Maximum 1KB(Byte) sent in a single call, maximum 30 calls per second, maximum 8KB sent per second.
      * 2. Currently only support Chrome 86+, Edge 86+, Opera 72+ browsers.
      * 3. Since SEI is sent along with video frames, there is a possibility that video frames may be lost, and therefore SEI may be lost as well. The number of times it can be sent can be increased within the frequency limit, and the business side needs to do message de-duplication on the receiving side.
-     * 4. SEI cannot be sent without trtc.startLocalVideo; SEI cannot be received without startRemoteVideo.
+     * 4. SEI cannot be sent without trtc.startLocalVideo(or trtc.startLocalScreen when set 'toSubStream' option to true); SEI cannot be received without startRemoteVideo.
      * 5. Only H264 encoder is supported to send SEI.
      * 6. SEI sending and receiving is not supported for small streams for the time being.
      * @see {@link module:EVENT.SEI_MESSAGE TRTC.EVENT.SEI_MESSAGE}
@@ -1610,6 +1614,7 @@ declare interface TRTCEventTypes {
      * @param {ArrayBuffer} buffer SEI data to be sent
      * @param {Object=} options
      * @param {Number} options.seiPayloadType Set the SEI payload type. SDK uses the custom payloadType 243 by default, the business side can use this parameter to set the payloadType to the standard 5. When the business side uses the 5 payloadType, you need to follow the specification to make sure that the first 16 bytes of the `buffer` are the business side's customized uuid.
+     * @param {Boolean} [options.toSubStream=false] Send SEI data to substream. Need call trtc.startLocalScreen first. Since v5.7.0+.
      * @example
      * // 1. enable SEI
      * const trtc = TRTC.create({
@@ -1688,6 +1693,53 @@ declare interface TRTCEventTypes {
         readonly VIDEO_PLAY_STATE_CHANGED: "video-play-state-changed";
         readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
         readonly DEVICE_CHANGED: "device-changed";
+        /**
+         * Enter a video call room.<br>
+         * - Entering a room means starting a video call session. Only after entering the room successfully can you make audio and video calls with other users in the room.
+         * - You can publish local audio and video streams through {@link TRTC#startLocalVideo startLocalVideo()} and {@link TRTC#startLocalAudio startLocalAudio()} respectively. After successful publishing, other users in the room will receive the {@link module:EVENT.REMOTE_AUDIO_AVAILABLE REMOTE_AUDIO_AVAILABLE} and {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} event notifications.
+         * - By default, the SDK automatically plays remote audio. You need to call {@link TRTC#startRemoteVideo startRemoteVideo()} to play remote video.
+         *
+         * @param {object} options Enter room parameters
+         * @param {number} options.sdkAppId sdkAppId <br>
+         * You can obtain the sdkAppId information in the **Application Information** section after creating a new application by clicking **Application Management** > **Create Application** in the [TRTC Console](https://console.intl.cloud.tencent.com/trtc).
+         * @param {string} options.userId User ID <br>
+         * It is recommended to limit the length to 32 bytes, and only allow uppercase and lowercase English letters (a-zA-Z), numbers (0-9), underscores, and hyphens.
+         * @param {string} options.userSig UserSig signature <br>
+         * Please refer to [UserSig related](https://www.tencentcloud.com/document/product/647/35166) for the calculation method of userSig.
+         * @param {number=} options.roomId
+         * the value must be an integer between 1 and 4294967294<br>
+         * <font color="red">If you need to use a string type room id, please use the strRoomId parameter. One of roomId and strRoomId must be passed in. If both are passed in, the roomId will be selected first.</font>
+         * @param {string=} options.strRoomId
+         * String type room id, the length is limited to 64 bytes, and only supports the following characters:
+         * - Uppercase and lowercase English letters (a-zA-Z)
+         * - Numbers (0-9)
+         * - Space ! # $ % & ( ) + - : ; < = . > ? @ [ ] ^ _ { } | ~ ,
+         * <font color="red">Note: It is recommended to use a numeric type roomId. The string type room id "123" is not the same room as the numeric type room id 123.</font>
+         * @param {string} [options.scene] Application scene, currently supports the following two scenes:
+         * - {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} (default) Real-time call scene, which is suitable for 1-to-1 audio and video calls, or online meetings with up to 300 participants. {@tutorial 04-info-uplink-limits}.
+         * - {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} Interactive live streaming scene, which is suitable for online live streaming scenes with up to 100,000 people, but you need to specify the role field in the options parameter introduced next.
+         * @param {string=} [options.role] User role, only meaningful in the {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} scene, and the {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} scene does not need to specify the role. Currently supports two roles:
+         * - {@link module:TYPE.ROLE_ANCHOR TRTC.TYPE.ROLE_ANCHOR} (default) Anchor
+         * - {@link module:TYPE.ROLE_AUDIENCE TRTC.TYPE.ROLE_AUDIENCE} Audience
+         * Note: The audience role does not have the permission to publish local audio and video, only the permission to watch remote streams. If the audience wants to interact with the anchor by connecting to the microphone, please switch the role to the anchor through {@link TRTC#switchRole switchRole()} before publishing local audio and video.
+         * @param {boolean} [options.autoReceiveAudio=true] Whether to automatically receive audio. When a remote user publishes audio, the SDK automatically plays the remote user's audio.
+         * @param {boolean} [options.autoReceiveVideo=false] Whether to automatically receive video. When a remote user publishes video, the SDK automatically subscribes and decodes the remote video. You need to call {@link TRTC#startRemoteVideo startRemoteVideo} to play the remote video.
+         * - The default value was changed to `false` since v5.6.0. Refer to [Breaking Changed for v5.6.0](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-00-info-update-guideline.html).
+         * @param {boolean} [options.enableAutoPlayDialog] Whether to enable the SDK's automatic playback failure dialog box, default: true.
+         * - Enabled by default. When automatic playback fails, the SDK will pop up a dialog box to guide the user to click the page to restore audio and video playback.
+         * - Can be set to false in order to turn off. Refer to {@tutorial 21-advanced-auto-play-policy}.
+         * @param {string|ProxyServer} [options.proxy] proxy config. Refer to {@tutorial 34-advanced-proxy}.
+         * @param {boolean} [options.privateMapKey] Key for entering a room. If permission control is required, please carry this parameter (empty or incorrect value will cause a failure in entering the room).<br>[privateMapKey permission configuration](https://www.tencentcloud.com/document/product/647/35157?lang=en&pg=).
+         * @throws
+         * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+         * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+         * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+         * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
+         * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
+         * @example
+         * const trtc = TRTC.create();
+         * await trtc.enterRoom({ roomId: 8888, sdkAppId, userId, userSig });
+         */
         readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
         readonly TRACK: "track";
         readonly STATISTICS: "statistics";
@@ -1759,7 +1811,7 @@ declare interface TRTCEventTypes {
      * | checkResult.detail.isVp8EncodeSupported    | boolean | Whether the current browser supports VP8 encoding for uplink          |
      * | checkResult.detail.isVp8DecodeSupported    | boolean | Whether the current browser supports VP8 decoding for downlink          |
      */
-    static isSupported(): Promise<any> | null;
+    static isSupported(): Promise<any>;
     /**
      * Returns the list of camera devices
      * <br>
