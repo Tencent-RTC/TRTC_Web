@@ -20,6 +20,7 @@
 ├── quick-demo-js           -- TRTC Web 快速运行 Demo (原生 Js 版本)
 ├── quick-demo-vue2-js      -- TRTC Web 快速运行 Demo (Vue2 版本)
 ├── quick-demo-vue3-ts      -- TRTC Web 快速运行 Demo (Vue3 版本)
+├── samples                 -- TRTC Web 功能实例 (原生 Js，v5版本 SDK)
 ├── SDK                     -- TRTC Web SDK 5.x 版本（推荐使用）
 └── v4                      -- TRTC Web SDK 4.x 版本（不推荐使用）
 ```
@@ -45,6 +46,12 @@
 - 说明：`quick-demo-vue3-ts` 为 TRTC Web 快速运行 Demo (Vue3 版本)，集成了 TRTC Web SDK 的基础音视频通话、设备选择等功能，使用 Vue3 + TypeScript 开发，需要您安装 Node 环境。
 - 运行：进入文件夹内参考 README。
 - 在线体验 [quick-demo-vue3-ts 在线体验地址](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue3-ts/index.html)。
+
+**samples**
+
+- 说明：`samples` 为 TRTC Web 的功能示例，包括屏幕分享、直播、添加视频水印等功能
+- 运行：进入文件夹内参考 README。
+- 在线体验 [samples 在线体验地址](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue3-ts/index.html)。
 
 ## 联系我们
 
