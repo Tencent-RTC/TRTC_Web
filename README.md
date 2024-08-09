@@ -65,6 +65,7 @@ Explore SDK API documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrt
 ├── quick-demo-js           -- TRTC Web quick demo (JavaScript edition).
 ├── quick-demo-vue2-js      -- TRTC Web quick demo (Vue.js 2 edition).
 ├── quick-demo-vue3-ts      -- TRTC Web quick demo (Vue.js 3 edition).
+├── samples                 -- TRTC Web feature samples (v5 SDK).
 ├── SDK                     -- TRTC Web SDK v5.x (Recommended).
 └── v4                      -- TRTC Web SDK v4.x (Not recommended).
 
