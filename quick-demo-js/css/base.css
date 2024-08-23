@@ -2,7 +2,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, 'Microsoft YaHei', PingFang SC, sans-serif, 'Segoe UI Symbol';
 }
 body{
-  padding-bottom: 40px;
+  overflow-x: hidden;
 }
 .container {
   padding: 0;
@@ -154,7 +154,7 @@ ul {
 .player {
   display: flex;
   width: 100%;
-  min-height: 100px;
+  min-height: 1px;
   flex-direction: row;
 }
 

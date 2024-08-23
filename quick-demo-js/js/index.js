@@ -8,6 +8,8 @@ document.getElementById('roomId').value = getQueryString('roomId') || Math.floor
 const state = { url:window.location.href.split("?")[0] };
 window.history.pushState(state,'', 'index.html');
 
+window.isIframe = window.self !== window.top;
+
 // --------global variables----------
 let sdkAppId;
 let sdkSecretKey;
@@ -35,7 +37,7 @@ let isMicOpened = false;
 TRTC.setLogLevel(1);
 
 // init device
-initDevice();
+if (!window.isIframe) initDevice();
 handleEvent();
 
 // check current environment is supported TRTC or not
@@ -61,21 +63,22 @@ function initParams() {
 		name: 'loaded',
 		ext1: 'loaded-success',
 		ext2: DEMOKEY,
-		ext3: 0,
+		ext3: window.isIframe ? 'iframe' : '',
 	});
 
 	if (!(sdkAppId && sdkSecretKey && roomId && userId)) {
 		if (window.lang_ === 'zh-cn') {
 			alert('请检查参数 SDKAppId, SDKSecretKey, userId, roomId 是否输入正确！');
 		} else if (window.lang_ === 'en') {
-			alert('Please enter the correct SDKAppId, SDKSecretKey, userId, roomId!');
+			alert('Please fill in the correct SDKAppId, SDKSecretKey, userId, roomId!');
 		}
 
-		throw new Error('Please enter the correct SDKAppId, SDKSecretKey, userId, roomId');
+		throw new Error('Please fill in the correct SDKAppId, SDKSecretKey, userId, roomId');
 	}
 }
 
 async function enterRoom() {
+	if (window.isIframe) initDevice();
 	initParams()
 	setButtonLoading('enter', true);
 	try {

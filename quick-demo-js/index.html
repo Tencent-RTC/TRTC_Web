@@ -37,15 +37,15 @@
 <body>
 
   <!--nav bar-->
-  <div class='container-fluid text-white header'>
+  <div id="header" class='container-fluid text-white header'>
     <img class='zh-cn' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png' style='height: 100%' />
     <img class='en' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png' style='height: 100%' />
     <div style='display: flex;align-items: center;'>
       <span id='document'>
-        <span class="en">Documentation</span>
-        <span class="zh-cn">文档</span>
+        <span class="en"> <a style="color: white;" href="https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-11-basic-video-call.html" target="_blank" rel="noopener noreferrer">Documentation</a></span>
+        <span class="zh-cn"><a style="color: white" href="https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-11-basic-video-call.html" target="_blank" rel="noopener noreferrer">文档</a></span>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+          stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
           class="icon icon-tabler icons-tabler-outline icon-tabler-external-link">
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
@@ -67,9 +67,9 @@
 
   <div class='container-fluid'>
     <div class='row justify-content-center'>
-      <div class='col-md-10 col-sm-12'>
+      <div id="operate-content" class='col-md-10 col-sm-12'>
 
-        <div class='content'>
+        <div class='content' id="guide">
           <div class='accordion' id='accordionPanelsStayOpenExample'>
             <div class='accordion-item'>
               <h2 class='accordion-header' id='panelsStayOpen-headingOne'>
@@ -186,14 +186,17 @@
             </div>
           </div>
         </div>
-        <h1 style='font-size: 14px'>
-          <span class='en'>Params</span>
-          <span class='zh-cn'>参数</span>
+        <h1 class="row justify-content-center" style='font-size: 14px; margin-top: 10px;'>
+          <span style="display: inline-flex; align-items: center;">
+            <span class='en'>Params</span>
+            <span class='zh-cn'>参数</span>
+            <img id="app-info-doc" src="./icon/info.svg" alt="info" style="width: 20px; cursor: pointer; user-select: none; margin: 0 5px;">
+          </span>
         </h1>
         <div class='input-list'>
           <div class='input-group input-group-sm mb-3'>
-            <span class='input-group-text'>SDKAppId</span>
-            <input id='sdkAppId' type='number' class='form-control' placeholder='SDKAppId' value=''>
+            <span class='input-group-text'>SDKAppID</span>
+            <input id='sdkAppId' type='number' class='form-control' placeholder='SDKAppID' value=''>
           </div>
           <div class='input-group input-group-sm mb-3'>
             <span class='input-group-text'>SDKSecretKey</span>
@@ -249,7 +252,7 @@
             <span class="en">Enter Room</span>
             <span class='zh-cn'> 进入房间 </span>
           </button>
-          <button id='exit' type='button' class='btn btn-primary btn-sm'>
+          <button id='exit' type='button' class='btn btn-outline-primary btn-sm'>
             <span class="loading-icon"> </span>
             <span class="en">Exit Room </span>
             <span class='zh-cn'> 离开房间 </span>
@@ -266,12 +269,12 @@
             <span class="en"> Start Local Video </span>
             <span class='zh-cn'> 采集摄像头 </span>
           </button>
-          <button id='stopLocalAudio' type='button' class='btn btn-primary btn-sm'>
+          <button id='stopLocalAudio' type='button' class='btn btn-outline-primary btn-sm'>
             <span class="loading-icon"> </span>
             <span class="en"> Stop Local Audio </span>
             <span class='zh-cn'> 终止采集麦克风 </span>
           </button>
-          <button id='stopLocalVideo' type='button' class='btn btn-primary btn-sm'>
+          <button id='stopLocalVideo' type='button' class='btn btn-outline-primary btn-sm'>
             <span class="loading-icon"> </span>
             <span class="en"> Stop Local Video </span>
             <span class='zh-cn'> 终止采集摄像头 </span>
@@ -283,7 +286,7 @@
             <span class="en"> Start Share Screen </span>
             <span class='zh-cn'> 开始共享屏幕 </span>
           </button>
-          <button id='stopShare' type='button' class='btn btn-primary btn-sm'>
+          <button id='stopShare' type='button' class='btn btn-outline-primary btn-sm'>
             <span class="loading-icon"> </span>
             <span class="en"> Stop Share Screen </span>
             <span class='zh-cn'> 停止共享屏幕 </span>
@@ -312,6 +315,45 @@
     </div>
   </div>
   <div id='console'>Open vConsole</div>
+  <script>
+    window.isIframe = window !== window.top;
+    if (window.isIframe) {
+      ['header', 'guide', 'app-info-doc'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.display = 'none';
+      });
+      const operateContent = document.getElementById('operate-content');
+      if (operateContent) {
+        operateContent.style.width = '100%';
+        operateContent.style.padding = '0';
+      }
+      document.getElementById('console').style.display = 'none';
+      const style = document.createElement('style');
+      style.textContent = `
+        ::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #aaa;
+          border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #888;
+        }
+        /* Firefox */
+        * {
+          scrollbar-width: thin;
+          scrollbar-color: #555 #f1f1f1;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  </script>
   <script src='https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js'></script>
   <script src='https://web.sdk.qcloud.com/trtc/webrtc/v5/dist/trtc.js'></script>
   <script src='https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js'></script>
