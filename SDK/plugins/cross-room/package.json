@@ -1,0 +1,30 @@
+{
+  "name": "@rtc-plugin/cross-room",
+  "version": "5.7.0",
+  "description": "TRTC Web SDK 5.x Cross Room plugin",
+  "main": "./cross-room.esm.js",
+  "author": "rychouwei <rychouwei@tencent.com>",
+  "module": "./cross-room.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
+  },
+  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-30-advanced-cross-room-link.html",
+  "keywords": [
+    "webrtc",
+    "TRTC",
+    "rtc",
+    "call",
+    "video call",
+    "audio call",
+    "javascript",
+    "video",
+    "audio",
+    "camera",
+    "microphone",
+    "live streaming",
+    "real-time communication",
+    "cross-room"
+  ],
+  "types": "./cross-room.esm.d.ts"
+}

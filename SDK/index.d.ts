@@ -1,11 +1,11 @@
 /// <reference path="./core.d.ts" />
 
 declare type PluginWithAssets = {
-    plugin: IPlugin;
+    plugin: IPluginClass;
     assetsPath?: string;
 };
 declare interface TRTCOptions {
-    plugins?: Array<IPlugin>;
+    plugins?: Array<IPluginClass>;
     enableSEI?: boolean;
     assetsPath?: string;
 }
@@ -310,6 +310,10 @@ declare type PluginStartOptionsMap = {
     'Watermark': WatermarkOptions;
     'Beauty': BeautyOptions;
     'BasicBeauty': BasicBeautyOptions;
+    'DeviceDetector': DeviceDetectorOptions;
+    'SEI': undefined;
+    'Debug': undefined;
+    'CrossRoom': StartCrossRoomOption;
 };
 declare type PluginUpdateOptionsMap = {
     'AudioMixer': UpdateAudioMixerOptions;
@@ -317,7 +321,16 @@ declare type PluginUpdateOptionsMap = {
     'VirtualBackground': UpdateVirtualBackgroundOptions;
     'Beauty': UpdateBeautyOptions;
     'BasicBeauty': BasicBeautyOptions;
+    'SEI': UpdateSEIOptions;
+    'CrossRoom': UpdateCrossRoomOption;
 };
+declare interface UpdateSEIOptions {
+    buffer: ArrayBuffer;
+    options: {
+        seiPayloadType: number;
+        toSubStream?: boolean;
+    };
+}
 declare type PluginStopOptionsMap = {
     'AudioMixer': StopAudioMixerOptions;
     'AIDenoiser': undefined;
@@ -326,6 +339,9 @@ declare type PluginStopOptionsMap = {
     'Watermark': undefined;
     'Beauty': undefined;
     'BasicBeauty': undefined;
+    'DeviceDetector': undefined;
+    'Debug': undefined;
+    'CrossRoom': StopCrossRoomOption | undefined;
 };
 declare interface TRTCStatistics {
     rtt: number;
@@ -371,6 +387,9 @@ interface RemoteStatistic {
 declare interface VideoFrameConfig {
     userId?: string;
     streamType?: TRTCStreamType;
+}
+declare enum AutoStartPluginName {
+    Debug = "Debug"
 }
 
 /**
@@ -873,9 +892,10 @@ declare interface TRTCEventTypes {
         }
     ];
     [TRTCEvent.SEI_MESSAGE]: [{
-        data: Uint8Array;
+        data: ArrayBuffer;
         userId: string;
         streamType: TRTCStreamType;
+        seiPayloadType: number;
     }];
     [TRTCEvent.STATISTICS]: [statistics: TRTCStatistics];
     [TRTCEvent.TRACK]: [{
@@ -898,6 +918,7 @@ declare interface TRTCEventTypes {
      * @returns {TRTC} TRTC object
      */
     static create(options?: TRTCOptions): TRTC;
+    get room(): IRoom;
     /**
      * @private
      * 注册插件 <br>
@@ -915,8 +936,8 @@ declare interface TRTCEventTypes {
      * import { VirtualBackground } from 'trtc-sdk-v5/plugins/video-effect/virtual-background';
      * trtc.use(VirtualBackground);
      */
-    use(pluginObject: PluginWithAssets | IPlugin): void;
-    _use(pluginClass: IPlugin, assetsPath?: string): void;
+    use(pluginObject: PluginWithAssets | IPluginClass): void;
+    _use(pluginClass: IPluginClass, assetsPath?: string): void;
     /**
      * @typedef TurnServer
      * @property {string} url TURN server url
@@ -1693,53 +1714,6 @@ declare interface TRTCEventTypes {
         readonly VIDEO_PLAY_STATE_CHANGED: "video-play-state-changed";
         readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
         readonly DEVICE_CHANGED: "device-changed";
-        /**
-         * Enter a video call room.<br>
-         * - Entering a room means starting a video call session. Only after entering the room successfully can you make audio and video calls with other users in the room.
-         * - You can publish local audio and video streams through {@link TRTC#startLocalVideo startLocalVideo()} and {@link TRTC#startLocalAudio startLocalAudio()} respectively. After successful publishing, other users in the room will receive the {@link module:EVENT.REMOTE_AUDIO_AVAILABLE REMOTE_AUDIO_AVAILABLE} and {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} event notifications.
-         * - By default, the SDK automatically plays remote audio. You need to call {@link TRTC#startRemoteVideo startRemoteVideo()} to play remote video.
-         *
-         * @param {object} options Enter room parameters
-         * @param {number} options.sdkAppId sdkAppId <br>
-         * You can obtain the sdkAppId information in the **Application Information** section after creating a new application by clicking **Application Management** > **Create Application** in the [TRTC Console](https://console.intl.cloud.tencent.com/trtc).
-         * @param {string} options.userId User ID <br>
-         * It is recommended to limit the length to 32 bytes, and only allow uppercase and lowercase English letters (a-zA-Z), numbers (0-9), underscores, and hyphens.
-         * @param {string} options.userSig UserSig signature <br>
-         * Please refer to [UserSig related](https://www.tencentcloud.com/document/product/647/35166) for the calculation method of userSig.
-         * @param {number=} options.roomId
-         * the value must be an integer between 1 and 4294967294<br>
-         * <font color="red">If you need to use a string type room id, please use the strRoomId parameter. One of roomId and strRoomId must be passed in. If both are passed in, the roomId will be selected first.</font>
-         * @param {string=} options.strRoomId
-         * String type room id, the length is limited to 64 bytes, and only supports the following characters:
-         * - Uppercase and lowercase English letters (a-zA-Z)
-         * - Numbers (0-9)
-         * - Space ! # $ % & ( ) + - : ; < = . > ? @ [ ] ^ _ { } | ~ ,
-         * <font color="red">Note: It is recommended to use a numeric type roomId. The string type room id "123" is not the same room as the numeric type room id 123.</font>
-         * @param {string} [options.scene] Application scene, currently supports the following two scenes:
-         * - {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} (default) Real-time call scene, which is suitable for 1-to-1 audio and video calls, or online meetings with up to 300 participants. {@tutorial 04-info-uplink-limits}.
-         * - {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} Interactive live streaming scene, which is suitable for online live streaming scenes with up to 100,000 people, but you need to specify the role field in the options parameter introduced next.
-         * @param {string=} [options.role] User role, only meaningful in the {@link module:TYPE.SCENE_LIVE TRTC.TYPE.SCENE_LIVE} scene, and the {@link module:TYPE.SCENE_RTC TRTC.TYPE.SCENE_RTC} scene does not need to specify the role. Currently supports two roles:
-         * - {@link module:TYPE.ROLE_ANCHOR TRTC.TYPE.ROLE_ANCHOR} (default) Anchor
-         * - {@link module:TYPE.ROLE_AUDIENCE TRTC.TYPE.ROLE_AUDIENCE} Audience
-         * Note: The audience role does not have the permission to publish local audio and video, only the permission to watch remote streams. If the audience wants to interact with the anchor by connecting to the microphone, please switch the role to the anchor through {@link TRTC#switchRole switchRole()} before publishing local audio and video.
-         * @param {boolean} [options.autoReceiveAudio=true] Whether to automatically receive audio. When a remote user publishes audio, the SDK automatically plays the remote user's audio.
-         * @param {boolean} [options.autoReceiveVideo=false] Whether to automatically receive video. When a remote user publishes video, the SDK automatically subscribes and decodes the remote video. You need to call {@link TRTC#startRemoteVideo startRemoteVideo} to play the remote video.
-         * - The default value was changed to `false` since v5.6.0. Refer to [Breaking Changed for v5.6.0](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-00-info-update-guideline.html).
-         * @param {boolean} [options.enableAutoPlayDialog] Whether to enable the SDK's automatic playback failure dialog box, default: true.
-         * - Enabled by default. When automatic playback fails, the SDK will pop up a dialog box to guide the user to click the page to restore audio and video playback.
-         * - Can be set to false in order to turn off. Refer to {@tutorial 21-advanced-auto-play-policy}.
-         * @param {string|ProxyServer} [options.proxy] proxy config. Refer to {@tutorial 34-advanced-proxy}.
-         * @param {boolean} [options.privateMapKey] Key for entering a room. If permission control is required, please carry this parameter (empty or incorrect value will cause a failure in entering the room).<br>[privateMapKey permission configuration](https://www.tencentcloud.com/document/product/647/35157?lang=en&pg=).
-         * @throws
-         * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
-         * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-         * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
-         * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
-         * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
-         * @example
-         * const trtc = TRTC.create();
-         * await trtc.enterRoom({ roomId: 8888, sdkAppId, userId, userSig });
-         */
         readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
         readonly TRACK: "track";
         readonly STATISTICS: "statistics";
