@@ -56,6 +56,7 @@ function changeLanguageTo(lang) {
 }
 
 function addStreamView(remoteId) {
+	playerContainer.style.minHeight = '100px';
 	let remoteDiv = document.getElementById(remoteId);
 	if (!remoteDiv) {
 		remoteDiv = document.createElement('div');
@@ -142,6 +143,17 @@ github.addEventListener('click', () => {
 	});
 })
 
+document.getElementById('app-info-doc').addEventListener('click', () => {
+	const url = window.lang_ === 'en' ? 'https://trtc.io/document/35607?platform=web&product=rtcengine' : 'https://cloud.tencent.com/document/product/647/32398#.E6.AD.A5.E9.AA.A41.EF.BC.9A.E5.88.9B.E5.BB.BA.E6.96.B0.E7.9A.84.E5.BA.94.E7.94.A8';
+	window.open(url, '_blank');
+	aegis?.reportEvent({
+		name: 'jumpDocInfo',
+		ext1: 'jumpDocInfo',
+		ext2: DEMOKEY,
+		ext3: 0,
+	});
+})
+
 let aegis;
 
 if (isProd || isDev) {
@@ -156,7 +168,7 @@ if (isProd || isDev) {
 function reportSuccessEvent(name, sdkAppId) {
 	aegis?.reportEvent({
 		name,
-		ext1: `${name}-success`,
+		ext1: `${name}-success${window.isIframe ? '-iframe' : ''}`,
 		ext2: DEMOKEY,
 		ext3: sdkAppId,
 	});
