@@ -1,14 +1,7 @@
-// --------global variables----------
 const trtc = TRTC.create({ plugins: [Watermark] });
-let sdkAppId;
-let sdkSecretKey;
-let userId;
-let roomId;
-let userSig;
 
 let size;
 let imageUrl;
-
 
 // listen for event
 trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
@@ -22,13 +15,13 @@ function initOptions() {
 }
 
 async function enterRoom() {
-    ({ sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams());
+    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
     await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
     await trtc.startLocalVideo({ view: 'local-video-view', option: { mirror: false } });
     document.getElementById('start-watermark-btn').disabled = false;
     switchButtonStatus('enter-btn', 'exit-btn', true);
     reportSuccessEvent('enterRoom', sdkAppId);
-    refreshLink();
+    refreshLink({ sdkAppId, sdkSecretKey, roomId });
 }
 
 async function exitRoom() {

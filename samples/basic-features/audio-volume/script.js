@@ -1,22 +1,17 @@
-// --------global variables----------
 const trtc = TRTC.create();
 const trtcSpeakDetect = TRTC.create();
-let sdkAppId;
-let sdkSecretKey;
-let userId;
-let roomId;
-let userSig;
+
 let isMuted = false;
 
 // --------functions----------
 async function enterRoom() {
-    ({ sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams());
+    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
     await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
     reportSuccessEvent('enterRoom', sdkAppId);
     await trtc.startLocalAudio();
     await trtcSpeakDetect.startLocalAudio();
     switchElementStatusOnRoomStatus(true);
-    refreshLink();
+    refreshLink({ sdkAppId, sdkSecretKey, roomId });
 }
 
 async function exitRoom() {

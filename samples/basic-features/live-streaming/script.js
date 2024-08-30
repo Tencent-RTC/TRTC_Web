@@ -1,10 +1,4 @@
-// --------global variables----------
 const trtc = TRTC.create();
-let sdkAppId;
-let sdkSecretKey;
-let userId;
-let roomId;
-let userSig;
 
 let isInvited = getQueryString('userId') ? true : false;
 let isAudience = isInvited;
@@ -21,7 +15,7 @@ trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
 
 // --------functions----------
 async function enterRoom() {
-    ({ sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams());
+    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
     let role;
     if (isInvited) {
         role = TRTC.TYPE.ROLE_AUDIENCE;
@@ -30,7 +24,7 @@ async function enterRoom() {
         role = TRTC.TYPE.ROLE_ANCHOR;
         await trtc.startLocalAudio();
         await trtc.startLocalVideo({ view: 'local-video-view' });
-        refreshLink();
+        refreshLink({ sdkAppId, sdkSecretKey, roomId });
     }
     const scene = TRTC.TYPE.SCENE_LIVE;
     await trtc.enterRoom({ scene, role, roomId, sdkAppId, userId, userSig });

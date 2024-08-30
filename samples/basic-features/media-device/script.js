@@ -1,10 +1,4 @@
-// --------global variables----------
 const trtc = TRTC.create();
-let sdkAppId;
-let sdkSecretKey;
-let userId;
-let roomId;
-let userSig;
 
 // listen for event
 handleEvent();
@@ -31,10 +25,10 @@ document.getElementById('update-speaker-btn').addEventListener('click', async ()
 
 // --------functions----------
 async function enterRoom() {
-    ({ sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams());
+    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
     await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
     switchButtonStatus('enter-btn', 'exit-btn', true);
-    refreshLink();
+    refreshLink({ sdkAppId, sdkSecretKey, roomId });
     reportSuccessEvent('enterRoom', sdkAppId);
 }
 
