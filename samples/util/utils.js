@@ -116,15 +116,14 @@ function getSelectedElement(id) {
 }
 
 // generate invite url 
-function refreshLink() {
+function refreshLink({ sdkAppId, sdkSecretKey, roomId }) {
     const basicFeatures = ['screen-sharing', 'live-streaming', 'media-device', 'audio-volume', 'set-encoding-profile'];
-    let currentFeature = toLowerCaseAndReplaceSpaces(document.querySelector('h1').innerHTML);
+    const currentFeature = toLowerCaseAndReplaceSpaces(document.querySelector('h1').innerHTML);
     const path = basicFeatures.includes(currentFeature) ? `basic-features/${currentFeature}/index.html` : `advance-features/${currentFeature}/index.html`;
     const userId = String(Math.floor(Math.random() * 1000000));
     const linkTail = `${path}?sdkSecretKey=${sdkSecretKey}&&sdkAppId=${sdkAppId}&&userId=${userId}&&roomId=${roomId}`;
     const link = window.location.href.indexOf('127.0.0.1') > -1 ? `http://127.0.0.1:5500/${linkTail}` : `https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/${linkTail}`;
-    let inviteUrl = document.getElementById('invite-url');
-    inviteUrl.value = link;
+    document.getElementById('invite-url').value = link;
 }
 
 function toLowerCaseAndReplaceSpaces(str) {
@@ -245,8 +244,8 @@ function toastify(text) {
 // handle the logic of clipboard
 let clipboard = new ClipboardJS('#invite-btn');
 clipboard.on('success', (e) => {
-    refreshLink();
-    showTooltip(e.trigger, 'Copied!')
+    refreshLink({ sdkAppId, sdkSecretKey, roomId });
+    showTooltip(e.trigger, 'Copied!');
 });
 const inviteBtn = document.getElementById('invite-btn');
 inviteBtn.addEventListener('mouseleave', clearTooltip);

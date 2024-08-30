@@ -1,10 +1,4 @@
-// --------global variables----------
 const trtc = TRTC.create();
-let sdkAppId;
-let sdkSecretKey;
-let userId;
-let roomId;
-let userSig;
 
 const id = 'demo';
 const url = 'https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/assets/hotel-california.mp3';
@@ -16,12 +10,12 @@ let isPause = false;
 
 // --------functions----------
 async function enterRoom() {
-    ({ sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams());
+    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
     await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
     await trtc.startLocalAudio();
     switchButtonStatus('enter-btn', 'exit-btn', true);
     reportSuccessEvent('enterRoom', sdkAppId);
-    refreshLink();
+    refreshLink({ sdkAppId, sdkSecretKey, roomId });
 }
 
 async function exitRoom() {

@@ -1,24 +1,17 @@
-// --------global variables----------
 const trtc = TRTC.create();
-let sdkAppId;
-let sdkSecretKey;
-let userId;
-let roomId;
-let userSig;
 
 // listen for event
 trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
     trtc.startRemoteVideo({ userId, streamType, view: 'remote-video-view' });
 });
 
-
 // --------functions----------
 async function enterRoom() {
-    ({ sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams());
+    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
     await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
     switchButtonStatus('enter-btn', 'exit-btn', true);
     reportSuccessEvent('enterRoom', sdkAppId);
-    refreshLink();
+    refreshLink({ sdkAppId, sdkSecretKey, roomId });
 }
 
 async function exitRoom() {

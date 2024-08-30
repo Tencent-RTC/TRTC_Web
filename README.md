@@ -93,6 +93,12 @@ Explore SDK API documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrt
 - Running: Refer to the README in the folder.
 - Online experience: [Quick-demo-vue3-ts online experience address](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue3-ts/index.html).
 
+**samples**
+
+- Description: `samples` contain a variety of specific feature demos of TRTC Web SDK including screen sharing, live streaming, set encoding profile, etc. They are developed in native HTML, CSS and JavaScript. 
+- Running: Refer to the README in the folder.
+- Online experience: [samples online experience address](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/basic-features/screen-sharing/index.html).
+
 ## Contact Us
 
 - If you have questions, see [FAQs](https://trtc.io/document/37340).

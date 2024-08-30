@@ -49,7 +49,7 @@
 
 **samples**
 
-- 说明：`samples` 为 TRTC Web 的功能示例，包括屏幕分享、直播、添加视频水印等功能
+- 说明：`samples` 为 TRTC Web v5 版本的功能示例，包括屏幕分享、直播、添加视频水印等功能
 - 运行：进入文件夹内参考 README。
 - 在线体验 [samples 在线体验地址](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue3-ts/index.html)。
 
