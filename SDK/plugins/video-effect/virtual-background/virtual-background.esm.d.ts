@@ -21,6 +21,7 @@ export interface UpdateVirtualBackgroundOptions {
 }
 
 export declare class VirtualBackground {
+    static isSupported(): boolean;
     start(options: VirtualBackgroundOptions): Promise<void>;
     update(options: UpdateVirtualBackgroundOptions): Promise<void>;
     stop(): Promise<void>;
