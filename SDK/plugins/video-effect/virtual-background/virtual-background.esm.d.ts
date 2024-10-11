@@ -11,6 +11,7 @@ export interface VirtualBackgroundOptions {
     type?: 'image' | 'blur';
     blurLevel?: number;
     src?: string;
+    onAbort?: (err:any) => void;
 }
 
 
