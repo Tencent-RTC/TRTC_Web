@@ -5,7 +5,7 @@ import { Watermark, WatermarkOptions } from './plugins/video-effect/watermark';
 import { Beauty, BeautyOptions, UpdateBeautyOptions } from './plugins/video-effect/beauty';
 import { BasicBeauty, BasicBeautyOptions } from './plugins/video-effect/basic-beauty';
 import { CrossRoom, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption } from './plugins/cross-room';
-import { Debug, DebugOptions } from './plugins/debug'
+import { Debug, DebugOptions } from './plugins/debug';
 
 export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, DebugOptions };
 type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof Debug;
@@ -45,38 +45,38 @@ export declare type PluginStopOptionsMap = {
 };
 
 export declare class RtcError extends Error implements RTCErrorInterface {
-	name: string;
-	/**
+  name: string;
+  /**
 	 *
 	 * Error code
 	 * @see Detailed error code list: {@link module:ERROR_CODE ErrorCode}
 	 * @readonly
 	 * @memberof RtcError
 	 */
-	code: number;
-	/**
+  code: number;
+  /**
 	 *
 	 * Extended error code
 	 * @see Detailed error code list: {@link module:ERROR_CODE ErrorCode}
 	 * @readonly
 	 * @memberof RtcError
 	 */
-	extraCode?: number;
-	/**
+  extraCode?: number;
+  /**
 	 *
 	 * The name of the function that throws the error
 	 * @readonly
 	 * @memberof RtcError
 	 */
-	functionName: string;
-	/**
+  functionName: string;
+  /**
 	 *
 	 * Error message
 	 * @readonly
 	 * @memberof RtcError
 	 */
-	message: string;
-	/**
+  message: string;
+  /**
 	 * Error handler. For the following errors, you can call error.handler() for recovering.
 	 *
 	 * - {@link module:ERROR_CODE.DEVICE_ERROR ErrorCode.DEVICE_ERROR} extraCode: 5302
@@ -93,10 +93,10 @@ export declare class RtcError extends Error implements RTCErrorInterface {
 	 * @readonly
 	 * @memberof RtcError
 	 */
-	handler?: () => void;
-	originError?: Error | DOMException | RtcError;
-	constructor({ code, extraCode, message, messageParams, fnName, originError }: RTCErrorParams);
-	static convertFrom(originError: Error, fnName?: string, fnParams?: any): RtcError;
+  handler?: () => void;
+  originError?: Error | DOMException | RtcError;
+  constructor({ code, extraCode, message, messageParams, fnName, originError }: RTCErrorParams);
+  static convertFrom(originError: Error, fnName?: string, fnParams?: any): RtcError;
 }
 
 export declare enum LOG_LEVEL {
@@ -242,8 +242,8 @@ export declare const screenProfileMap: {
 	};
 };
 export declare const enum Scene {
-	LIVE = "live",
-	RTC = "rtc"
+	LIVE = 'live',
+	RTC = 'rtc'
 }
 
 export declare const enum NetworkQualityValue {
@@ -257,20 +257,20 @@ export declare const enum NetworkQualityValue {
 }
 
 export declare const enum PlayerState {
-	PAUSED = "PAUSED",
-	PLAYING = "PLAYING",
-	STOPPED = "STOPPED"
+	PAUSED = 'PAUSED',
+	PLAYING = 'PLAYING',
+	STOPPED = 'STOPPED'
 }
 export declare const enum UserRole {
-	ANCHOR = "anchor",
-	AUDIENCE = "audience"
+	ANCHOR = 'anchor',
+	AUDIENCE = 'audience'
 }
 export declare const enum ConnectionState {
-	CONNECTED = "CONNECTED",
-	DISCONNECTED = "DISCONNECTED",
-	CONNECTING = "CONNECTING",
-	RECONNECTED = "RECONNECTED",
-	RECONNECTING = "RECONNECTING"
+	CONNECTED = 'CONNECTED',
+	DISCONNECTED = 'DISCONNECTED',
+	CONNECTING = 'CONNECTING',
+	RECONNECTED = 'RECONNECTED',
+	RECONNECTING = 'RECONNECTING'
 }
 export declare interface NetworkQuality {
 	uplinkNetworkQuality: NetworkQualityValue;
@@ -281,10 +281,10 @@ export declare interface NetworkQuality {
 	downlinkLoss: number;
 }
 export declare const enum BannedReason {
-	BANNED = "banned",
-	KICK = "kick",
-	USER_TIME_OUT = "user_time_out",
-	ROOM_DISBAND = "room_disband"
+	BANNED = 'banned',
+	KICK = 'kick',
+	USER_TIME_OUT = 'user_time_out',
+	ROOM_DISBAND = 'room_disband'
 }
 
 export declare type PluginWithAssets = {
@@ -421,18 +421,18 @@ export declare interface StopRemoteAudioConfig {
 	userId: string;
 }
 export declare const enum TRTCStreamType {
-	Main = "main",
-	Sub = "sub"
+	Main = 'main',
+	Sub = 'sub'
 }
 export declare enum TRTCDeviceType {
-	Camera = "camera",
-	Microphone = "microphone",
-	Speaker = "speaker"
+	Camera = 'camera',
+	Microphone = 'microphone',
+	Speaker = 'speaker'
 }
 export declare enum TRTCDeviceAction {
-	Remove = "remove",
-	Add = "add",
-	Active = "active"
+	Remove = 'remove',
+	Add = 'add',
+	Active = 'active'
 }
 export declare interface RTCErrorParams {
 	code: number;
@@ -510,7 +510,7 @@ export declare const TRTCType: {
 		* @default 'standard'
 		* @memberof module:TYPE
 		*/
-	readonly AUDIO_PROFILE_STANDARD: "standard";
+	readonly AUDIO_PROFILE_STANDARD: 'standard';
 	/**
 		 * Standard stereo audio quality
 	 * | Audio Profile | Sampling Rate | Channel | Bitrate (kbps) |
@@ -522,7 +522,7 @@ export declare const TRTCType: {
 		* @default 'standard-stereo'
 		* @memberof module:TYPE
 		*/
-	readonly AUDIO_PROFILE_STANDARD_STEREO: "standard-stereo";
+	readonly AUDIO_PROFILE_STANDARD_STEREO: 'standard-stereo';
 	/**
 		 * High audio quality
 		 * | Audio Profile | Sampling Rate | Channel | Bitrate (kbps) |
@@ -534,7 +534,7 @@ export declare const TRTCType: {
 		* @default 'high'
 		* @memberof module:TYPE
 		*/
-	readonly AUDIO_PROFILE_HIGH: "high";
+	readonly AUDIO_PROFILE_HIGH: 'high';
 	/**
 		 * High-quality stereo audio
 		 * | Audio Profile | Sampling Rate | Channel | Bitrate (kbps) |
@@ -544,10 +544,10 @@ export declare const TRTCType: {
 		 * | TRTC.TYPE.AUDIO_PROFILE_STANDARD_STEREO | 48000 | Stereo| 64        |
 		 * | TRTC.TYPE.AUDIO_PROFILE_HIGH_STEREO | 48000 | Stereo| 192        |
 		 * @default 'high-stereo'
- 
+
 		* @memberof module:TYPE
 		*/
-	readonly AUDIO_PROFILE_HIGH_STEREO: "high-stereo";
+	readonly AUDIO_PROFILE_HIGH_STEREO: 'high-stereo';
 	/**
 	 * When the network is weak, the video encoding strategy takes 'smooth' first, i.e., the priority is to preserve frame rate.
 	 * <br>
@@ -555,7 +555,7 @@ export declare const TRTCType: {
 	* @default 'smooth'
 	* @memberof module:TYPE
 	*/
-	readonly QOS_PREFERENCE_SMOOTH: "smooth";
+	readonly QOS_PREFERENCE_SMOOTH: 'smooth';
 	/**
 	 * When the network is weak, the video encoding strategy takes 'clear' first, i.e., the priority is to preserve resolution.
 	 * <br>
@@ -563,7 +563,7 @@ export declare const TRTCType: {
 	* @default 'clear'
 	* @memberof module:TYPE
 	*/
-	readonly QOS_PREFERENCE_CLEAR: "clear";
+	readonly QOS_PREFERENCE_CLEAR: 'clear';
 };
 export declare interface AudioMixerOptions {
 	id: string;
@@ -611,9 +611,9 @@ export declare interface LocalStatistic {
 	}[];
 }
 export declare enum TRTCVideoType {
-	Big = "big",
-	Small = "small",
-	Sub = "sub"
+	Big = 'big',
+	Small = 'small',
+	Sub = 'sub'
 }
 export declare interface RemoteStatistic {
 	audio: {
@@ -634,7 +634,7 @@ export declare interface VideoFrameConfig {
 	streamType?: TRTCStreamType;
 }
 export declare enum AutoStartPluginName {
-	Debug = "Debug"
+	Debug = 'Debug'
 }
 
 /**
@@ -703,7 +703,7 @@ export declare const TRTCEvent: {
 	 *   const extraCode = error.extraCode;
 	 * });
 	 */
-	readonly ERROR: "error";
+	readonly ERROR: 'error';
 	/**
 		 * @description Automatic playback failed, refer to {@tutorial 21-advanced-auto-play-policy}
 		 * @default 'autoplay-failed'
@@ -715,7 +715,7 @@ export declare const TRTCEvent: {
 		 *   console.log(event.userId);
 		 * });
 		 */
-	readonly AUTOPLAY_FAILED: "autoplay-failed";
+	readonly AUTOPLAY_FAILED: 'autoplay-failed';
 	/**
 	 * @description Kicked out of the room for some reason, including:<br>
 	 * - kick: The same user with same userId enters same room. The user who enters the room first will be kicked out of the room by the user who enters later.
@@ -731,7 +731,7 @@ export declare const TRTCEvent: {
 	 *   console.log(event.reason)
 	 * });
 	 */
-	readonly KICKED_OUT: "kicked-out";
+	readonly KICKED_OUT: 'kicked-out';
 	/**
 	 * Remote user enters the room event.
 	 *
@@ -745,7 +745,7 @@ export declare const TRTCEvent: {
 	 *   const userId = event.userId;
 	 * });
 	 */
-	readonly REMOTE_USER_ENTER: "remote-user-enter";
+	readonly REMOTE_USER_ENTER: 'remote-user-enter';
 	/**
 	 * Remote user exits the room event.
 	 *
@@ -759,7 +759,7 @@ export declare const TRTCEvent: {
 	 *   const userId = event.userId;
 	 * });
 	 */
-	readonly REMOTE_USER_EXIT: "remote-user-exit";
+	readonly REMOTE_USER_EXIT: 'remote-user-exit';
 	/**
 	 * Remote user publishes audio. You will receive this notification when the remote user turns on the microphone. Refer to: [Turn on/off camera and microphone](./tutorial-15-basic-dynamic-add-video.html)
 	 *
@@ -775,7 +775,7 @@ export declare const TRTCEvent: {
 	 *   const userId = event.userId;
 	 * });
 	 */
-	readonly REMOTE_AUDIO_AVAILABLE: "remote-audio-available";
+	readonly REMOTE_AUDIO_AVAILABLE: 'remote-audio-available';
 	/**
 	 * Remote user stops publishing audio. You will receive this notification when the remote user turns off the microphone.
 	 *
@@ -788,7 +788,7 @@ export declare const TRTCEvent: {
 	 *
 	 * });
 	 */
-	readonly REMOTE_AUDIO_UNAVAILABLE: "remote-audio-unavailable";
+	readonly REMOTE_AUDIO_UNAVAILABLE: 'remote-audio-unavailable';
 	/**
 	 * Remote user publishes video. You will receive this notification when the remote user turns on the camera. Refer to: [Turn on/off camera and microphone](./tutorial-15-basic-dynamic-add-video.html)
 	 *
@@ -805,7 +805,7 @@ export declare const TRTCEvent: {
 	 *   trtc.startRemoteVideo({userId, streamType, view});
 	 * });
 	 */
-	readonly REMOTE_VIDEO_AVAILABLE: "remote-video-available";
+	readonly REMOTE_VIDEO_AVAILABLE: 'remote-video-available';
 	/**
 	 * Remote user stops publishing video. You will receive this notification when the remote user turns off the camera.
 	 * @default 'remote-video-unavailable'
@@ -818,7 +818,7 @@ export declare const TRTCEvent: {
 	 *   // At this point, the SDK will automatically stop playing, and there is no need to call stopRemoteVideo.
 	 * });
 	 */
-	readonly REMOTE_VIDEO_UNAVAILABLE: "remote-video-unavailable";
+	readonly REMOTE_VIDEO_UNAVAILABLE: 'remote-video-unavailable';
 	/**
 	 * @description Volume event<br>
 	 * After calling the {@link TRTC#enableAudioVolumeEvaluation enableAudioVolumeEvaluation} interface to enable the volume callback, the SDK will throw this event regularly to notify the volume of each userId.<br>
@@ -844,7 +844,7 @@ export declare const TRTCEvent: {
 	 * // Enable volume callback and trigger the event every 1000ms
 	 * trtc.enableAudioVolumeEvaluation(1000);
 	 */
-	readonly AUDIO_VOLUME: "audio-volume";
+	readonly AUDIO_VOLUME: 'audio-volume';
 	/**
 	 * @description Network quality statistics data event, which starts to be counted after entering the room and triggers every two seconds. This data reflects the network quality of your local uplink and downlink.
 	 * - The uplink network quality (uplinkNetworkQuality) refers to the network situation of uploading local streams (uplink connection network quality from SDK to Tencent Cloud)
@@ -875,7 +875,7 @@ export declare const TRTCEvent: {
 	 *    console.log(`downlink rtt:${event.downlinkRTT} loss:${event.downlinkLoss}`)
 	 * })
 	 */
-	readonly NETWORK_QUALITY: "network-quality";
+	readonly NETWORK_QUALITY: 'network-quality';
 	/**
 	 * @description SDK and Tencent Cloud connection state change event, you can use this event to listen to the overall connection state of the SDK and Tencent Cloud.<br>
 	 * - 'DISCONNECTED': Connection disconnected
@@ -899,7 +899,7 @@ export declare const TRTCEvent: {
 	 *   const curState = event.state;
 	 * });
 	 */
-	readonly CONNECTION_STATE_CHANGED: "connection-state-changed";
+	readonly CONNECTION_STATE_CHANGED: 'connection-state-changed';
 	/**
 	 * @description Audio playback state change event
 	 *
@@ -930,7 +930,7 @@ export declare const TRTCEvent: {
 	 *   console.log(`${event.userId} player is ${event.state} because of ${event.reason}`);
 	 * });
 	 */
-	readonly AUDIO_PLAY_STATE_CHANGED: "audio-play-state-changed";
+	readonly AUDIO_PLAY_STATE_CHANGED: 'audio-play-state-changed';
 	/**
 	 * @description Video playback state change event
 	 *
@@ -964,7 +964,7 @@ export declare const TRTCEvent: {
 	 *   console.log(`${event.userId} ${event.streamType} video player is ${event.state} because of ${event.reason}`);
 	 * });
 	 */
-	readonly VIDEO_PLAY_STATE_CHANGED: "video-play-state-changed";
+	readonly VIDEO_PLAY_STATE_CHANGED: 'video-play-state-changed';
 	/**
 	 * @description Notification event for local screen sharing stop, only valid for local screen sharing streams.
 	 * @default 'screen-share-stopped'
@@ -974,7 +974,7 @@ export declare const TRTCEvent: {
 	 *   console.log('screen sharing was stopped');
 	 * });
 	 */
-	readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
+	readonly SCREEN_SHARE_STOPPED: 'screen-share-stopped';
 	/**
 	 * @description Notification event for device changes such as camera and microphone.
 	 * - event.device is a [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo) object with properties:
@@ -993,7 +993,7 @@ export declare const TRTCEvent: {
 	 *   console.log(`${event.type}(${event.device.label}) ${event.action}`);
 	 * });
 	 */
-	readonly DEVICE_CHANGED: "device-changed";
+	readonly DEVICE_CHANGED: 'device-changed';
 	/**
 	 * @description Publish state change event.
 	 * - event.mediaType media type, value: `'audio'|'video'|'screen'`.
@@ -1014,7 +1014,7 @@ export declare const TRTCEvent: {
 	 *   console.log(`${event.mediaType} ${event.state} ${event.reason}`);
 	 * });
 	 */
-	readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
+	readonly PUBLISH_STATE_CHANGED: 'publish-state-changed';
 	/**
 	 * @since v5.3.0
 	 * @description a new MediaStreamTrack object received.
@@ -1030,7 +1030,7 @@ export declare const TRTCEvent: {
 	 *   const kind = event.track.kind; // audio or video
 	 * })
 	 */
-	readonly TRACK: "track";
+	readonly TRACK: 'track';
 	/**
 	 * @description TRTC statistics.<br>
 	 *
@@ -1044,7 +1044,7 @@ export declare const TRTCEvent: {
 	 *    console.warn(statistics.rtt, statistics.upLoss, statistics.downLoss);
 	 * })
 	 */
-	readonly STATISTICS: "statistics";
+	readonly STATISTICS: 'statistics';
 	/**
 	 * @since v5.3.0
 	 * @description SEI message received<br>
@@ -1055,7 +1055,7 @@ export declare const TRTCEvent: {
 	 *    console.log(`received sei message from ${event.userId}, data: ${event.data}, streamType: ${event.streamType}`)
 	 * })
 	 */
-	readonly SEI_MESSAGE: "sei-message";
+	readonly SEI_MESSAGE: 'sei-message';
 	/**
 	 * @since v5.6.0
 	 * @description received a new custom message.
@@ -1069,7 +1069,7 @@ export declare const TRTCEvent: {
 	 *    // event.data: custom message data, type is ArrayBuffer.
 	 * })
 	 */
-	readonly CUSTOM_MESSAGE: "custom-message";
+	readonly CUSTOM_MESSAGE: 'custom-message';
 };
 export declare interface TRTCEventTypes {
 	[TRTCEvent.ERROR]: [RtcError];
@@ -1160,7 +1160,7 @@ export declare interface CustomMessage extends CustomMessageData {
   seq: number;
 }
 export declare class TRTC {
-	/**
+  /**
 	 * Create a TRTC object for implementing functions such as entering a room, previewing, publishing, and subscribing streams.<br>
 	 *
 	 * **Note:**
@@ -1171,8 +1171,8 @@ export declare class TRTC {
 	 *
 	 * @returns {TRTC} TRTC object
 	 */
-	static create(options?: TRTCOptions): TRTC;
-	/**
+  static create(options?: TRTCOptions): TRTC;
+  /**
 	 * @private
 	 * regi <br>
 	 *
@@ -1189,15 +1189,15 @@ export declare class TRTC {
 	 * import { VirtualBackground } from 'trtc-sdk-v5/plugins/video-effect/virtual-background';
 	 * trtc.use(VirtualBackground);
 	 */
-	use(pluginObject: PluginWithAssets | TRTCPlugin): void;
-	/**
+  use(pluginObject: PluginWithAssets | TRTCPlugin): void;
+  /**
 	 * @typedef TurnServer
 	 * @property {string} url TURN server url
 	 * @property {string=} username TURN server auth user name
 	 * @property {string=} credential TURN server password
 	 * @property {string=} [credentialType=password] TURN server verify password type
 	 */
-	/**
+  /**
 	 * @typedef ProxyServer
 	 * @property {string} [websocketProxy] websocket service proxy
 	 * @property {string} [loggerProxy] log service agent
@@ -1205,7 +1205,7 @@ export declare class TRTC {
 	 * @property {'all'|'relay'} [iceTransportPolicy='all'] 'all' gives priority to directly connecting to TRTC, and tries to go to the turn server if the connection fails.<br>
 	 * 'relay' forces the connection through the TURN server.
 	 */
-	/**
+  /**
 	 * Enter a video call room.<br>
 	 * - Entering a room means starting a video call session. Only after entering the room successfully can you make audio and video calls with other users in the room.
 	 * - You can publish local audio and video streams through {@link TRTC#startLocalVideo startLocalVideo()} and {@link TRTC#startLocalAudio startLocalAudio()} respectively. After successful publishing, other users in the room will receive the {@link module:EVENT.REMOTE_AUDIO_AVAILABLE REMOTE_AUDIO_AVAILABLE} and {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} event notifications.
@@ -1252,8 +1252,8 @@ export declare class TRTC {
 	 * const trtc = TRTC.create();
 	 * await trtc.enterRoom({ roomId: 8888, sdkAppId, userId, userSig });
 	 */
-	enterRoom(params: EnterRoomConfig): Promise<void>;
-	/**
+  enterRoom(params: EnterRoomConfig): Promise<void>;
+  /**
 	 * Exit the current audio and video call room.
 	 * - After exiting the room, the connection with remote users will be closed, and remote audio and video will no longer be received and played, and the publishing of local audio and video will be stopped.
 	 * - The capture and preview of the local camera and microphone will not stop. You can call {@link TRTC#stopLocalVideo stopLocalVideo()} and {@link TRTC#stopLocalAudio stopLocalAudio()} to stop capturing local microphone and camera.
@@ -1262,8 +1262,8 @@ export declare class TRTC {
 	 * @example
 	 * await trtc.exitRoom();
 	 */
-	exitRoom(): Promise<void>;
-	/**
+  exitRoom(): Promise<void>;
+  /**
 	 * Switches the user role, only effective in TRTC.TYPE.SCENE_LIVE interactive live streaming mode.
 	 *
 	 * In interactive live streaming mode, a user may need to switch between "audience" and "anchor".
@@ -1299,7 +1299,7 @@ export declare class TRTC {
 	 * // Since v5.3.0+
 	 * await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR, { privateMapKey: 'your new privateMapKey' });
 	 */
-	switchRole(role: UserRole, option?: {
+  switchRole(role: UserRole, option?: {
 		privateMapKey?: string;
 		latencyLevel?: number;
 	}): Promise<void>;
@@ -1321,8 +1321,8 @@ export declare class TRTC {
 	 * @throws {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
 	 * @memberof TRTC
 	 */
-	destroy(): void;
-	/**
+  destroy(): void;
+  /**
 	 * Start collecting audio from the local microphone and publish it to the current room.
 	 * - When to call: can be called before or after entering the room, cannot be called repeatedly.
 	 * - Only one microphone can be opened for a trtc instance. If you need to open another microphone for testing in the case of already opening one microphone, you can create multiple trtc instances to achieve it.
@@ -1356,8 +1356,8 @@ export declare class TRTC {
 	 * await trtc.stopLocalAudio();
 	 * @memberof TRTC
 	 */
-	startLocalAudio(config?: LocalAudioConfig): Promise<void>;
-	/**
+  startLocalAudio(config?: LocalAudioConfig): Promise<void>;
+  /**
 	 * Update the configuration of the local microphone.
 	 * - When to call: This interface needs to be called after {@link TRTC#startLocalAudio startLocalAudio()} is successful and can be called multiple times.
 	 * - This method uses incremental update: only update the passed parameters, and keep the parameters that are not passed unchanged.
@@ -1382,16 +1382,16 @@ export declare class TRTC {
 	 * }
 	 * @memberof TRTC
 	 */
-	updateLocalAudio(config: UpdateLocalAudioConfig): Promise<void>;
-	/**
+  updateLocalAudio(config: UpdateLocalAudioConfig): Promise<void>;
+  /**
 	 * Stop collecting and publishing the local microphone.
 	 * - If you just want to mute the microphone, please use updateLocalAudio({ mute: true }). Refer to: {@tutorial 15-basic-dynamic-add-video}.
 	 * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
 	 * @example
 	 * await trtc.stopLocalAudio();
 	 */
-	stopLocalAudio(): Promise<void>;
-	/**
+  stopLocalAudio(): Promise<void>;
+  /**
 	 * @typedef {object|string} VideoProfile - Configuration for local video stream
 	 *
 	 * Video configuration parameters, can use preset values in string format or custom resolution and other parameters
@@ -1430,11 +1430,11 @@ export declare class TRTC {
 	 * }
 	 * await trtc.startLocalVideo(config);
 	 */
-	/**
+  /**
 	 * Start collecting video from the local camera, play the camera's video on the specified HTMLElement tag, and publish the camera's video to the current room.
 	 * - When to call: can be called before or after entering the room, but cannot be called repeatedly.
 	 * - Only one camera can be started per trtc instance. If you need to start another camera for testing while one camera is already started, you can create multiple trtc instances to achieve this.
- 
+
 	 * @param {object} [config]
 	 * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or ID for local video preview. If not passed or passed as null, the video will not be played.
 	 * @param {boolean} [config.publish] - Whether to publish the local video to the room. If you call this interface before entering the room and publish = true, the SDK will automatically publish after entering the room. You can get the publish state by listening this event {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}.
@@ -1493,8 +1493,8 @@ export declare class TRTC {
 	 * await trtc.startLocalVideo({ view, option: { useFrontCamera: false }});
 	 * @memberof TRTC
 	 */
-	startLocalVideo(config?: LocalVideoConfig): Promise<void>;
-	/**
+  startLocalVideo(config?: LocalVideoConfig): Promise<void>;
+  /**
 	 * Update the local camera configuration.
 	 * - This interface needs to be called after {@link TRTC#startLocalVideo startLocalVideo()} is successful.
 	 * - This interface can be called multiple times.
@@ -1532,16 +1532,16 @@ export declare class TRTC {
 	 * await trtc.updateLocalVideo({ publish:false });
 	 * @memberof TRTC
 	 */
-	updateLocalVideo(config: LocalVideoConfig): Promise<void>;
-	/**
+  updateLocalVideo(config: LocalVideoConfig): Promise<void>;
+  /**
 	 * Stop capturing, previewing, and publishing the local camera.
 	 * - If you only want to stop publishing video but keep the local camera preview, you can use the {@link TRTC#updateLocalVideo updateLocalVideo({ publish:false })} method.<br>
 	 * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
 	 * @example
 	 * await trtc.stopLocalVideo();
 	 */
-	stopLocalVideo(): Promise<void>;
-	/**
+  stopLocalVideo(): Promise<void>;
+  /**
 	 * @typedef {object|string} ScreenShareProfile - Screen sharing resolution, bit rate, and frame rate configuration
 	 * Screen sharing configuration parameters, can use preset values or custom resolution and other parameters
 	 * | Screen Profile | Resolution (width x height) | Frame Rate (fps) | Bitrate (kbps) |
@@ -1554,7 +1554,7 @@ export declare class TRTC {
 	 * | 1080p_2    | 1920 x 1080    | 30        | 4000        |
 	 * - The default resolution for screen sharing is `1080p`.
 	 * - If the above profiles do not meet your business needs, you can also specify custom resolution, frame rate, and bitrate.
- 
+
 	 * @property {number} width - Screen sharing width
 	 * @property {number} height - Screen sharing height
 	 * @property {number} frameRate - Screen sharing frame rate
@@ -1567,7 +1567,7 @@ export declare class TRTC {
 	 * }
 	 * await trtc.startScreenShare(config);
 	 */
-	/**
+  /**
 	 * Start screen sharing.
 	 *
 	 * - After starting screen sharing, other users in the room will receive the {@link module:EVENT.REMOTE_VIDEO_AVAILABLE REMOTE_VIDEO_AVAILABLE} event, with streamType as {@link module:TYPE.STREAM_TYPE_SUB STREAM_TYPE_SUB}, and other users can play screen sharing through {@link TRTC#startRemoteVideo startRemoteVideo}.
@@ -1595,8 +1595,8 @@ export declare class TRTC {
 	 * await trtc.startScreenShare();
 	 * @memberof TRTC
 	 */
-	startScreenShare(config?: ScreenShareConfig): Promise<void>;
-	/**
+  startScreenShare(config?: ScreenShareConfig): Promise<void>;
+  /**
 	 * Update screen sharing configuration
 	 * - This interface needs to be called after {@link TRTC#startScreenShare startScreenShare()} is successful.
 	 * - This interface can be called multiple times.
@@ -1618,16 +1618,16 @@ export declare class TRTC {
 	 * await trtc.updateScreenShare({ publish:false });
 	 * @memberof TRTC
 	 */
-	updateScreenShare(config: UpdateScreenShareConfig): Promise<void>;
-	/**
+  updateScreenShare(config: UpdateScreenShareConfig): Promise<void>;
+  /**
 	 * Stop screen sharing.
- 
+
 	 * @throws {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
 	 * @example
 	 * await trtc.stopScreenShare();
 	 */
-	stopScreenShare(): Promise<void>;
-	/**
+  stopScreenShare(): Promise<void>;
+  /**
 	 * Play remote video
 	 *
 	 * - When to call: Call after receiving the {@link module:EVENT.REMOTE_VIDEO_AVAILABLE TRTC.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE)} event.
@@ -1656,8 +1656,8 @@ export declare class TRTC {
 	 * })
 	 * @memberof TRTC
 	 */
-	startRemoteVideo(config: RemoteVideoConfig): Promise<void>;
-	/**
+  startRemoteVideo(config: RemoteVideoConfig): Promise<void>;
+  /**
 	 * Update remote video playback configuration<br>
 	 * - This method should be called after {@link TRTC#startRemoteVideo startRemoteVideo} is successful.
 	 * - This method can be called multiple times.
@@ -1688,8 +1688,8 @@ export declare class TRTC {
 	 * await trtc.updateRemoteVideo(config);
 	 * @memberof TRTC
 	 */
-	updateRemoteVideo(config: RemoteVideoConfig): Promise<void>;
-	/**
+  updateRemoteVideo(config: RemoteVideoConfig): Promise<void>;
+  /**
 	 * Used to stop remote video playback.<br>
 	 * @param {object} config - Remote video configuration
 	 * @param {string} config.userId - Remote user ID, '*' represents all users.
@@ -1701,8 +1701,8 @@ export declare class TRTC {
 	 * // Stop playing all remote users
 	 * await trtc.stopRemoteVideo({ userId: '*' });
 	 */
-	stopRemoteVideo(config: StopRemoteVideoConfig): Promise<void>;
-	/**
+  stopRemoteVideo(config: StopRemoteVideoConfig): Promise<void>;
+  /**
 	 * Mute a remote user and stop subscribing audio data from that user. Only effective for the current user, other users in the room can still hear the muted user's voice.<br>
 	 *
 	 * Note:
@@ -1721,8 +1721,8 @@ export declare class TRTC {
 	 * // Mute all remote users
 	 * await trtc.muteRemoteAudio('*', true);
 	 */
-	muteRemoteAudio(userId: string, mute: boolean): Promise<void>;
-	/**
+  muteRemoteAudio(userId: string, mute: boolean): Promise<void>;
+  /**
 	 * Used to control the playback volume of remote audio.<br>
 	 *
 	 * - Not supported by iOS Safari
@@ -1732,14 +1732,14 @@ export declare class TRTC {
 	 * @example
 	 * await trtc.setRemoteAudioVolume('123', 90);
 	 */
-	setRemoteAudioVolume(userId: string, volume: number): void;
-	startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
-	startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
-	updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
-	updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
-	stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
-	stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
-	/**
+  setRemoteAudioVolume(userId: string, volume: number): void;
+  startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
+  startPlugin<T extends keyof PluginStartOptionsMap, O extends PluginStartOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
+  updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
+  updatePlugin<T extends keyof PluginUpdateOptionsMap, O extends PluginUpdateOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
+  stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? never : T, options: O): Promise<any>;
+  stopPlugin<T extends keyof PluginStopOptionsMap, O extends PluginStopOptionsMap[T]>(plugin: O extends undefined ? T : never): Promise<any>;
+  /**
 	 * Enables or disables the volume callback.<br>
 	 *
 	 * - After enabling this function, whether someone is speaking in the room or not, the SDK will regularly throw the {@link module:EVENT.AUDIO_VOLUME TRTC.on(TRTC.EVENT.AUDIO_VOLUME)} event, which feedbacks the volume evaluation value of each user.<br>
@@ -1765,8 +1765,8 @@ export declare class TRTC {
 	 * // To turn off the volume callback, pass in an interval value less than or equal to 0
 	 * trtc.enableAudioVolumeEvaluation(-1);
 	 */
-	enableAudioVolumeEvaluation(interval?: number, enableInBackground?: boolean): void;
-	/**
+  enableAudioVolumeEvaluation(interval?: number, enableInBackground?: boolean): void;
+  /**
 	 * Listen to TRTC events<br><br>
 	 * For a detailed list of events, please refer to: {@link module:EVENT TRTC.EVENT}
 	 *
@@ -1779,8 +1779,8 @@ export declare class TRTC {
 	 *   // REMOTE_VIDEO_AVAILABLE event handler
 	 * });
 	 */
-	on<T extends keyof TRTCEventTypes>(event: T, handler: (...args: TRTCEventTypes[T]) => void, context?: any): this;
-	/**
+  on<T extends keyof TRTCEventTypes>(event: T, handler: (...args: TRTCEventTypes[T]) => void, context?: any): this;
+  /**
 	 * Remove event listener<br>
 	 *
 	 * @param {string} eventName Event name. Passing in the wildcard '*' will remove all event listeners.
@@ -1798,8 +1798,8 @@ export declare class TRTC {
 	 * // Remove all event listeners
 	 * trtc.off('*');
 	 */
-	off<T extends keyof TRTCEventTypes>(event: T | '*', handler: T extends '*' ? never : (...args: TRTCEventTypes[T]) => void, context?: any): this;
-	/**
+  off<T extends keyof TRTCEventTypes>(event: T | '*', handler: T extends '*' ? never : (...args: TRTCEventTypes[T]) => void, context?: any): this;
+  /**
 	 * Get audio track
 	 *
 	 * @returns {MediaStreamTrack?} Audio track
@@ -1808,6 +1808,7 @@ export declare class TRTC {
 	 * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - stream type:
 	 * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (user's microphone)(default)
 	 * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (user's screen sharing audio). Only works for local screen sharing audio because there is only one remote audioTrack, and there is no distinction between Main and Sub for remote audioTrack.
+   * @param {boolean} [config.processed=false] - Whether to get the processed audioTrack. The processed audioTrack is the audioTrack after the SDK processes the audio frame, such as ai-denose, gain, mix. The default value is false.
 	 * @memberof TRTC
 	 * @example
 	 * // Version before v5.4.3
@@ -1816,10 +1817,14 @@ export declare class TRTC {
 	 *
 	 * // Since v5.4.3+, you can get local screen audioTrack by passing the streamType = TRTC.STREAM_TYPE_SUB
 	 * trtc.getAudioTrack({ streamType: TRTC.STREAM_TYPE_SUB });
+   *
+   * // Since v5.8.2+, you can get the processed audioTrack by passing processed = true
+   * trtc.getAudioTrack({ processed: true });
 	 */
-	getAudioTrack(configOrUserId?: {
+  getAudioTrack(configOrUserId?: {
 		userId?: string;
 		streamType?: TRTCStreamType;
+    	processed?: boolean;
 	} | string): MediaStreamTrack | null;
 	/**
 	 * Get video track
@@ -1829,6 +1834,7 @@ export declare class TRTC {
 	 * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - stream type:
 	 * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (user's camera)(default)
 	 * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (user's screen sharing)
+   * @param {boolean} [config.processed=false] - Whether to get the processed videoTrack. The processed videoTrack is the videoTrack after the SDK processes the video frame, such as visualbackground, mirror, watermark. The default value is false.
 	 * @returns {MediaStreamTrack|null} Video track
 	 * @memberof TRTC
 	 * @example
@@ -1840,10 +1846,13 @@ export declare class TRTC {
 	 * const remoteMainVideoTrack = trtc.getVideoTrack({ userId: 'test', streamType: TRTC.TYPE.STREAM_TYPE_MAIN });
 	 * // Get remote user's sub stream videoTrack
 	 * const remoteSubVideoTrack = trtc.getVideoTrack({ userId: 'test', streamType: TRTC.TYPE.STREAM_TYPE_SUB });
+   * // Since v5.8.2+, you can get the processed videoTrack by passing processed = true
+   * const processedVideoTrack = trtc.getVideoTrack({ processed: true });
 	*/
-	getVideoTrack(config?: {
+  getVideoTrack(config?: {
 		userId?: string;
 		streamType?: TRTCStreamType;
+		processed?: boolean;
 	}): MediaStreamTrack | null;
 	/**
 	 * Get video snapshot <br>
@@ -1862,9 +1871,9 @@ export declare class TRTC {
 	 * trtc.getVideoSnapshot({userId: 'remote userId', streamType:TRTC.TYPE.STREAM_TYPE_MAIN})
 	 * @memberof TRTC
 	 */
-	getVideoSnapshot(config?: VideoFrameConfig): string;
-	setCurrentSpeaker(speakerId: string): void;
-	/**
+  getVideoSnapshot(config?: VideoFrameConfig): string;
+  setCurrentSpeaker(speakerId: string): void;
+  /**
 	 * Send SEI Message <br>
 	 *
 	 * > The header of a video frame has a header block called SEI.
@@ -1912,7 +1921,7 @@ export declare class TRTC {
 	 *  console.warn(`sei ${event.data} from ${event.userId}`);
 	 * })
 	 */
-	sendSEIMessage(buffer: ArrayBuffer, options?: {
+  sendSEIMessage(buffer: ArrayBuffer, options?: {
 		seiPayloadType?: number;
 		toSubStream?: boolean;
 	}): void;
@@ -1948,31 +1957,31 @@ export declare class TRTC {
 	 *    console.log(`received custom msg from ${event.userId}, message: ${new TextDecoder().decode(event.data)}`)
 	 * })
 	 */
-	sendCustomMessage(message: CustomMessageData): void;
-	static EVENT: {
-		readonly ERROR: "error";
-		readonly AUTOPLAY_FAILED: "autoplay-failed";
-		readonly KICKED_OUT: "kicked-out";
-		readonly REMOTE_USER_ENTER: "remote-user-enter";
-		readonly REMOTE_USER_EXIT: "remote-user-exit";
-		readonly REMOTE_AUDIO_AVAILABLE: "remote-audio-available";
-		readonly REMOTE_AUDIO_UNAVAILABLE: "remote-audio-unavailable";
-		readonly REMOTE_VIDEO_AVAILABLE: "remote-video-available";
-		readonly REMOTE_VIDEO_UNAVAILABLE: "remote-video-unavailable";
-		readonly AUDIO_VOLUME: "audio-volume";
-		readonly NETWORK_QUALITY: "network-quality";
-		readonly CONNECTION_STATE_CHANGED: "connection-state-changed";
-		readonly AUDIO_PLAY_STATE_CHANGED: "audio-play-state-changed";
-		readonly VIDEO_PLAY_STATE_CHANGED: "video-play-state-changed";
-		readonly SCREEN_SHARE_STOPPED: "screen-share-stopped";
-		readonly DEVICE_CHANGED: "device-changed";
-		readonly PUBLISH_STATE_CHANGED: "publish-state-changed";
-		readonly TRACK: "track";
-		readonly STATISTICS: "statistics";
-		readonly SEI_MESSAGE: "sei-message";
-		readonly CUSTOM_MESSAGE: "custom-message";
+  sendCustomMessage(message: CustomMessageData): void;
+  static EVENT: {
+		readonly ERROR: 'error';
+		readonly AUTOPLAY_FAILED: 'autoplay-failed';
+		readonly KICKED_OUT: 'kicked-out';
+		readonly REMOTE_USER_ENTER: 'remote-user-enter';
+		readonly REMOTE_USER_EXIT: 'remote-user-exit';
+		readonly REMOTE_AUDIO_AVAILABLE: 'remote-audio-available';
+		readonly REMOTE_AUDIO_UNAVAILABLE: 'remote-audio-unavailable';
+		readonly REMOTE_VIDEO_AVAILABLE: 'remote-video-available';
+		readonly REMOTE_VIDEO_UNAVAILABLE: 'remote-video-unavailable';
+		readonly AUDIO_VOLUME: 'audio-volume';
+		readonly NETWORK_QUALITY: 'network-quality';
+		readonly CONNECTION_STATE_CHANGED: 'connection-state-changed';
+		readonly AUDIO_PLAY_STATE_CHANGED: 'audio-play-state-changed';
+		readonly VIDEO_PLAY_STATE_CHANGED: 'video-play-state-changed';
+		readonly SCREEN_SHARE_STOPPED: 'screen-share-stopped';
+		readonly DEVICE_CHANGED: 'device-changed';
+		readonly PUBLISH_STATE_CHANGED: 'publish-state-changed';
+		readonly TRACK: 'track';
+		readonly STATISTICS: 'statistics';
+		readonly SEI_MESSAGE: 'sei-message';
+		readonly CUSTOM_MESSAGE: 'custom-message';
 	};
-	static ERROR_CODE: {
+  static ERROR_CODE: {
 		INVALID_PARAMETER: number;
 		INVALID_OPERATION: number;
 		ENV_NOT_SUPPORTED: number;
@@ -1982,22 +1991,22 @@ export declare class TRTC {
 		OPERATION_ABORT: number;
 		UNKNOWN_ERROR: number;
 	};
-	static TYPE: {
+  static TYPE: {
 		readonly SCENE_LIVE: Scene.LIVE;
 		readonly SCENE_RTC: Scene.RTC;
 		readonly ROLE_ANCHOR: UserRole.ANCHOR;
 		readonly ROLE_AUDIENCE: UserRole.AUDIENCE;
 		readonly STREAM_TYPE_MAIN: TRTCStreamType.Main;
 		readonly STREAM_TYPE_SUB: TRTCStreamType.Sub;
-		readonly AUDIO_PROFILE_STANDARD: "standard";
-		readonly AUDIO_PROFILE_STANDARD_STEREO: "standard-stereo";
-		readonly AUDIO_PROFILE_HIGH: "high";
-		readonly AUDIO_PROFILE_HIGH_STEREO: "high-stereo";
-		readonly QOS_PREFERENCE_SMOOTH: "smooth";
-		readonly QOS_PREFERENCE_CLEAR: "clear";
+		readonly AUDIO_PROFILE_STANDARD: 'standard';
+		readonly AUDIO_PROFILE_STANDARD_STEREO: 'standard-stereo';
+		readonly AUDIO_PROFILE_HIGH: 'high';
+		readonly AUDIO_PROFILE_HIGH_STEREO: 'high-stereo';
+		readonly QOS_PREFERENCE_SMOOTH: 'smooth';
+		readonly QOS_PREFERENCE_CLEAR: 'clear';
 	};
-	static frameWorkType: number;
-	/**
+  static frameWorkType: number;
+  /**
 	 * Set the log output level
 	 * <br>
 	 * It is recommended to set the DEBUG level during development and testing, which includes detailed prompt information.
@@ -2009,8 +2018,8 @@ export declare class TRTC {
 	 * // Output log levels above DEBUG
 	 * TRTC.setLogLevel(1);
 	 */
-	static setLogLevel(level: LOG_LEVEL, enableUploadLog?: boolean): void;
-	/**
+  static setLogLevel(level: LOG_LEVEL, enableUploadLog?: boolean): void;
+  /**
 	 * Check if the TRTC Web SDK is supported by the current browser
 	 *
 	 * - Reference: {@tutorial 05-info-browser}.
@@ -2037,8 +2046,8 @@ export declare class TRTC {
 	 * | checkResult.detail.isVp8EncodeSupported    | boolean | Whether the current browser supports VP8 encoding for uplink          |
 	 * | checkResult.detail.isVp8DecodeSupported    | boolean | Whether the current browser supports VP8 decoding for downlink          |
 	 */
-	static isSupported(): Promise<any>;
-	/**
+  static isSupported(): Promise<any>;
+  /**
 	 * Returns the list of camera devices
 	 * <br>
 	 * **Note**
@@ -2060,8 +2069,8 @@ export declare class TRTC {
 	 * }
 	 * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
 	 */
-	static getCameraList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
-	/**
+  static getCameraList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
+  /**
 	 * Returns the list of microphone devices
 	 * <br>
 	 * **Note**
@@ -2076,19 +2085,19 @@ export declare class TRTC {
 	 * }
 	 * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
 	 */
-	static getMicrophoneList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
-	/**
+  static getMicrophoneList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
+  /**
 	 * Returns the list of speaker devices. Only support PC browser, not support mobile browser.
 	 * <br>
 	 * @param {boolean} [requestPermission=true] `Since v5.6.3`. Whether to request permission to use the microphone. If requestPermission is true, calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically stop the microphone capture later.
 	 * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
 	 */
-	static getSpeakerList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
-	/**
+  static getSpeakerList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
+  /**
 	 *  Set the current speaker for audio playback
 	 *
 	 * @param {string} speakerId Speaker ID
 	 */
-	static setCurrentSpeaker(speakerId: string): Promise<void>;
+  static setCurrentSpeaker(speakerId: string): Promise<void>;
 }
-export default TRTC
+export default TRTC;
