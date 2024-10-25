@@ -1,6 +1,6 @@
 {
   "name": "trtc-sdk-v5",
-  "version": "5.8.2",
+  "version": "5.8.3",
   "description": "Tencent Cloud RTC SDK for Web",
   "main": "trtc.js",
   "types": "index.d.ts",
