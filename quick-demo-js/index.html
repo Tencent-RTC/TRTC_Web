@@ -37,7 +37,7 @@
 <body>
 
   <!--nav bar-->
-  <div id="header" class='container-fluid text-white header'>
+  <div id="header" class='text-white container-fluid header'>
     <img class='zh-cn' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png' style='height: 100%' />
     <img class='en' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png' style='height: 100%' />
     <div style='display: flex;align-items: center;'>
@@ -194,21 +194,21 @@
           </span>
         </h1>
         <div class='input-list'>
-          <div class='input-group input-group-sm mb-3'>
+          <div class='mb-3 input-group input-group-sm'>
             <span class='input-group-text'>SDKAppID</span>
             <input id='sdkAppId' type='number' class='form-control' placeholder='SDKAppID' value=''>
           </div>
-          <div class='input-group input-group-sm mb-3'>
+          <div class='mb-3 input-group input-group-sm'>
             <span class='input-group-text'>SDKSecretKey</span>
             <input id='sdkSecretKey' type='text' class='form-control' placeholder='SDKSecretKey' value=''>
           </div>
         </div>
         <div class='input-list'>
-          <div class='input-group input-group-sm mb-3'>
+          <div class='mb-3 input-group input-group-sm'>
             <span class='input-group-text'>UserId</span>
             <input id='userId' type='text' class='form-control' placeholder='userId'>
           </div>
-          <div class='input-group input-group-sm mb-3'>
+          <div class='mb-3 input-group input-group-sm'>
             <span class='input-group-text'>RoomId</span>
             <input id='roomId' type='number' min='1' max='4294967294' class='form-control' placeholder='roomId'>
           </div>
@@ -216,9 +216,9 @@
         <div class="alert alert-danger" role="alert">
           <span class='en'>Notes: this Demo is only applicable for debugging. Before official launch, please migrate the
             UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the
-            leakage of encryption key. <a target="_blank" href='https://trtc.io/document/35166'>View
+            leakage of encryption key. <a target="_blank" href='https://trtc.io/document/35166?platform=web&product=rtcengine&menulabel=sdk'>View
               Documents</a></span>
-          <span class='zh-cn'>注意️：本 Demo 仅用于调试，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。<a target="_blank"
+          <span class='zh-cn' id="user-sig-doc">注意️：本 Demo 仅用于调试，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。<a target="_blank"
               href='https://cloud.tencent.com/document/product/647/17275'>查看文档</a></span>
         </div>
         <h1 style='font-size: 14px'>
@@ -226,12 +226,12 @@
           <span class='zh-cn'>设备</span>
         </h1>
         <div class='select-wrapper'>
-          <div class='input-group mb-3'>
+          <div class='mb-3 input-group'>
             <select class='form-select' id='camera-select'>
             </select>
             <label class='input-group-text' for='camera-select'>Camera</label>
           </div>
-          <div class='input-group mb-3'>
+          <div class='mb-3 input-group'>
             <select class='form-select' id='microphone-select'>
             </select>
             <label class='input-group-text' for='microphone-select'>Microphone</label>
@@ -354,7 +354,7 @@
       document.head.appendChild(style);
     }
   </script>
-  <script src='https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js'></script>
+  <script src='https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/vconsole.min.js'></script>
   <script src='https://web.sdk.qcloud.com/trtc/webrtc/v5/dist/trtc.js'></script>
   <script src='https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js'></script>
   <script src='js/libs/clipboard.min.js'></script>

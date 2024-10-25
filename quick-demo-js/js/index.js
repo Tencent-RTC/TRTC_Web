@@ -38,6 +38,9 @@ TRTC.setLogLevel(1);
 
 // init device
 if (!window.isIframe) initDevice();
+else {
+	document.getElementById('user-sig-doc').querySelector('a').href = 'https://trtc.io/zh/document/35166?platform=web&product=rtcengine&menulabel=sdk';
+}
 handleEvent();
 
 // check current environment is supported TRTC or not
