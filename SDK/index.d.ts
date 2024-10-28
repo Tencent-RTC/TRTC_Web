@@ -272,6 +272,15 @@ export declare const enum ConnectionState {
 	RECONNECTED = 'RECONNECTED',
 	RECONNECTING = 'RECONNECTING'
 }
+export declare interface PingResult {
+  domain: string;
+  cost: number;
+}
+export declare interface PingResults {
+  isPoorNetwork?: boolean;
+  timestamp?: number;
+  data?: PingResult[];
+}
 export declare interface NetworkQuality {
 	uplinkNetworkQuality: NetworkQualityValue;
 	downlinkNetworkQuality: NetworkQualityValue;
@@ -279,6 +288,7 @@ export declare interface NetworkQuality {
 	uplinkLoss: number;
 	downlinkRTT: number;
 	downlinkLoss: number;
+	pingResults?: PingResults;
 }
 export declare const enum BannedReason {
 	BANNED = 'banned',

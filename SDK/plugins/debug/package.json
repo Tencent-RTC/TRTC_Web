@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/debug",
-  "version": "5.8.2",
+  "version": "5.8.3",
   "description": "TRTC Web SDK Debug Plugin",
   "main": "./debug.esm.js",
   "author": "leochliu <leochliu@tencent.com>",
