@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/beauty",
-  "version": "5.8.3",
+  "version": "5.8.4",
   "description": "TRTC Web SDK 5.x beauty plugin",
   "main": "./beauty.esm.js",
   "author": "longyuqi <longyuqi@tencent.com>",
