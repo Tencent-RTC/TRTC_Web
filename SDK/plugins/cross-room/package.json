@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/cross-room",
-  "version": "5.8.4",
+  "version": "5.8.5",
   "description": "TRTC Web SDK 5.x Cross Room plugin",
   "main": "./cross-room.esm.js",
   "author": "rychouwei <rychouwei@tencent.com>",
