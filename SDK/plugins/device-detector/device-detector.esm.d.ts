@@ -5,7 +5,10 @@ export interface DeviceDetectorOptions {
     userId: string,
     userSig: string,
     downlinkUserId?: string,
-    downlinkUserSig?: string
+    downlinkUserSig?: string,
+  },
+  cameraDetect?: {
+    mirror?: boolean,
   }
 }
 
