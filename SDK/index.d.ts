@@ -574,6 +574,14 @@ export declare const TRTCType: {
 	* @memberof module:TYPE
 	*/
 	readonly QOS_PREFERENCE_CLEAR: 'clear';
+	/**
+   * Audio output device types in Android. Specify this device when capture microphone, and the sound will come out of the speaker.
+  */
+  readonly SPEAKER: 'Speakerphone',
+  /**
+   * Audio output device types in Android. Specify this device when capture microphone, and the sound will come out of the headset.
+  */
+  readonly HEADSET: 'Headset earpiece'
 };
 export declare interface AudioMixerOptions {
 	id: string;
@@ -723,6 +731,8 @@ export declare const TRTCEvent: {
 		 *   // Guide user to click the page, SDK will resume playback automatically when user click the page.
 		 *   // Since v5.1.3+, you can get userId on this event.
 		 *   console.log(event.userId);
+		 *   // Since v5.9.0+, you can call the `resume` method to restore playback of the stream corresponding to event.userId.
+		 *   event.resume();
 		 * });
 		 */
 	readonly AUTOPLAY_FAILED: 'autoplay-failed';
@@ -1080,11 +1090,26 @@ export declare const TRTCEvent: {
 	 * })
 	 */
 	readonly CUSTOM_MESSAGE: 'custom-message';
+	/**
+   * @since v5.9.0
+   * @description started rendering the first video frame of the local or a remote user.
+   * @default 'first-video-frame'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.FIRST_VIDEO_FRAME, event => {
+   *    // event.height: video height.
+   *    // event.width: video width.
+   *    // event.streamType: video stream type.
+   *    // event.userId: The user ID of the local or a remote user. If it is empty, it indicates that the first local video frame is available; if it is not empty, it indicates that the first video frame of a remote user is available.
+   * })
+   */
+	readonly FIRST_VIDEO_FRAME: 'first-video-frame';
 };
 export declare interface TRTCEventTypes {
 	[TRTCEvent.ERROR]: [RtcError];
 	[TRTCEvent.AUTOPLAY_FAILED]: [{
 		userId: string;
+		resume: () => Promise<void>;
 	}];
 	[TRTCEvent.KICKED_OUT]: [{
 		reason: Exclude<BannedReason, 'user_time_out'>;
@@ -1735,7 +1760,7 @@ export declare class TRTC {
   /**
 	 * Used to control the playback volume of remote audio.<br>
 	 *
-	 * - Not supported by iOS Safari
+	 * - Since `v5.9.0`, iOS Safari is supported
 	 * @param {string} userId - Remote user ID。'*' represents all remote users.
 	 * @param {number} volume - Volume, ranging from 0 to 100. The default value is 100.<br>
 	 * Since `v5.1.3+`, the volume can be set higher than 100.
@@ -1882,7 +1907,6 @@ export declare class TRTC {
 	 * @memberof TRTC
 	 */
   getVideoSnapshot(config?: VideoFrameConfig): string;
-  setCurrentSpeaker(speakerId: string): void;
   /**
 	 * Send SEI Message <br>
 	 *
@@ -1968,29 +1992,7 @@ export declare class TRTC {
 	 * })
 	 */
   sendCustomMessage(message: CustomMessageData): void;
-  static EVENT: {
-		readonly ERROR: 'error';
-		readonly AUTOPLAY_FAILED: 'autoplay-failed';
-		readonly KICKED_OUT: 'kicked-out';
-		readonly REMOTE_USER_ENTER: 'remote-user-enter';
-		readonly REMOTE_USER_EXIT: 'remote-user-exit';
-		readonly REMOTE_AUDIO_AVAILABLE: 'remote-audio-available';
-		readonly REMOTE_AUDIO_UNAVAILABLE: 'remote-audio-unavailable';
-		readonly REMOTE_VIDEO_AVAILABLE: 'remote-video-available';
-		readonly REMOTE_VIDEO_UNAVAILABLE: 'remote-video-unavailable';
-		readonly AUDIO_VOLUME: 'audio-volume';
-		readonly NETWORK_QUALITY: 'network-quality';
-		readonly CONNECTION_STATE_CHANGED: 'connection-state-changed';
-		readonly AUDIO_PLAY_STATE_CHANGED: 'audio-play-state-changed';
-		readonly VIDEO_PLAY_STATE_CHANGED: 'video-play-state-changed';
-		readonly SCREEN_SHARE_STOPPED: 'screen-share-stopped';
-		readonly DEVICE_CHANGED: 'device-changed';
-		readonly PUBLISH_STATE_CHANGED: 'publish-state-changed';
-		readonly TRACK: 'track';
-		readonly STATISTICS: 'statistics';
-		readonly SEI_MESSAGE: 'sei-message';
-		readonly CUSTOM_MESSAGE: 'custom-message';
-	};
+  static EVENT: typeof TRTCEvent;
   static ERROR_CODE: {
 		INVALID_PARAMETER: number;
 		INVALID_OPERATION: number;
@@ -2001,20 +2003,7 @@ export declare class TRTC {
 		OPERATION_ABORT: number;
 		UNKNOWN_ERROR: number;
 	};
-  static TYPE: {
-		readonly SCENE_LIVE: Scene.LIVE;
-		readonly SCENE_RTC: Scene.RTC;
-		readonly ROLE_ANCHOR: UserRole.ANCHOR;
-		readonly ROLE_AUDIENCE: UserRole.AUDIENCE;
-		readonly STREAM_TYPE_MAIN: TRTCStreamType.Main;
-		readonly STREAM_TYPE_SUB: TRTCStreamType.Sub;
-		readonly AUDIO_PROFILE_STANDARD: 'standard';
-		readonly AUDIO_PROFILE_STANDARD_STEREO: 'standard-stereo';
-		readonly AUDIO_PROFILE_HIGH: 'high';
-		readonly AUDIO_PROFILE_HIGH_STEREO: 'high-stereo';
-		readonly QOS_PREFERENCE_SMOOTH: 'smooth';
-		readonly QOS_PREFERENCE_CLEAR: 'clear';
-	};
+  static TYPE: typeof TRTCType;
   static frameWorkType: number;
   /**
 	 * Set the log output level
