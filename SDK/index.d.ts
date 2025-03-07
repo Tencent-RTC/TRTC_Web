@@ -305,6 +305,7 @@ export declare interface TRTCOptions {
 	plugins?: Array<TRTCPlugin>;
 	enableSEI?: boolean;
 	assetsPath?: string;
+	volumeType?: number;
 }
 export interface VideoProfile { width: number, height: number, frameRate: number, bitrate: number; }
 export interface AudioProfile { sampleRate: number, channelCount: number, bitrate: number; }
@@ -1182,6 +1183,7 @@ export declare interface TRTCEventTypes {
 		userId: string;
 		streamType?: TRTCStreamType;
 		track: MediaStreamTrack;
+		sourceTrack: MediaStreamTrack;
 	}];
 	[TRTCEvent.CUSTOM_MESSAGE]: [CustomMessage];
 }
