@@ -1,0 +1,9 @@
+{
+  "name": "@rtc-plugin/voice-changer",
+  "version": "5.10.0",
+  "description": "",
+  "main": "./voice-changer.esm.js",
+  "keywords": [],
+  "module": "./voice-changer.esm.js",
+  "types": "./voice-changer.esm.d.ts"
+}

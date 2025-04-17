@@ -1,9 +1,8 @@
 {
   "name": "@rtc-plugin/device-detector",
-  "version": "5.9.1",
+  "version": "5.10.0",
   "description": "TRTC Web SDK 5.x device detector plugin",
   "main": "./device-detector.esm.js",
-  "author": "edwards <edwards@tencent.com>",
   "module": "./device-detector.esm.js",
   "repository": {
     "type": "git",

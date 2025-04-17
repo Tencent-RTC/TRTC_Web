@@ -1,0 +1,7 @@
+{
+  "name": "@rtc-plugin/custom-encryption",
+  "version": "5.10.0",
+  "main": "./custom-encryption.esm.js",
+  "module": "./custom-encryption.esm.js",
+  "types": "./custom-encryption.esm.d.ts"
+}

@@ -80,5 +80,6 @@ Explore SDK API documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrt
 ├── trtc.js // sdk file(umd format)
 ├── trtc.esm.js // sdk file base on ES modules(esm format)
 ├── index.d.ts // ts declaration file
-└── plugins // trtc plugins
+├── plugins // sdk plugins
+└── assets // static resource directory (e.g., required for features like virtual background, AI noise reduction, etc., which need to be deployed on the server for the SDK to dynamically load resources)
 ```
