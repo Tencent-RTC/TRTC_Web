@@ -1,9 +1,8 @@
 {
   "name": "@rtc-plugin/basic-beauty",
-  "version": "5.9.1",
+  "version": "5.10.0",
   "description": "TRTC Web SDK 5.x basic-beauty plugin",
   "main": "./basic-beauty.esm.js",
-  "author": "longyuqi <longyuqi@tencent.com>",
   "module": "./basic-beauty.esm.js",
   "repository": {
     "type": "git",

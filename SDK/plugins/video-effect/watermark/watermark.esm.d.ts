@@ -1,6 +1,14 @@
-import { WatermarkOptions } from '../src/enums';
+export interface WatermarkOptions {
+    imageUrl: string;
+    x: number;
+    y: number;
+    size?: Size | number | 'contain' | 'cover';
+}
 
-export { WatermarkOptions };
+export interface Size {
+    height?: number;
+    width?: number;
+}
 
 export declare class Watermark {
     start(options: WatermarkOptions): Promise<void>;

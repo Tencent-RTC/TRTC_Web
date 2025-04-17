@@ -84,7 +84,8 @@ import TRTC from 'trtc-sdk-v5';
 ├── trtc.js // npm 包入口文件（umd 格式）
 ├── trtc.esm.js // 基于 es 模块的 sdk 包（esm 格式）
 ├── index.d.ts // 类型声明文件
-└── plugins // 插件目录
+├── plugins // 插件目录
+└── assets // 静态资源目录（如使用虚拟背景、AI 降噪等功能需要部署到服务器供 SDK 动态加载资源）
 ```
 
 ## Changelog

@@ -1,9 +1,8 @@
 {
   "name": "@rtc-plugin/virtual-background",
-  "version": "5.9.1",
+  "version": "5.10.0",
   "description": "TRTC Web SDK 5.x virtual background plugin",
   "main": "./virtual-background.esm.js",
-  "author": "longyuqi <longyuqi@tencent.com>",
   "module": "./virtual-background.esm.js",
   "repository": {
     "type": "git",
