@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/cross-room",
-  "version": "5.10.0",
+  "version": "5.10.1",
   "description": "TRTC Web SDK 5.x Cross Room plugin",
   "main": "./cross-room.esm.js",
   "module": "./cross-room.esm.js",
