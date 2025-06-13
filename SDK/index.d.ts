@@ -6,31 +6,42 @@ import { Beauty, BeautyOptions, UpdateBeautyOptions } from './plugins/video-effe
 import { BasicBeauty, BasicBeautyOptions } from './plugins/video-effect/basic-beauty';
 import { CrossRoom, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption } from './plugins/cross-room';
 import { CustomEncryption, EncryptionOptions } from './plugins/custom-encryption';
+import { VideoMixerOptions, VideoMixer} from './plugins/video-effect/video-mixer'
+import { SmallStreamAutoSwitcher, SmallStreamAutoSwitcherOptions } from './plugins/small-stream-auto-switcher';
+import { InitAudioProcessorOptions, UpdateAudioProcessorOptions } from 'trtc-js-sdk-core';
 
-export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption };
-type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption;
-
+export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions };
+type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer;
+export declare type ExperimentalAPIFunctionMap = {
+  'enableAudioFrameEvent': EnableAudioFrameEventOptions;
+}
 export declare type PluginStartOptionsMap = {
   'AudioMixer': AudioMixerOptions;
   'AIDenoiser': AIDenoiserOptions;
   'CDNStreaming': CDNStreamingOptions;
   'VirtualBackground': VirtualBackgroundOptions;
   'Watermark': WatermarkOptions;
+  'VideoMixer': VideoMixerOptions;
   'Beauty': BeautyOptions;
   'BasicBeauty': BasicBeautyOptions;
   'DeviceDetector': DeviceDetectorOptions;
   'Debug': undefined;
   'CrossRoom': StartCrossRoomOption;
   'CustomEncryption': EncryptionOptions;
+  'SmallStreamAutoSwitcher': SmallStreamAutoSwitcherOptions;
+  'AudioProcessor': InitAudioProcessorOptions;
 };
 
 export declare type PluginUpdateOptionsMap = {
   'AudioMixer': UpdateAudioMixerOptions;
   'CDNStreaming': CDNStreamingOptions;
   'VirtualBackground': UpdateVirtualBackgroundOptions;
+  'Watermark': WatermarkOptions;
+  'VideoMixer': VideoMixerOptions;
   'Beauty': UpdateBeautyOptions;
   'BasicBeauty': BasicBeautyOptions;
   'CrossRoom': UpdateCrossRoomOption;
+	'AudioProcessor': UpdateAudioProcessorOptions;
 };
 
 export declare type PluginStopOptionsMap = {
@@ -39,11 +50,14 @@ export declare type PluginStopOptionsMap = {
   'CDNStreaming': CDNStreamingOptions;
   'VirtualBackground': undefined;
   'Watermark': undefined;
+  'VideoMixer': undefined;
   'Beauty': undefined;
   'BasicBeauty': undefined;
   'DeviceDetector': undefined;
   'Debug': undefined;
   'CrossRoom': StopCrossRoomOption | undefined;
+  'SmallStreamAutoSwitcher': undefined;
+	'AudioProcessor': undefined;
 };
 
 export declare class RtcError extends Error implements RTCErrorInterface {
@@ -101,7 +115,7 @@ export declare class RtcError extends Error implements RTCErrorInterface {
   static convertFrom(originError: Error, fnName?: string, fnParams?: any): RtcError;
 }
 
-export declare enum LOG_LEVEL {
+export declare const enum LOG_LEVEL {
   /**
    * 输出所有日志
    */
@@ -325,6 +339,7 @@ export declare interface LocalVideoConfig {
     qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
     videoTrack?: MediaStreamTrack;
     avoidCropping?: boolean;
+    rotation?: 0 | 90 | 180 | 270;
   };
 }
 export interface TurnServerOptions {
@@ -364,6 +379,13 @@ export declare interface EnterRoomConfig {
 export interface PlayoutDelay {
   min: number;
   max: number;
+}
+
+export declare interface SwitchRoomConfig {
+	roomId?: number,
+	strRoomId?: string;
+	privateMapKey?: string;
+	userSig: string;
 }
 
 export declare interface ScreenShareConfig {
@@ -446,12 +468,12 @@ export declare const enum TRTCStreamType {
   Main = 'main',
   Sub = 'sub'
 }
-export declare enum TRTCDeviceType {
+export declare const enum TRTCDeviceType {
   Camera = 'camera',
   Microphone = 'microphone',
   Speaker = 'speaker'
 }
-export declare enum TRTCDeviceAction {
+export declare const enum TRTCDeviceAction {
   Remove = 'remove',
   Add = 'add',
   Active = 'active'
@@ -612,7 +634,7 @@ export declare interface StopAudioMixerOptions {
   id: string;
 }
 export declare interface AIDenoiserOptions {
-  assetsPath: string;
+  assetsPath?: string;
   sdkAppId: number;
   userId: string;
   userSig: string;
@@ -640,7 +662,7 @@ export declare interface LocalStatistic {
     videoType: TRTCVideoType;
   }[];
 }
-export declare enum TRTCVideoType {
+export declare const enum TRTCVideoType {
   Big = 'big',
   Small = 'small',
   Sub = 'sub'
@@ -663,8 +685,15 @@ export declare interface VideoFrameConfig {
   userId?: string;
   streamType?: TRTCStreamType;
 }
-export declare enum AutoStartPluginName {
+export declare const enum AutoStartPluginName {
   Debug = 'Debug'
+}
+export declare interface EnableAudioFrameEventOptions {
+  enable: boolean
+  userId: string
+  sampleRate?: number
+  channelCount?: number
+  port?: MessagePort
 }
 
 /**
@@ -703,6 +732,14 @@ export declare enum AutoStartPluginName {
  * @property {number} height Video height
  * @property {number} frameRate Video frameRate
  * @property {'big'|'small'|'sub'} videoType Video type: big, small, sub.
+ */
+/** enableAudioFrameEvent Options
+ * @typedef EnableAudioFrameEventOptions
+ * @property {boolean} enable Whether to enable callback of audio frame
+ * @property {string} userId The userId of the monitored user. '' indicates local microphone data, '*' indicates monitoring the audio data of all remote users.
+ * @property {number=} [sampleRate=48000] Set the sampling rate of pcm data, the default is 48000. Support 8000, 16000, 32000, 44100, 48000
+ * @property {number=} [channelCount=1] Set the number of channels of pcm data, the default is 1. Support 1, 2
+ * @property {MessagePort=} port Set the MessagePort for the pcm callback
  */
 /**
  * **TRTC Event List**<br>
@@ -1135,6 +1172,7 @@ export declare interface TRTCEventTypes {
   [TRTCEvent.ERROR]: [RtcError];
   [TRTCEvent.AUTOPLAY_FAILED]: [{
     userId: string;
+    mediaType: 'audio' | 'video' | 'screen';
     resume: () => Promise<void>;
   }];
   [TRTCEvent.KICKED_OUT]: [{
@@ -1230,6 +1268,14 @@ export declare class TRTC {
    *
    * **Note:**
    * - You must create a TRTC object first and call its methods and listen to its events to implement various functions required by the business.
+   * @param {Array=} options.plugins List of registered plugins (optional).
+   * @param {boolean=} [options.enableSEI=false] Whether to enable SEI sending and receiving function (optional). [Reference document](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#sendSEIMessage)
+   * @param {string=} options.assetsPath The address of the static resource file that the plugin depends on (optional).
+   * - Publish the node_modules/trtc-sdk-v5/assets directory to CDN or static resource server.
+   * - Set the assetsPath parameter to the CDN address, for example: `TRTC.create({ assetsPath: 'https://xxx/assets' })`, the SDK will load the relevant resource files on demand.
+   * @param {string=} options.userDefineRecordId is used to set the userDefineRecordId of cloud recording (optional).
+   * - [Recommended value] The length is limited to 64 bytes, and only uppercase and lowercase English letters (a-zA-Z), numbers (0-9), underscores, and hyphens are allowed.
+   * - [Reference document] [Cloud recording](https://trtc.io/document/45169?product=rtcengine&menulabel=serverfeaturesapis).
    * @example
    * // Create a TRTC object
    * const trtc = TRTC.create();
@@ -1365,27 +1411,64 @@ export declare class TRTC {
    * await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR, { privateMapKey: 'your new privateMapKey' });
    */
   switchRole(role: UserRole, option?: {
-    privateMapKey?: string;
-    latencyLevel?: number;
-  }): Promise<void>;
-  /**
-   * Destroy the TRTC instance <br/>
+		privateMapKey?: string;
+		latencyLevel?: number;
+	}): Promise<void>;
+	/**
+   * Switch a video call room.<br>
+   * - Switch the video call room that the audience is watching in live scene. It is faster than exit old room and then entering the new room, and can optimize the opening time in live broadcast and other scenarios.
+   * - [Contact us](https://trtc.io/contact) to enable this API.
    *
-   * After exiting the room, if the business side no longer needs to use trtc, you need to call this interface to destroy the trtc instance in time and release related resources.
-   *
-   * Note:
-   *  - The trtc instance after destruction cannot be used again.
-   *  - If you have entered the room, you need to call the {@link TRTC#exitRoom TRTC.exitRoom} interface to exit the room successfully before calling this interface to destroy trtc.
-   *
+   * @param {object} options Switch room parameters
+   * @param {string} options.userSig UserSig signature <br>
+   * Please refer to [UserSig related](https://trtc.io/document/35166) for the calculation method of userSig.
+   * @param {number=} options.roomId
+   * the value must be an integer between 1 and 4294967294<br>
+   * <font color="red">Note: <br>1. The room to be switched and the current room must be of the same room type (both digital rooms or string rooms)<br> 2. Either roomId or strRoomId must be filled in. If both are filled in, roomId is preferred. </font>
+   * @param {string=} options.strRoomId
+   * String type room id, the length is limited to 64 bytes, and only supports the following characters:
+   * - Uppercase and lowercase English letters (a-zA-Z)
+   * - Numbers (0-9)
+   * - Space ! # $ % & ( ) + - : ; < = . > ? @ [ ] ^ _ { } | ~ ,
+   * <font color="red">Note: If you omit this parameter, SDK will reuse the userSig passed in {@link TRTC#enterRoom enterRoom()}. If it has expired, switching room will fail.</font>
+   * @param {boolean=} [options.privateMapKey] Key for entering a room. If permission control is required, please carry this parameter (empty or incorrect value will cause a failure in entering the room).<br>[privateMapKey permission configuration](https://www.tencentcloud.com/document/product/647/35157?lang=en&pg=).
+   * @throws
+   * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
+   * - {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+   * - {@link module:ERROR_CODE.OPERATION_ABORT OPERATION_ABORT}
+   * - {@link module:ERROR_CODE.SERVER_ERROR SERVER_ERROR}
    * @example
-   * // When the call is over
-   * await trtc.exitRoom();
-   * // If the trtc is no longer needed, destroy the trtc and release the reference.
-   * trtc.destroy();
-   * trtc = null;
-   * @throws {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-   * @memberof TRTC
+   * const trtc = TRTC.create();
+   * await trtc.enterRoom({
+   *    ...
+   *    roomId: 8888,
+   *    scene: TRTC.TYPE.SCENE_LIVE,
+   *    role: TRTC.TYPE.ROLE_AUDIENCE
+   * });
+   * await trtc.switchRoom({ 
+   *    userSig,
+   *    roomId: 9999 
+   * });
    */
+	switchRoom(params: SwitchRoomConfig): Promise<void>;
+	/**
+	 * Destroy the TRTC instance <br/>
+	 *
+	 * After exiting the room, if the business side no longer needs to use trtc, you need to call this interface to destroy the trtc instance in time and release related resources.
+	 *
+	 * Note:
+	 *  - The trtc instance after destruction cannot be used again.
+	 *  - If you have entered the room, you need to call the {@link TRTC#exitRoom TRTC.exitRoom} interface to exit the room successfully before calling this interface to destroy trtc.
+	 *
+	 * @example
+	 * // When the call is over
+	 * await trtc.exitRoom();
+	 * // If the trtc is no longer needed, destroy the trtc and release the reference.
+	 * trtc.destroy();
+	 * trtc = null;
+	 * @throws {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+	 * @memberof TRTC
+	 */
   destroy(): void;
   /**
    * Start collecting audio from the local microphone and publish it to the current room.
@@ -1519,6 +1602,7 @@ export declare class TRTC {
    * @param {string | VideoProfile} [config.option.profile] - Video encoding parameters for the main video.
    * @param {string | boolean | VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first(default) ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+   * @param {0 | 90 | 180 | 270} [config.option.rotation] - Set the clockwise rotation angle of the local camera when publishing. Supports 90, 180, and 270
    * @throws
    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
@@ -1581,6 +1665,7 @@ export declare class TRTC {
    * @param {string | VideoProfile} [config.option.profile] - Video encoding parameters for the main stream
    * @param {string | boolean | VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+   * @param {0 | 90 | 180 | 270} [config.option.rotation] - Set the clockwise rotation angle of the local camera when publishing. Supports 90, 180, and 270
    * @throws
    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
@@ -1790,7 +1875,7 @@ export declare class TRTC {
   /**
    * Used to control the playback volume of remote audio.<br>
    *
-   * - Since `v5.9.0`, iOS Safari is supported
+   * - Not supported by iOS Safari
    * @param {string} userId - Remote user ID。'*' represents all remote users.
    * @param {number} volume - Volume, ranging from 0 to 100. The default value is 100.<br>
    * Since `v5.1.3+`, the volume can be set higher than 100.
@@ -1899,7 +1984,7 @@ export declare class TRTC {
    * @param {STREAM_TYPE_MAIN|STREAM_TYPE_SUB} [config.streamType] - stream type:
    * - {@link module:TYPE.STREAM_TYPE_MAIN TRTC.TYPE.STREAM_TYPE_MAIN}: Main stream (user's camera)(default)
    * - {@link module:TYPE.STREAM_TYPE_SUB TRTC.TYPE.STREAM_TYPE_SUB}: Sub stream (user's screen sharing)
-   * @param {boolean} [config.processed=false] - Whether to get the processed videoTrack. The processed videoTrack is the videoTrack after the SDK processes the video frame, such as virtual background, mirror, watermark. The default value is false.
+   * @param {boolean} [config.processed=false] - Whether to get the processed videoTrack. The processed videoTrack is the videoTrack after the SDK processes the video frame, such as virtual background, mirror, watermark, rotation. The default value is false.
    * @returns {MediaStreamTrack|null} Video track
    * @memberof TRTC
    * @example
@@ -2022,6 +2107,27 @@ export declare class TRTC {
    * })
    */
   sendCustomMessage(message: CustomMessageData): void;
+  /**
+   * call experimental API
+   *
+   * | APIName | name | param |
+   * | --- | --- | --- |
+   * | 'enableAudioFrameEvent' | Config the pcm data of Audio Frame Event | [EnableAudioFrameEventOptions](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/global.html#EnableAudioFrameEventOptions) |
+   * @private
+   * @param {string} name
+   * @param {EnableAudioFrameEventOptions} options
+   * @example
+   * // Call back the pcm data of the remote user 'user_A'. The default pcm data is 48kHZ, mono
+   * await trtc.callExperimentalAPI('enableAudioFrameEvent', { enable: true, userId: 'user_A'})
+   * // Call back all remote pcm data and set the pcm data to 16kHZ, stereo
+   * await trtc.callExperimentalAPI('enableAudioFrameEvent', { enable: true, userId: '*', sampleRate: 16000, channelCount: 2 })
+   * // Set the MessagePort for the local microphone pcm data callback
+   * await trtc.callExperimentalAPI('enableAudioFrameEvent', { enable: true, userId: '', port })
+   * // Cancel callback of local microphone pcm data
+   * await trtc.callExperimentalAPI('enableAudioFrameEvent', { enable: false, userId: '' })
+   */
+  callExperimentalAPI<T extends keyof ExperimentalAPIFunctionMap, O extends ExperimentalAPIFunctionMap[T]>(name: O extends undefined ? never : T, options: O): Promise<void>;
+  callExperimentalAPI<T extends keyof ExperimentalAPIFunctionMap, O extends ExperimentalAPIFunctionMap[T]>(name: O extends undefined ? T : never): Promise<void>;
   static EVENT: typeof TRTCEvent;
   static ERROR_CODE: {
     INVALID_PARAMETER: number;
