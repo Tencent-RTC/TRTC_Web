@@ -1,14 +1,14 @@
 {
-  "name": "@rtc-plugin/virtual-background",
+  "name": "@rtc-plugin/video-mixer",
   "version": "5.11.0",
-  "description": "TRTC Web SDK 5.x virtual background plugin",
-  "main": "./virtual-background.esm.js",
-  "module": "./virtual-background.esm.js",
+  "description": "TRTC Web SDK 5.x videoMixer plugin",
+  "main": "./video-mixer.esm.js",
+  "module": "./video-mixer.esm.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
   },
-  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-36-advanced-virtual-background.html",
+  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-40-advanced-video-mixer.html",
   "keywords": [
     "webrtc",
     "TRTC",
@@ -25,5 +25,5 @@
     "real-time communication",
     "blur background"
   ],
-  "types": "./virtual-background.esm.d.ts"
+  "types": "./video-mixer.esm.d.ts"
 }
