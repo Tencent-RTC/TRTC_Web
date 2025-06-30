@@ -9,7 +9,8 @@ export interface DeviceDetectorOptions {
   },
   cameraDetect?: {
     mirror?: boolean,
-  }
+  },
+  allowSkip?: boolean,
 }
 
 export interface DeviceDetectorResult {

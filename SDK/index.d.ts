@@ -1202,6 +1202,7 @@ export declare interface TRTCEventTypes {
     result: {
       userId: string;
       volume: number;
+      floatVolume: number;
     }[];
   }];
   [TRTCEvent.AUDIO_FRAME]: [{
