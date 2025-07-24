@@ -11,6 +11,7 @@ export interface DeviceDetectorOptions {
     mirror?: boolean,
   },
   allowSkip?: boolean,
+  language?: 'auto' | 'zh' | 'en'
 }
 
 export interface DeviceDetectorResult {
