@@ -6,11 +6,11 @@ import { Beauty, BeautyOptions, UpdateBeautyOptions } from './plugins/video-effe
 import { BasicBeauty, BasicBeautyOptions } from './plugins/video-effect/basic-beauty';
 import { CrossRoom, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption } from './plugins/cross-room';
 import { CustomEncryption, EncryptionOptions } from './plugins/custom-encryption';
-import { VideoMixerOptions, VideoMixer} from './plugins/video-effect/video-mixer'
+import { VideoMixerOptions, UpdateVideoMixerOptions, VideoMixer} from './plugins/video-effect/video-mixer'
 import { SmallStreamAutoSwitcher, SmallStreamAutoSwitcherOptions } from './plugins/small-stream-auto-switcher';
 import { InitAudioProcessorOptions, UpdateAudioProcessorOptions } from 'trtc-js-sdk-core';
 
-export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions };
+export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions };
 type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer;
 export declare type ExperimentalAPIFunctionMap = {
   'enableAudioFrameEvent': EnableAudioFrameEventOptions;
@@ -37,7 +37,7 @@ export declare type PluginUpdateOptionsMap = {
   'CDNStreaming': CDNStreamingOptions;
   'VirtualBackground': UpdateVirtualBackgroundOptions;
   'Watermark': WatermarkOptions;
-  'VideoMixer': VideoMixerOptions;
+  'VideoMixer': UpdateVideoMixerOptions;
   'Beauty': UpdateBeautyOptions;
   'BasicBeauty': BasicBeautyOptions;
   'CrossRoom': UpdateCrossRoomOption;
@@ -110,6 +110,13 @@ export declare class RtcError extends Error implements RTCErrorInterface {
    * @memberof RtcError
    */
   handler?: () => void;
+  /**
+   * Some errors will include a data property to help you handle exceptions.
+   * @since v5.12.0
+   * @readonly
+   * @memberof RtcError
+   */
+  data?: any;
   originError?: Error | DOMException | RtcError;
   constructor({ code, extraCode, message, messageParams, fnName, originError }: RTCErrorParams);
   static convertFrom(originError: Error, fnName?: string, fnParams?: any): RtcError;
@@ -322,6 +329,7 @@ export declare interface TRTCOptions {
   enableSEI?: boolean;
   assetsPath?: string;
   volumeType?: number;
+  enableAutoSwitchWhenRecapturing?: boolean;
 }
 export interface VideoProfile { width: number, height: number, frameRate: number, bitrate: number; }
 export interface AudioProfile { sampleRate: number, channelCount: number, bitrate: number; }
@@ -391,6 +399,7 @@ export declare interface SwitchRoomConfig {
 export declare interface ScreenShareConfig {
   view?: string | HTMLElement | HTMLElement[] | null;
   publish?: boolean;
+  muteSystemAudio?: boolean;
   option?: {
     profile?: keyof typeof screenProfileMap | VideoProfile;
     fillMode?: 'contain' | 'cover' | 'fill';
