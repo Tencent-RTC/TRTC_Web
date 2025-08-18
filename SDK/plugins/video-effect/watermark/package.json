@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/watermark",
-  "version": "5.12.0",
+  "version": "5.12.1",
   "description": "TRTC Web SDK 5.x watermark plugin",
   "main": "./watermark.esm.js",
   "module": "./watermark.esm.js",
