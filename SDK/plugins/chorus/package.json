@@ -1,14 +1,14 @@
 {
-  "name": "@rtc-plugin/video-mixer",
+  "name": "@rtc-plugin/chorus",
   "version": "5.13.0",
-  "description": "TRTC Web SDK 5.x videoMixer plugin",
-  "main": "./video-mixer.esm.js",
-  "module": "./video-mixer.esm.js",
+  "description": "TRTC Web SDK 5.x Chorus plugin",
+  "main": "./chorus.esm.js",
+  "module": "./chorus.esm.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
   },
-  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-40-advanced-video-mixer.html",
+  "homepage": "https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-30-advanced-chorus-link.html",
   "keywords": [
     "webrtc",
     "TRTC",
@@ -23,7 +23,7 @@
     "microphone",
     "live streaming",
     "real-time communication",
-    "blur background"
+    "chorus"
   ],
-  "types": "./video-mixer.esm.d.ts"
+  "types": "./chorus.esm.d.ts"
 }

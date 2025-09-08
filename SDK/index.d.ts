@@ -6,12 +6,12 @@ import { Beauty, BeautyOptions, UpdateBeautyOptions } from './plugins/video-effe
 import { BasicBeauty, BasicBeautyOptions } from './plugins/video-effect/basic-beauty';
 import { CrossRoom, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption } from './plugins/cross-room';
 import { CustomEncryption, EncryptionOptions } from './plugins/custom-encryption';
-import { VideoMixerOptions, UpdateVideoMixerOptions, VideoMixer} from './plugins/video-effect/video-mixer'
+import { VideoMixerOptions, UpdateVideoMixerOptions, VideoMixer } from './plugins/video-effect/video-mixer'
 import { SmallStreamAutoSwitcher, SmallStreamAutoSwitcherOptions } from './plugins/small-stream-auto-switcher';
-import { InitAudioProcessorOptions, UpdateAudioProcessorOptions } from 'trtc-js-sdk-core';
+import { Chorus } from './plugins/chorus';
 
 export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions };
-type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer;
+type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus;
 export declare type ExperimentalAPIFunctionMap = {
   'enableAudioFrameEvent': EnableAudioFrameEventOptions;
 }
@@ -34,6 +34,7 @@ export declare type PluginStartOptionsMap = {
 
 export declare type PluginUpdateOptionsMap = {
   'AudioMixer': UpdateAudioMixerOptions;
+  'AIDenoiser': UpdateDenoiserOptions;
   'CDNStreaming': CDNStreamingOptions;
   'VirtualBackground': UpdateVirtualBackgroundOptions;
   'Watermark': WatermarkOptions;
@@ -41,7 +42,8 @@ export declare type PluginUpdateOptionsMap = {
   'Beauty': UpdateBeautyOptions;
   'BasicBeauty': BasicBeautyOptions;
   'CrossRoom': UpdateCrossRoomOption;
-	'AudioProcessor': UpdateAudioProcessorOptions;
+  'AudioProcessor': UpdateAudioProcessorOptions;
+  'Debug': UpdateDebugOptions;
 };
 
 export declare type PluginStopOptionsMap = {
@@ -57,7 +59,7 @@ export declare type PluginStopOptionsMap = {
   'Debug': undefined;
   'CrossRoom': StopCrossRoomOption | undefined;
   'SmallStreamAutoSwitcher': undefined;
-	'AudioProcessor': undefined;
+  'AudioProcessor': undefined;
 };
 
 export declare class RtcError extends Error implements RTCErrorInterface {
@@ -390,10 +392,10 @@ export interface PlayoutDelay {
 }
 
 export declare interface SwitchRoomConfig {
-	roomId?: number,
-	strRoomId?: string;
-	privateMapKey?: string;
-	userSig: string;
+  roomId?: number,
+  strRoomId?: string;
+  privateMapKey?: string;
+  userSig: string;
 }
 
 export declare interface ScreenShareConfig {
@@ -486,6 +488,15 @@ export declare const enum TRTCDeviceAction {
   Remove = 'remove',
   Add = 'add',
   Active = 'active'
+}
+export declare interface PermissionOption {
+  request?: boolean;
+  types?: ('camera' | 'microphone')[];
+}
+
+export declare interface PermissionResult {
+  camera: PermissionState | null;
+  microphone: PermissionState | null;
 }
 export declare interface RTCErrorParams {
   code: number;
@@ -639,6 +650,14 @@ export declare interface UpdateAudioMixerOptions {
   seekFrom?: number;
   operation?: 'pause' | 'resume' | 'stop';
 }
+export declare enum DenoiserMode {
+  NORMAL = 0,
+  FAR_FIELD_REDUCTION = 1
+}
+
+export declare interface UpdateDenoiserOptions {
+  mode: DenoiserMode;
+}
 export declare interface StopAudioMixerOptions {
   id: string;
 }
@@ -647,7 +666,26 @@ export declare interface AIDenoiserOptions {
   sdkAppId: number;
   userId: string;
   userSig: string;
+  mode?: DenoiserMode;
 }
+
+export declare interface InitAudioProcessorOptions {
+  assetsPath?: string,
+  sdkAppId: number,
+  userId: string,
+  userSig: string,
+  audioReference?: AudioSource[];
+}
+
+export declare interface UpdateAudioProcessorOptions {
+  audioReference?: AudioSource[];
+}
+
+export declare interface UpdateDebugOptions {
+  visible: boolean
+}
+
+export declare type AudioSource = HTMLAudioElement | MediaStreamAudioTrack | AudioNode;
 
 export declare interface TRTCStatistics {
   rtt: number;
@@ -1176,6 +1214,32 @@ export declare const TRTCEvent: {
    * })
    */
   readonly FIRST_VIDEO_FRAME: 'first-video-frame';
+
+  /**
+   * @since v5.13.0
+   * @description Notification event for device permission changes.
+   * @default 'permission-state-change'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.PERMISSION_STATE_CHANGE, event => {
+   *   console.log(event.camera, event.microphone); // 'granted' | 'denied' | 'prompt' | null. null means the permission is not supported query.
+   * });
+   */
+  readonly PERMISSION_STATE_CHANGE: 'permission-state-change';
+  /**
+   * @since v5.13.0
+   * @description Video size changed event
+   * @default 'video-size-changed'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.VIDEO_SIZE_CHANGED, event => {
+   *    // event.newHeight: video height.
+   *    // event.newWidth: video width.
+   *    // event.streamType: video stream type.
+   *    // event.userId: The user ID of the local or a remote user. If it is empty, it indicates that video is the local video and the local user has not entered the room; if it is not empty, it indicates that video is remote video or local user enter room already.
+   * })
+   */
+  readonly VIDEO_SIZE_CHANGED: 'video-size-changed'
 };
 export declare interface TRTCEventTypes {
   [TRTCEvent.ERROR]: [RtcError];
@@ -1262,6 +1326,22 @@ export declare interface TRTCEventTypes {
     sourceTrack: MediaStreamTrack;
   }];
   [TRTCEvent.CUSTOM_MESSAGE]: [CustomMessage];
+  [TRTCEvent.PERMISSION_STATE_CHANGE]: [{
+    camera: PermissionState;
+    microphone: PermissionState;
+  }];
+  [TRTCEvent.VIDEO_SIZE_CHANGED]: [{
+    newWidth: number;
+    newHeight: number;
+    streamType: TRTCStreamType;
+    userId: string;
+  }];
+  [TRTCEvent.FIRST_VIDEO_FRAME]: [{
+    userId: string;
+    streamType: TRTCStreamType;
+    width: number;
+    height: number;
+  }];
 }
 
 export declare interface CustomMessageData {
@@ -1421,10 +1501,10 @@ export declare class TRTC {
    * await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR, { privateMapKey: 'your new privateMapKey' });
    */
   switchRole(role: UserRole, option?: {
-		privateMapKey?: string;
-		latencyLevel?: number;
-	}): Promise<void>;
-	/**
+    privateMapKey?: string;
+    latencyLevel?: number;
+  }): Promise<void>;
+  /**
    * Switch a video call room.<br>
    * - Switch the video call room that the audience is watching in live scene. It is faster than exit old room and then entering the new room, and can optimize the opening time in live broadcast and other scenarios.
    * - [Contact us](https://trtc.io/contact) to enable this API.
@@ -1460,25 +1540,25 @@ export declare class TRTC {
    *    roomId: 9999 
    * });
    */
-	switchRoom(params: SwitchRoomConfig): Promise<void>;
-	/**
-	 * Destroy the TRTC instance <br/>
-	 *
-	 * After exiting the room, if the business side no longer needs to use trtc, you need to call this interface to destroy the trtc instance in time and release related resources.
-	 *
-	 * Note:
-	 *  - The trtc instance after destruction cannot be used again.
-	 *  - If you have entered the room, you need to call the {@link TRTC#exitRoom TRTC.exitRoom} interface to exit the room successfully before calling this interface to destroy trtc.
-	 *
-	 * @example
-	 * // When the call is over
-	 * await trtc.exitRoom();
-	 * // If the trtc is no longer needed, destroy the trtc and release the reference.
-	 * trtc.destroy();
-	 * trtc = null;
-	 * @throws {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
-	 * @memberof TRTC
-	 */
+  switchRoom(params: SwitchRoomConfig): Promise<void>;
+  /**
+   * Destroy the TRTC instance <br/>
+   *
+   * After exiting the room, if the business side no longer needs to use trtc, you need to call this interface to destroy the trtc instance in time and release related resources.
+   *
+   * Note:
+   *  - The trtc instance after destruction cannot be used again.
+   *  - If you have entered the room, you need to call the {@link TRTC#exitRoom TRTC.exitRoom} interface to exit the room successfully before calling this interface to destroy trtc.
+   *
+   * @example
+   * // When the call is over
+   * await trtc.exitRoom();
+   * // If the trtc is no longer needed, destroy the trtc and release the reference.
+   * trtc.destroy();
+   * trtc = null;
+   * @throws {@link module:ERROR_CODE.OPERATION_FAILED OPERATION_FAILED}
+   * @memberof TRTC
+   */
   destroy(): void;
   /**
    * Start collecting audio from the local microphone and publish it to the current room.
@@ -2192,6 +2272,22 @@ export declare class TRTC {
    * | checkResult.detail.isVp8DecodeSupported    | boolean | Whether the current browser supports VP8 decoding for downlink          |
    */
   static isSupported(): Promise<any>;
+
+  /**
+   * Get the permission state of the camera and microphone. Since v5.13.0+.
+   * @param {PermissionOption} option
+   * @param {boolean} [option.request=true] Whether to request permission to use the camera and microphone.
+   * @param {string[]} [option.types=['camera', 'microphone']] The types of permission to request.
+   * @returns {Promise<PermissionResult>} Promise returns the permission state of the camera and microphone
+   * @example
+   * const { camera, microphone } = await TRTC.getPermissions({
+   *   request: true, // if true, will request permission to use the camera and microphone.
+   *   types: ['camera', 'microphone']
+   * });
+   * console.log(camera, microphone); // 'granted' | 'denied' | 'prompt' | null. null means the permission is not supported query.
+   */
+  static getPermissions(option: PermissionOption): Promise<PermissionResult>;
+
   /**
    * Returns the list of camera devices
    * <br>

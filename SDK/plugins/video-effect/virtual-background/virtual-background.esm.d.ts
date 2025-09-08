@@ -8,17 +8,23 @@ export interface VirtualBackgroundOptions {
     sdkAppId: number;
     userId: string;
     userSig: string;
-    type?: 'image' | 'blur';
+    type?: 'image' | 'blur' | 'color';
     blurLevel?: number;
     src?: string;
     onAbort?: (err:any) => void;
+    enableFaceCentering?: boolean;
+    enableEffectOptimization?: boolean;
+    color?: string | [number, number, number];
 }
 
 
 export interface UpdateVirtualBackgroundOptions {
-    type: 'image' | 'blur';
-    blurLevel?: number;
-    src?: string;
+  type: 'image' | 'blur' | 'color';
+  src?: string;
+  blurLevel?: number;
+  enableFaceCentering?: boolean;
+  enableEffectOptimization?: boolean;
+  color?: string | [number, number, number];
 }
 
 export declare class VirtualBackground {
