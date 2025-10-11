@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/video-mixer",
-  "version": "5.13.0",
+  "version": "5.13.1",
   "description": "TRTC Web SDK 5.x videoMixer plugin",
   "main": "./video-mixer.esm.js",
   "module": "./video-mixer.esm.js",

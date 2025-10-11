@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/chorus",
-  "version": "5.13.0",
+  "version": "5.13.1",
   "description": "TRTC Web SDK 5.x Chorus plugin",
   "main": "./chorus.esm.js",
   "module": "./chorus.esm.js",
