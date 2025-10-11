@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/beauty",
-  "version": "5.13.0",
+  "version": "5.13.1",
   "description": "TRTC Web SDK 5.x beauty plugin",
   "main": "./beauty.esm.js",
   "module": "./beauty.esm.js",

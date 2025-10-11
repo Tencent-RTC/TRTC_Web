@@ -6,15 +6,20 @@ import { Beauty, BeautyOptions, UpdateBeautyOptions } from './plugins/video-effe
 import { BasicBeauty, BasicBeautyOptions } from './plugins/video-effect/basic-beauty';
 import { CrossRoom, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption } from './plugins/cross-room';
 import { CustomEncryption, EncryptionOptions } from './plugins/custom-encryption';
-import { VideoMixerOptions, UpdateVideoMixerOptions, VideoMixer } from './plugins/video-effect/video-mixer'
+import { VideoMixerOptions, UpdateVideoMixerOptions, VideoMixer } from './plugins/video-effect/video-mixer';
 import { SmallStreamAutoSwitcher, SmallStreamAutoSwitcherOptions } from './plugins/small-stream-auto-switcher';
-import { Chorus } from './plugins/chorus';
+import { Chorus, StartChorusOption, UpdateChorusOption } from './plugins/chorus';
 
 export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions };
 type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus;
-export declare type ExperimentalAPIFunctionMap = {
+export type ExperimentalAPIFunctionMap = {
   'enableAudioFrameEvent': EnableAudioFrameEventOptions;
+  'resumeRemotePlayer': RemotePlayerOptions;
+  'pauseRemotePlayer': RemotePlayerOptions;
 }
+
+export interface RemotePlayerOptions { userId: string, streamType?: TRTCStreamType }
+
 export declare type PluginStartOptionsMap = {
   'AudioMixer': AudioMixerOptions;
   'AIDenoiser': AIDenoiserOptions;
@@ -30,6 +35,7 @@ export declare type PluginStartOptionsMap = {
   'CustomEncryption': EncryptionOptions;
   'SmallStreamAutoSwitcher': SmallStreamAutoSwitcherOptions;
   'AudioProcessor': InitAudioProcessorOptions;
+  'Chorus': StartChorusOption;
 };
 
 export declare type PluginUpdateOptionsMap = {
@@ -44,6 +50,7 @@ export declare type PluginUpdateOptionsMap = {
   'CrossRoom': UpdateCrossRoomOption;
   'AudioProcessor': UpdateAudioProcessorOptions;
   'Debug': UpdateDebugOptions;
+  'Chorus': UpdateChorusOption;
 };
 
 export declare type PluginStopOptionsMap = {
@@ -60,6 +67,8 @@ export declare type PluginStopOptionsMap = {
   'CrossRoom': StopCrossRoomOption | undefined;
   'SmallStreamAutoSwitcher': undefined;
   'AudioProcessor': undefined;
+  'CustomEncryption': undefined;
+  'Chorus': undefined;
 };
 
 export declare class RtcError extends Error implements RTCErrorInterface {
@@ -332,6 +341,7 @@ export declare interface TRTCOptions {
   assetsPath?: string;
   volumeType?: number;
   enableAutoSwitchWhenRecapturing?: boolean;
+  enableVolumeControlInIOS?: boolean;
 }
 export interface VideoProfile { width: number, height: number, frameRate: number, bitrate: number; }
 export interface AudioProfile { sampleRate: number, channelCount: number, bitrate: number; }
@@ -682,7 +692,7 @@ export declare interface UpdateAudioProcessorOptions {
 }
 
 export declare interface UpdateDebugOptions {
-  visible: boolean
+  visible: boolean;
 }
 
 export declare type AudioSource = HTMLAudioElement | MediaStreamAudioTrack | AudioNode;
@@ -736,11 +746,11 @@ export declare const enum AutoStartPluginName {
   Debug = 'Debug'
 }
 export declare interface EnableAudioFrameEventOptions {
-  enable: boolean
-  userId: string
-  sampleRate?: number
-  channelCount?: number
-  port?: MessagePort
+  enable: boolean;
+  userId: string;
+  sampleRate?: number;
+  channelCount?: number;
+  port?: MessagePort;
 }
 
 /**
@@ -1239,7 +1249,7 @@ export declare const TRTCEvent: {
    *    // event.userId: The user ID of the local or a remote user. If it is empty, it indicates that video is the local video and the local user has not entered the room; if it is not empty, it indicates that video is remote video or local user enter room already.
    * })
    */
-  readonly VIDEO_SIZE_CHANGED: 'video-size-changed'
+  readonly VIDEO_SIZE_CHANGED: 'video-size-changed';
 };
 export declare interface TRTCEventTypes {
   [TRTCEvent.ERROR]: [RtcError];
