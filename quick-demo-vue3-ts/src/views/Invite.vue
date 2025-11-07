@@ -37,7 +37,7 @@ const store = appStore();
 const sdkAppId = parseInt(getParamKey('sdkAppId'), 10);
 const myUserId = getParamKey('userId');
 const userSig = getParamKey('userSig');
-const roomId = parseInt(getParamKey('roomId'), 10);
+const strRoomId = getParamKey('strRoomId');
 
 const state = { url: window.location.href.split('?')[0] };
 window.history.pushState(state, '', 'index.html#/invite');
@@ -48,15 +48,17 @@ navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) 
   ElMessage({ message: t('permit'), type: 'error' });
 });
 
-if (!sdkAppId || !myUserId || !userSig || !roomId) {
-  ElMessage.error(t('check'));
-}
 const trtc = TRTC.create();
 
 async function handleEnter() {
+  if (!sdkAppId || !myUserId || !userSig || !strRoomId) {
+    ElMessage.error(t('check'));
+    return;
+  }
+
   try {
     await trtc.enterRoom({
-      roomId,
+      strRoomId,
       sdkAppId,
       userId: myUserId,
       userSig,

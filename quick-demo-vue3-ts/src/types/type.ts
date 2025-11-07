@@ -1,7 +1,7 @@
 export interface ClientOptions {
   sdkAppId: number;
   userId: string;
-  roomId: number;
+  strRoomId: string;
   sdkSecretKey?: string;
   userSig?: string;
 }

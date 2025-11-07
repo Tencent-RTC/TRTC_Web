@@ -34,10 +34,9 @@ export default {
         this.infoValue = userId ? userId : `user_${parseInt(Math.random() * 100000000, 10)}`;
         break;
       }
-      case 'roomId': {
-        const roomId = getUrlParam('roomId');
-        this.type = 'number';
-        this.infoValue = roomId ? roomId : parseInt(Math.random() * 100000, 10);
+      case 'strRoomId': {
+        const strRoomId = getUrlParam('strRoomId');
+        this.infoValue = strRoomId ? strRoomId : `room_${parseInt(Math.random() * 100000, 10)}`;
         break;
       }
       case 'sdkAppId': {

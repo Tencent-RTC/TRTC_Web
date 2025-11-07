@@ -12,7 +12,7 @@
         <comp-info-input
           label="userId" @change="handleValueChange($event, 'userId')"></comp-info-input>
         <comp-info-input
-          label="roomId" type="number" @change="handleValueChange($event, 'roomId')"></comp-info-input>
+          label="strRoomId" @change="handleValueChange($event, 'strRoomId')"></comp-info-input>
       </div>
       <div class='alert'>
         <el-alert
@@ -33,7 +33,7 @@
         :sdkAppId="Number(sdkAppId)"
         :sdkSecretKey="sdkSecretKey"
         :userId="userId"
-        :roomId="Number(roomId)"
+        :strRoomId="strRoomId"
         :cameraId="cameraId"
         :microphoneId="microphoneId"></comp-room>
     </div>
@@ -62,7 +62,7 @@ export default {
       sdkAppId: 0,
       sdkSecretKey: '',
       userId: '',
-      roomId: 0,
+      strRoomId: '',
       cameraId: '',
       microphoneId: '',
     };

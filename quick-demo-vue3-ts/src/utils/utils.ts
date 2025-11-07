@@ -19,8 +19,8 @@ export const getParamKey: any = (key: string) => {
   switch (key) {
     case 'userId':
       return `user_${Math.floor(Math.random() * 100000000)}`;
-    case 'roomId':
-      return Math.floor(Math.random() * 100000);
+    case 'strRoomId':
+      return `room_${Math.floor(Math.random() * 100000)}`;
     case 'sdkAppId':
       return undefined;
     case 'sdkSecretKey':

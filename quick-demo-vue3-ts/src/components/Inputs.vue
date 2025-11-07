@@ -20,8 +20,8 @@
         </el-input>
       </el-col>
       <el-col :span="12">
-        <el-input v-model="store.roomId" placeholder="roomID" type='number'>
-          <template #prepend><div class='key'>RoomID</div></template>
+        <el-input v-model="store.strRoomId" placeholder="roomID(String)">
+          <template #prepend><div class='key'>strRoomId</div></template>
         </el-input>
       </el-col>
     </el-row>
@@ -48,7 +48,7 @@ store.$patch({
   sdkAppId: getParamKey('sdkAppId'),
   sdkSecretKey: getParamKey('sdkSecretKey'),
   userId: getParamKey('userId'),
-  roomId: getParamKey('roomId'),
+  strRoomId: getParamKey('strRoomId'),
 });
 const state = { url: window.location.href.split('?')[0] };
 window.history.pushState(state, '', 'index.html#/');

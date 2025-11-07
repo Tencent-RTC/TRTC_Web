@@ -11,7 +11,7 @@
   "device": "Device",
   "operation": "Operation",
   "permit": "Please enable your microphone and camera for current page.",
-  "paramsNeed": "Please enter the correct SDKAppId, SDKSecretKey, userId, roomId!",
+  "paramsNeed": "Please enter the correct SDKAppId, SDKSecretKey, userId, strRoomId!",
   "invite": "Copy the link to invite friends to join the video call, one link can invite only one person, the link will be updated automatically after copying.",
   "inviteUrl": "You are invited to this video chat room!",
   "check": "Please reacquire the invitation link!",

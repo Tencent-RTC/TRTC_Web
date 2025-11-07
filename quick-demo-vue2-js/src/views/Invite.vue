@@ -10,7 +10,7 @@
         :sdkAppId="Number(sdkAppId)"
         :inviteUserSig="userSig"
         :userId="userId"
-        :roomId="Number(roomId)"></comp-room>
+        :strRoomId="strRoomId"></comp-room>
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
       sdkAppId: 0,
       userSig: '',
       userId: '',
-      roomId: 0,
+      strRoomId: '',
     };
   },
   components: {
@@ -38,7 +38,7 @@ export default {
     this.sdkAppId = Number(getUrlParam('sdkAppId'));
     this.userSig = getUrlParam('userSig');
     this.userId = getUrlParam('userId');
-    this.roomId = Number(getUrlParam('roomId'));
+    this.strRoomId = getUrlParam('strRoomId');
     clearUrlParam();
   },
 };

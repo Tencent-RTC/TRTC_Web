@@ -90,8 +90,8 @@
 
   const userId = getQueryString('userId');
   const sdkAppId = parseInt(getQueryString('sdkAppId'));
-  const userSig = getQueryString('userSIg');
-  const roomId = parseInt(getQueryString('roomId'));
+  const userSig = getQueryString('userSig');
+  const strRoomId = getQueryString('strRoomId');
   if (!userId || !sdkAppId || !userSig) {
     const origin = window.location.origin;
     const pathname = window.location.pathname.replace('invite/invite.html', 'index.html');
@@ -112,7 +112,7 @@
       removeStreamView(elementId);
       trtc.stopRemoteVideo({ userId, streamType: TRTC.TYPE.STREAM_TYPE_MAIN});
     });
-    await trtc.enterRoom({ roomId, sdkAppId, userId, userSig })
+    await trtc.enterRoom({ strRoomId, sdkAppId, userId, userSig })
     await trtc.startLocalAudio();
     await trtc.startLocalVideo({
       view: document.getElementById('local'),

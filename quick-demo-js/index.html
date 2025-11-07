@@ -42,16 +42,26 @@
     <img class='en' src='https://web.sdk.qcloud.com/trtc/webrtc/assets/trtcio-headlogo.png' style='height: 100%' />
     <div style='display: flex;align-items: center;'>
       <span id='document'>
-        <span class="en"> <a style="color: white;" href="https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-11-basic-video-call.html" target="_blank" rel="noopener noreferrer">Documentation</a></span>
-        <span class="zh-cn"><a style="color: white" href="https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-11-basic-video-call.html" target="_blank" rel="noopener noreferrer">文档</a></span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-external-link">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
-          <path d="M11 13l9 -9" />
-          <path d="M15 4h5v5" />
-        </svg>
+        <span class="en"> <a style="color: white;"
+            href="https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-11-basic-video-call.html" target="_blank"
+            rel="noopener noreferrer">Documentation <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-external-link">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
+              <path d="M11 13l9 -9" />
+              <path d="M15 4h5v5" />
+            </svg></a></span>
+        <span class="zh-cn"><a style="color: white"
+            href="https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/zh-cn/tutorial-11-basic-video-call.html" target="_blank"
+            rel="noopener noreferrer">文档 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-external-link">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
+              <path d="M11 13l9 -9" />
+              <path d="M15 4h5v5" />
+            </svg></a></span>
       </span>
       <div id='language'>中/En</div>
       <a target="_blank" class='github' id="github" href='https://github.com/LiteAVSDK/TRTC_Web'>
@@ -209,17 +219,18 @@
             <input id='userId' type='text' class='form-control' placeholder='userId'>
           </div>
           <div class='mb-3 input-group input-group-sm'>
-            <span class='input-group-text'>RoomId</span>
-            <input id='roomId' type='number' min='1' max='4294967294' class='form-control' placeholder='roomId'>
+            <span class='input-group-text'>RoomId(String)</span>
+            <input id='strRoomId' type='text' class='form-control' placeholder='roomId(string)'>
           </div>
         </div>
         <div class="alert alert-danger" role="alert">
           <span class='en'>Notes: this Demo is only applicable for debugging. Before official launch, please migrate the
             UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the
-            leakage of encryption key. <a target="_blank" href='https://trtc.io/document/35166?platform=web&product=rtcengine&menulabel=sdk'>View
+            leakage of encryption key. <a target="_blank"
+              href='https://trtc.io/document/35166?platform=web&product=rtcengine&menulabel=sdk'>View
               Documents</a></span>
-          <span class='zh-cn' id="user-sig-doc">注意️：本 Demo 仅用于调试，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。<a target="_blank"
-              href='https://cloud.tencent.com/document/product/647/17275'>查看文档</a></span>
+          <span class='zh-cn' id="user-sig-doc">注意️：本 Demo 仅用于调试，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。<a
+              target="_blank" href='https://cloud.tencent.com/document/product/647/17275'>查看文档</a></span>
         </div>
         <h1 style='font-size: 14px'>
           <span class='en'>Device</span>

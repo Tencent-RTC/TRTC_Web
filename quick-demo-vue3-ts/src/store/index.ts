@@ -5,7 +5,7 @@ const appStore = defineStore('app', {
   state: () => ({
     sdkAppId: '',
     userId: '',
-    roomId: '',
+    strRoomId: '',
     sdkSecretKey: '',
     userSig: '',
     audioDeviceId: '',
@@ -19,7 +19,7 @@ const appStore = defineStore('app', {
   getters: {},
   actions: {
     getInitParamsStates() {
-      return !!(this.sdkAppId && this.sdkSecretKey && this.roomId && this.userId);
+      return !!(this.sdkAppId && this.sdkSecretKey && this.strRoomId && this.userId);
     },
     getUserSig() {
       return this.userSig || genTestUserSig({
@@ -37,7 +37,7 @@ const appStore = defineStore('app', {
       });
       const { origin } = window.location;
       const { pathname } = window.location;
-      return `${origin}${pathname}#/invite?userSig=${userSig}&&SDKAppId=${this.sdkAppId}&&userId=${userId}&&roomId=${this.roomId}`;
+      return `${origin}${pathname}#/invite?userSig=${userSig}&&SDKAppId=${this.sdkAppId}&&userId=${userId}&&strRoomId=${this.strRoomId}`;
     },
     addSuccessLog(str: string) {
       this.logs.push({

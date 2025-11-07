@@ -27,7 +27,7 @@ export default {
       this.initTRTC();
       try {
         await this.trtc.enterRoom({
-          roomId: this.roomId,
+          strRoomId: this.strRoomId,
           sdkAppId: parseInt(this.sdkAppId, 10),
           userId: this.userId,
           userSig: this.userSig,
@@ -37,11 +37,11 @@ export default {
         this.installEventHandlers();
         this.startGetAudioLevel();
         this.reportSuccessEvent('enterRoom');
-        this.addSuccessLog(`Enter room [${this.roomId}] success.`);
+        this.addSuccessLog(`Enter room [${this.strRoomId}] success.`);
       } catch (error) {
         this.roomStatus = 'exited';
         console.error('enterRoom room failed', error);
-        this.addFailedLog(`Enter room ${this.roomId} failed, please check your params. Error: ${error.message}`);
+        this.addFailedLog(`Enter room ${this.strRoomId} failed, please check your params. Error: ${error.message}`);
         this.reportFailedEvent('enterRoom', error);
         throw error;
       }

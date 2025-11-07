@@ -3,8 +3,8 @@
 
 document.getElementById('sdkAppId').value = getQueryString('sdkAppId');
 document.getElementById('sdkSecretKey').value = getQueryString('sdkSecretKey');
-document.getElementById('userId').value = getQueryString('userId') || Math.floor(Math.random() * 1000000);
-document.getElementById('roomId').value = getQueryString('roomId') || Math.floor(Math.random() * 1000);
+document.getElementById('userId').value = getQueryString('userId') || 'user_' + Math.floor(Math.random() * 1000000);
+document.getElementById('strRoomId').value = getQueryString('strRoomId') || 'room_' + Math.floor(Math.random() * 1000);
 const state = { url:window.location.href.split("?")[0] };
 window.history.pushState(state,'', 'index.html');
 
@@ -13,7 +13,7 @@ window.isIframe = window.self !== window.top;
 // --------global variables----------
 let sdkAppId;
 let sdkSecretKey;
-let roomId;
+let strRoomId;
 let trtc = TRTC.create()
 
 let userId;
@@ -56,7 +56,7 @@ TRTC.isSupported().then((checkResult) => {
 function initParams() {
 	sdkAppId = parseInt(document.getElementById('sdkAppId').value);
 	sdkSecretKey = document.getElementById('sdkSecretKey').value;
-	roomId = parseInt(document.getElementById('roomId').value);
+	strRoomId = document.getElementById('strRoomId').value;
 	userId = document.getElementById('userId').value;
 	shareUserId = 'share_' + userId;
 	cameraId = document.getElementById('camera-select').value;
@@ -69,14 +69,14 @@ function initParams() {
 		ext3: window.isIframe ? 'iframe' : '',
 	});
 
-	if (!(sdkAppId && sdkSecretKey && roomId && userId)) {
+	if (!(sdkAppId && sdkSecretKey && strRoomId && userId)) {
 		if (window.lang_ === 'zh-cn') {
-			alert('请检查参数 SDKAppId, SDKSecretKey, userId, roomId 是否输入正确！');
+			alert('请检查参数 SDKAppId, SDKSecretKey, userId, strRoomId 是否输入正确！');
 		} else if (window.lang_ === 'en') {
-			alert('Please fill in the correct SDKAppId, SDKSecretKey, userId, roomId!');
+			alert('Please fill in the correct SDKAppId, SDKSecretKey, userId, strRoomId!');
 		}
 
-		throw new Error('Please fill in the correct SDKAppId, SDKSecretKey, userId, roomId');
+		throw new Error('Please fill in the correct SDKAppId, SDKSecretKey, userId, strRoomId');
 	}
 }
 
@@ -86,7 +86,7 @@ async function enterRoom() {
 	setButtonLoading('enter', true);
 	try {
 		const { userSig } = genTestUserSig({ sdkAppId, userId, sdkSecretKey });
-		await trtc.enterRoom({ roomId, sdkAppId, userId, userSig })
+		await trtc.enterRoom({ strRoomId, sdkAppId, userId, userSig })
 		reportSuccessEvent('enterRoom', sdkAppId)
 		refreshLink()
 		invite.style.display = 'flex';
@@ -393,7 +393,7 @@ function createShareLink() {
 	const { userSig } = genTestUserSig({ sdkAppId, userId, sdkSecretKey });
 	const { origin } = window.location;
 	const pathname = window.location.pathname.replace('index.html', 'invite/invite.html');
-	return `${origin}${pathname}?userSig=${userSig}&&SDKAppId=${sdkAppId}&&userId=${userId}&&roomId=${roomId}`;
+	return `${origin}${pathname}?userSig=${userSig}&&SDKAppId=${sdkAppId}&&userId=${userId}&&strRoomId=${strRoomId}`;
 }
 
 let clipboard = new ClipboardJS('#inviteBtn');
