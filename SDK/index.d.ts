@@ -444,6 +444,7 @@ export declare interface RemoteVideoConfig {
     viewRoot?: HTMLElement;
     canvasRender?: boolean;
     poster?: string;
+    draggable?:boolean;
   };
 }
 export declare interface StopRemoteVideoConfig {
@@ -459,7 +460,7 @@ export declare interface LocalAudioConfig {
     audioTrack?: MediaStreamTrack;
     captureVolume?: number;
     earMonitorVolume?: number;
-    echoCancellation?: boolean;
+    echoCancellation?: boolean | 'remote-only' | 'all';
     autoGainControl?: boolean;
     noiseSuppression?: boolean;
   };
