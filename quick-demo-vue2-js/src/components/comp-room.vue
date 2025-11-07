@@ -142,7 +142,7 @@ export default {
     sdkAppId: Number,
     sdkSecretKey: String,
     userId: String,
-    roomId: Number,
+    strRoomId: String,
     cameraId: String,
     microphoneId: String,
     inviteUserSig: String,
@@ -181,11 +181,11 @@ export default {
       if (!this.isHostMode) {
         return;
       }
-      const { sdkAppId, sdkSecretKey, roomId } = this;
+      const { sdkAppId, sdkSecretKey, strRoomId } = this;
       const inviteUserId = `user_${parseInt(Math.random() * 100000000, 10)}`;
       const userSigGenerator = new LibGenerateTestUserSig(sdkAppId, sdkSecretKey, 604800);
       const inviteUserSig = userSigGenerator.genTestUserSig(inviteUserId);
-      this.inviteLink = encodeURI(`${location.origin}${location.pathname}#/invite?sdkAppId=${sdkAppId}&userSig=${inviteUserSig}&roomId=${roomId}&userId=${inviteUserId}`);
+      this.inviteLink = encodeURI(`${location.origin}${location.pathname}#/invite?sdkAppId=${sdkAppId}&userSig=${inviteUserSig}&strRoomId=${strRoomId}&userId=${inviteUserId}`);
     },
     handleCopyInviteLink() {
       navigator.clipboard.writeText(this.inviteLink);
@@ -201,14 +201,14 @@ export default {
           alert(this.$t('Please enter sdkAppId and sdkSecretKey'));
           return;
         }
-        if (!this.userId || !this.roomId) {
-          alert(this.$t('Please enter userId and roomId'));
+        if (!this.userId || !this.strRoomId) {
+          alert(this.$t('Please enter userId and strRoomId'));
           return;
         }
         const userSigGenerator = new LibGenerateTestUserSig(this.sdkAppId, this.sdkSecretKey, 604800);
         this.userSig = userSigGenerator.genTestUserSig(this.userId);
       } else {
-        if (!this.sdkAppId || !this.inviteUserSig || !this.userId || !this.roomId) {
+        if (!this.sdkAppId || !this.inviteUserSig || !this.userId || !this.strRoomId) {
           alert(this.$t('Please reacquire the invitation link'));
           return;
         }
@@ -291,7 +291,7 @@ export default {
     reportFailedEvent(name, error, type = 'rtc') {
       this.$aegis?.reportEvent({
         name,
-        ext1: `${name}-failed#${this.roomId}*${type === 'share' ? this.shareUserId : this.userId}*${error.message}`,
+        ext1: `${name}-failed#${this.strRoomId}*${type === 'share' ? this.shareUserId : this.userId}*${error.message}`,
         ext2: this.$DEMOKEY,
         ext3: 0
       });
@@ -431,7 +431,7 @@ export default {
     "Start Screen Share": "Start Screen Share",
     "Stop Screen Share": "Stop Screen Share",
     "Please enter sdkAppId and sdkSecretKey": "Please enter sdkAppId and sdkSecretKey",
-    "Please enter userId and roomId": "Please enter userId and roomId",
+    "Please enter userId and strRoomId": "Please enter userId and strRoomId",
     "Please reacquire the invitation link": "Please reacquire the invitation link!"
 	},
 	"zh-cn": {
@@ -445,7 +445,7 @@ export default {
     "Start Screen Share": "开始共享屏幕",
     "Stop Screen Share": "停止共享屏幕",
     "Please enter sdkAppId and sdkSecretKey": "请输入 sdkAppId 和 sdkSecretKey",
-    "Please enter userId and roomId": "请输入 userId 和 roomId",
+    "Please enter userId and strRoomId": "请输入 userId 和 strRoomId",
     "Please reacquire the invitation link": "请重新获取邀请链接！"
 	}
 }

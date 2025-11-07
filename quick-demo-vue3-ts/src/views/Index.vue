@@ -91,7 +91,7 @@ function reportSuccessEvent(name: string) {
 function reportFailedEvent(name: string, message: string) {
   $aegis?.reportEvent({
     name,
-    ext1: `${name}-failed#${store.roomId}**${store.userId}*${message}`,
+    ext1: `${name}-failed#${store.strRoomId}**${store.userId}*${message}`,
     ext2: $aegis?.DEMOKEY,
     ext3: 0,
   });
@@ -200,7 +200,7 @@ async function handleEnter() {
   roomStatus.value = 'entering';
   try {
     await trtc.enterRoom({
-      roomId: parseInt(store.roomId, 10),
+      strRoomId: store.strRoomId,
       sdkAppId: parseInt(store.sdkAppId, 10),
       userId: store.userId,
       userSig: store.getUserSig(),
@@ -214,11 +214,11 @@ async function handleEnter() {
     await handleStartLocalAudio();
     await handleStartLocalVideo();
 
-    addSuccessLog(`[${store.userId}] enter room [${store.roomId}] success`);
+    addSuccessLog(`[${store.userId}] enter room [${store.strRoomId}] success`);
     reportSuccessEvent('enterRoom');
   } catch (error: any) {
     roomStatus.value = 'stopped';
-    addFailedLog(`Enter room ${store.roomId} failed. Error: ${error.message}`);
+    addFailedLog(`Enter room ${store.strRoomId} failed. Error: ${error.message}`);
     reportFailedEvent('enterRoom', error.message);
   }
 }

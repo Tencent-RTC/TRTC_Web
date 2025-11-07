@@ -6,6 +6,7 @@
     "start": "npm install && npm run serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "dev": "vue-cli-service serve",
     "lint": "eslint ./src",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "lint:fix": "vue-cli-service lint"
