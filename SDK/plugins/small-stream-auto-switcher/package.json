@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/small-stream-auto-switcher",
-  "version": "5.14.0",
+  "version": "5.14.1",
   "description": "",
   "main": "./small-stream-auto-switcher.esm.js",
   "keywords": [],
