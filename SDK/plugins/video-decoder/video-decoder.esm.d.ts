@@ -31,4 +31,5 @@ export declare class TRTCVideoDecoder implements IPlugin {
   stop(option: StopOption): void;
   update(option: UpdateOption): void;
 }
-export { };
+
+export default TRTCVideoDecoder;

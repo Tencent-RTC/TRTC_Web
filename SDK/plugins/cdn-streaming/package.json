@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/cdn-streaming",
-  "version": "5.14.1",
+  "version": "5.15.0",
   "description": "TRTC Web SDK 5.x CDN streaming plugin",
   "main": "./cdn-streaming.esm.js",
   "module": "./cdn-streaming.esm.js",

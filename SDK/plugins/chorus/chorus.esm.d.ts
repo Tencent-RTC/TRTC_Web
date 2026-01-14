@@ -11,3 +11,5 @@ export declare class Chorus {
   update(option: any): Promise<void>;
   stop(option?: any): Promise<void>;
 }
+
+export default Chorus;
