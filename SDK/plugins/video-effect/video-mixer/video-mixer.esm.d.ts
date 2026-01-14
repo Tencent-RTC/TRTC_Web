@@ -43,6 +43,7 @@ export interface ScreenSource {
   captureElement?: HTMLElement;
   preferDisplaySurface?: 'current-tab' | 'tab' | 'window' | 'monitor';
   layout: LayerOption;
+  systemAudio?: boolean;
 }
 export interface TextSource {
   id: string;
@@ -81,6 +82,7 @@ export interface MixFailedDetail {
 
 export interface MixParseResult {
   track: MediaStreamVideoTrack;
+  systemAudioTrackList: Record<string, MediaStreamAudioTrack>;
   result: {
     successOptions: VideoMixerOptions | UpdateVideoMixerOptions;
     failedDetails: MixFailedDetail[];

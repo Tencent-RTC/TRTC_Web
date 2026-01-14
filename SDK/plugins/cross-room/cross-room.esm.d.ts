@@ -25,3 +25,5 @@ export declare class CrossRoom {
   update(option: UpdateCrossRoomOption): Promise<void>;
   stop(option?: StopCrossRoomOption): Promise<void>;
 }
+
+export default CrossRoom;

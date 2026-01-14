@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/virtual-background",
-  "version": "5.14.1",
+  "version": "5.15.0",
   "description": "TRTC Web SDK 5.x virtual background plugin",
   "main": "./virtual-background.esm.js",
   "module": "./virtual-background.esm.js",

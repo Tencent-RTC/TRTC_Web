@@ -9,9 +9,10 @@ import { CustomEncryption, EncryptionOptions } from './plugins/custom-encryption
 import { VideoMixerOptions, UpdateVideoMixerOptions, VideoMixer } from './plugins/video-effect/video-mixer';
 import { SmallStreamAutoSwitcher, SmallStreamAutoSwitcherOptions } from './plugins/small-stream-auto-switcher';
 import { Chorus, StartChorusOption, UpdateChorusOption } from './plugins/chorus';
+import { LEBPlayer, StartLEBPlayerOption, UpdateLEBPlayerOption } from './plugins/lebplayer';
 
 export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions };
-type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus;
+type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus | typeof LEBPlayer;
 export type ExperimentalAPIFunctionMap = {
   'enableAudioFrameEvent': EnableAudioFrameEventOptions;
   'resumeRemotePlayer': RemotePlayerOptions;
@@ -36,6 +37,7 @@ export declare type PluginStartOptionsMap = {
   'SmallStreamAutoSwitcher': SmallStreamAutoSwitcherOptions;
   'AudioProcessor': InitAudioProcessorOptions;
   'Chorus': StartChorusOption;
+  'LEBPlayer': StartLEBPlayerOption;
 };
 
 export declare type PluginUpdateOptionsMap = {
@@ -51,6 +53,7 @@ export declare type PluginUpdateOptionsMap = {
   'AudioProcessor': UpdateAudioProcessorOptions;
   'Debug': UpdateDebugOptions;
   'Chorus': UpdateChorusOption;
+  'LEBPlayer': UpdateLEBPlayerOption;
 };
 
 export declare type PluginStopOptionsMap = {
@@ -69,6 +72,7 @@ export declare type PluginStopOptionsMap = {
   'AudioProcessor': undefined;
   'CustomEncryption': undefined;
   'Chorus': undefined;
+  'LEBPlayer': undefined;
 };
 
 export declare class RtcError extends Error implements RTCErrorInterface {
@@ -331,6 +335,13 @@ export declare const enum BannedReason {
   ROOM_DISBAND = 'room_disband'
 }
 
+export declare const enum PEER_LEAVE_REASON {
+  NORMAL_LEAVE = 'normal leave',
+  TIMEOUT_LEAVE = 'timeout leave',
+  KICK = 'kick',
+  ROLE_CHANGE = 'role change'
+}
+
 export declare type PluginWithAssets = {
   plugin: TRTCPlugin;
   assetsPath?: string;
@@ -338,6 +349,7 @@ export declare type PluginWithAssets = {
 export declare interface TRTCOptions {
   plugins?: Array<TRTCPlugin>;
   enableSEI?: boolean;
+  enableAutoPlayDialog?: boolean;
   assetsPath?: string;
   volumeType?: number;
   enableAutoSwitchWhenRecapturing?: boolean;
@@ -411,6 +423,7 @@ export declare interface SwitchRoomConfig {
 export declare interface ScreenShareConfig {
   view?: string | HTMLElement | HTMLElement[] | null;
   publish?: boolean;
+  streamType?: TRTCStreamType;
   muteSystemAudio?: boolean;
   option?: {
     profile?: keyof typeof screenProfileMap | VideoProfile;
@@ -430,6 +443,8 @@ export declare interface UpdateScreenShareConfig extends ScreenShareConfig {
   option?: {
     fillMode?: 'contain' | 'cover' | 'fill';
     qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
+    audioTrack?: MediaStreamTrack;
+    videoTrack?: MediaStreamTrack;
   };
 }
 export declare interface RemoteVideoConfig {
@@ -445,6 +460,8 @@ export declare interface RemoteVideoConfig {
     canvasRender?: boolean;
     poster?: string;
     draggable?:boolean;
+    pictureInPicture?: boolean;
+    fullScreen?: boolean;
   };
 }
 export declare interface StopRemoteVideoConfig {
@@ -503,6 +520,30 @@ export declare const enum TRTCDeviceAction {
 export declare interface PermissionOption {
   request?: boolean;
   types?: ('camera' | 'microphone')[];
+}
+
+export declare interface RealtimeTranscriberStateEvent {
+  state: 'started' | 'stopped';
+  roomId: string | number;
+  transcriberRobotId: string;
+  sourceLanguage?: string;
+  error?: number;
+  errorMessage?: string;
+}
+
+export declare interface TranslationText {
+  language: string;
+  text: string;
+}
+
+export declare interface RealtimeTranscriberMessageEvent {
+  segmentId: string;
+  speakerUserId: string;
+  sourceText: string;
+  translationTexts: TranslationText[];
+  timestamp: number;
+  isCompleted: boolean;
+  robotId: string;
 }
 
 export declare interface PermissionResult {
@@ -1038,6 +1079,9 @@ export declare const TRTCEvent: {
    * trtc.on(TRTC.EVENT.CONNECTION_STATE_CHANGED, event => {
    *   const prevState = event.prevState;
    *   const curState = event.state;
+   *   if (curState === 'CONNECTING') {
+   *     const isReconnecting = event.isReconnecting;
+   *   }
    * });
    */
   readonly CONNECTION_STATE_CHANGED: 'connection-state-changed';
@@ -1251,6 +1295,55 @@ export declare const TRTCEvent: {
    * })
    */
   readonly VIDEO_SIZE_CHANGED: 'video-size-changed';
+  /**
+   * @since v5.15.0
+   * @description Realtime transcriber message
+   * @default 'realtime-transcriber-message'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.REALTIME_TRANSCRIBER_MESSAGE, event => {
+   *    // event.data: custom message data, type is ArrayBuffer.
+   * })
+   */
+  readonly REALTIME_TRANSCRIBER_MESSAGE: 'realtime-transcriber-message';
+  /**
+   * @since v5.15.0
+   * @description Realtime transcriber state changed
+   * @default 'realtime-transcriber-state-changed'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.REALTIME_TRANSCRIBER_STATE_CHANGED, event => {
+   *    // event.state: transcriber state.
+   * })
+   */
+  readonly REALTIME_TRANSCRIBER_STATE_CHANGED: 'realtime-transcriber-state-changed';
+  /**
+   * @since v5.15.0
+   * @description Picture in picture state change event
+   * @default 'picture-in-picture-state-changed'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.PICTURE_IN_PICTURE_STATE_CHANGED, event => {
+   *    // event.userId: userId.
+   *    // event.streamType: video stream type.
+   *    // event.isPictureInPicture: is in picture in picture.
+   *    // event.pictureInPictureWindow: Exist when isPictureInPicture is true. See: https://developer.mozilla.org/en-US/docs/Web/API/PictureInPictureWindow
+   * })
+   */
+  readonly PICTURE_IN_PICTURE_STATE_CHANGED: 'picture-in-picture-state-changed',
+  /**
+   * @since v5.15.0
+   * @description Full screen state change event
+   * @default 'full-screen-state-changed'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.FULL_SCREEN_STATE_CHANGED, event => {
+   *    // event.userId: userId.
+   *    // event.streamType: video stream type.
+   *    // event.isFullScreen: is in full screen.
+   * })
+   */
+  readonly FULL_SCREEN_STATE_CHANGED: 'full-screen-state-changed'
 };
 export declare interface TRTCEventTypes {
   [TRTCEvent.ERROR]: [RtcError];
@@ -1267,6 +1360,7 @@ export declare interface TRTCEventTypes {
   }];
   [TRTCEvent.REMOTE_USER_EXIT]: [{
     userId: string;
+    reason?: keyof typeof PEER_LEAVE_REASON; 
   }];
   [TRTCEvent.REMOTE_AUDIO_AVAILABLE]: [{
     userId: string;
@@ -1296,6 +1390,7 @@ export declare interface TRTCEventTypes {
   [TRTCEvent.CONNECTION_STATE_CHANGED]: [{
     prevState: ConnectionState;
     state: ConnectionState;
+    isReconnecting?: boolean;
   }];
   [TRTCEvent.AUDIO_PLAY_STATE_CHANGED]: [{
     userId: string;
@@ -1353,6 +1448,23 @@ export declare interface TRTCEventTypes {
     width: number;
     height: number;
   }];
+  [TRTCEvent.REALTIME_TRANSCRIBER_MESSAGE]: [RealtimeTranscriberMessageEvent];
+  [TRTCEvent.REALTIME_TRANSCRIBER_STATE_CHANGED]: [RealtimeTranscriberStateEvent];
+  [TRTCEvent.PICTURE_IN_PICTURE_STATE_CHANGED]: [PictureInPictureStateChangedEvent];
+  [TRTCEvent.FULL_SCREEN_STATE_CHANGED]: [FullScreenStateChangedEvent]
+}
+
+export interface PictureInPictureStateChangedEvent {
+    userId: string;
+    streamType: TRTCStreamType;
+    isPictureInPicture: boolean;
+    pictureInPictureWindow?: PictureInPictureWindow;
+}
+
+export interface FullScreenStateChangedEvent {
+    userId: string;
+    streamType: TRTCStreamType;
+    isFullScreen: boolean;
 }
 
 export declare interface CustomMessageData {
