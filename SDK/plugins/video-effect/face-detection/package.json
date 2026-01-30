@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/face-detection",
-  "version": "5.15.0",
+  "version": "5.15.2",
   "description": "TRTC Web SDK 5.x face detection plugin",
   "main": "./face-detection.esm.js",
   "module": "./face-detection.esm.js",
