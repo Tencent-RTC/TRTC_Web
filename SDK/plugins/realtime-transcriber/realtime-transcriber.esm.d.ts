@@ -1,12 +1,12 @@
 export interface StartRealtimeTranscriberOption {
-  roomId?: number,
-  strRoomId?: string,
-  userId?: string
+  sourceLanguage: string;
+  translationLanguages?: string | string[];
+  userIdsToTranscribe?: string | string[]; // 默认: 'all'
+  transcriberRobotId?: string;
 }
 
 export interface StopRealtimeTranscriberOption {
-  roomId?: number,
-  strRoomId?: string,
+  transcriberRobotId: string;
 }
 
 

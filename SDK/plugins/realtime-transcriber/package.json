@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/realtime-transcriber",
-  "version": "5.15.0",
+  "version": "5.15.2",
   "description": "TRTC Web SDK 5.x Realtime Transcriber plugin",
   "main": "./realtime-transcriber.esm.js",
   "module": "./realtime-transcriber.esm.js",

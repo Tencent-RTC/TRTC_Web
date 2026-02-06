@@ -10,15 +10,21 @@ import { VideoMixerOptions, UpdateVideoMixerOptions, VideoMixer } from './plugin
 import { SmallStreamAutoSwitcher, SmallStreamAutoSwitcherOptions } from './plugins/small-stream-auto-switcher';
 import { Chorus, StartChorusOption, UpdateChorusOption } from './plugins/chorus';
 import { LEBPlayer, StartLEBPlayerOption, UpdateLEBPlayerOption } from './plugins/lebplayer';
+import { RealtimeTranscriber, StartRealtimeTranscriberOption, StopRealtimeTranscriberOption } from './plugins/realtime-transcriber';
 
-export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions };
-type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus | typeof LEBPlayer;
+export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions, StartRealtimeTranscriberOption, StopRealtimeTranscriberOption };
+type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus | typeof LEBPlayer | typeof RealtimeTranscriber;
+
 export type ExperimentalAPIFunctionMap = {
   'enableAudioFrameEvent': EnableAudioFrameEventOptions;
   'resumeRemotePlayer': RemotePlayerOptions;
   'pauseRemotePlayer': RemotePlayerOptions;
+  'requestPictureInPicture': RequestPictureInPictureOptions;
+  'requestFullScreen': RequestFullScreenOptions;
 }
 
+export interface RequestPictureInPictureOptions { enable: boolean }
+export interface RequestFullScreenOptions { enable: boolean }
 export interface RemotePlayerOptions { userId: string, streamType?: TRTCStreamType }
 
 export declare type PluginStartOptionsMap = {
@@ -38,6 +44,7 @@ export declare type PluginStartOptionsMap = {
   'AudioProcessor': InitAudioProcessorOptions;
   'Chorus': StartChorusOption;
   'LEBPlayer': StartLEBPlayerOption;
+  'RealtimeTranscriber': StartRealtimeTranscriberOption;
 };
 
 export declare type PluginUpdateOptionsMap = {
@@ -73,6 +80,7 @@ export declare type PluginStopOptionsMap = {
   'CustomEncryption': undefined;
   'Chorus': undefined;
   'LEBPlayer': undefined;
+  'RealtimeTranscriber': StopRealtimeTranscriberOption;
 };
 
 export declare class RtcError extends Error implements RTCErrorInterface {
@@ -336,12 +344,11 @@ export declare const enum BannedReason {
 }
 
 export declare const enum PEER_LEAVE_REASON {
-  NORMAL_LEAVE = 'normal leave',
-  TIMEOUT_LEAVE = 'timeout leave',
-  KICK = 'kick',
-  ROLE_CHANGE = 'role change'
+  NORMAL_LEAVE = 0,
+  TIMEOUT_LEAVE = 1,
+  KICK = 2,
+  ROLE_CHANGE = 3
 }
-
 export declare type PluginWithAssets = {
   plugin: TRTCPlugin;
   assetsPath?: string;
@@ -1360,7 +1367,7 @@ export declare interface TRTCEventTypes {
   }];
   [TRTCEvent.REMOTE_USER_EXIT]: [{
     userId: string;
-    reason?: keyof typeof PEER_LEAVE_REASON; 
+    reason?: PEER_LEAVE_REASON; 
   }];
   [TRTCEvent.REMOTE_AUDIO_AVAILABLE]: [{
     userId: string;
