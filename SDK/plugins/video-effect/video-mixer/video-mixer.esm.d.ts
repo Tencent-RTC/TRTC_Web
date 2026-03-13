@@ -35,6 +35,7 @@ export interface CameraSource {
   videoTrack?: MediaStreamTrack;
   profile?: keyof typeof videoProfileMap | VideoProfile;
   layout: LayerOption;
+  useInternalTrack?: boolean;
 }
 export interface ScreenSource {
   // 参数与 startScreenShare 对齐
@@ -44,6 +45,9 @@ export interface ScreenSource {
   preferDisplaySurface?: 'current-tab' | 'tab' | 'window' | 'monitor';
   layout: LayerOption;
   systemAudio?: boolean;
+  videoTrack?: MediaStreamTrack;
+  audioTrack?: MediaStreamTrack;
+  useInternalTrack?: boolean;
 }
 export interface TextSource {
   id: string;
