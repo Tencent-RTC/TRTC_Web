@@ -14,6 +14,17 @@ import { RealtimeTranscriber, StartRealtimeTranscriberOption, StopRealtimeTransc
 
 export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions, StartRealtimeTranscriberOption, StopRealtimeTranscriberOption };
 type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus | typeof LEBPlayer | typeof RealtimeTranscriber;
+export interface PlaybackQualityStream {
+  name: string;
+  userId: string;
+  streamType?: TRTCStreamType;
+  bitrate: number;
+}
+
+export interface SwitchPlaybackQualityOptions {
+  quality?: string;
+  streamList?: PlaybackQualityStream[];
+}
 
 export type ExperimentalAPIFunctionMap = {
   'enableAudioFrameEvent': EnableAudioFrameEventOptions;
@@ -21,11 +32,17 @@ export type ExperimentalAPIFunctionMap = {
   'pauseRemotePlayer': RemotePlayerOptions;
   'requestPictureInPicture': RequestPictureInPictureOptions;
   'requestFullScreen': RequestFullScreenOptions;
+  'switchPlaybackQuality': SwitchPlaybackQualityOptions;
+  'preconnect': PreconnectParams;
 }
 
 export interface RequestPictureInPictureOptions { enable: boolean }
 export interface RequestFullScreenOptions { enable: boolean }
 export interface RemotePlayerOptions { userId: string, streamType?: TRTCStreamType }
+interface EnablePreconnectParams { enable: true; userId: string; userSig: string; sdkAppId: number; }
+interface ClosePreconnectParams { enable: false; userId?: never; userSig?: never; sdkAppId?: never;
+}
+export type PreconnectParams = EnablePreconnectParams | ClosePreconnectParams;
 
 export declare type PluginStartOptionsMap = {
   'AudioMixer': AudioMixerOptions;
@@ -367,6 +384,7 @@ export interface AudioProfile { sampleRate: number, channelCount: number, bitrat
 export declare interface LocalVideoConfig {
   view?: string | HTMLElement | HTMLElement[] | null;
   publish?: boolean;
+  forcePublish?: boolean;
   mute?: boolean | string;
   option?: {
     cameraId?: string;
@@ -443,6 +461,7 @@ export declare interface ScreenShareConfig {
     videoTrack?: MediaStreamTrack;
     captureElement?: HTMLElement;
     preferDisplaySurface?: 'current-tab' | 'tab' | 'window' | 'monitor';
+    selfBrowserSurface?: 'include' | 'exclude';
     qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
   };
 }
@@ -477,7 +496,8 @@ export declare interface StopRemoteVideoConfig {
 }
 export declare interface LocalAudioConfig {
   publish?: boolean;
-  mute?: boolean;
+  mute?: boolean | 'microphone';
+  muteKeepVolumeDetection?: boolean;
   option?: {
     microphoneId?: string;
     profile?: keyof typeof audioProfileMap;
@@ -490,7 +510,6 @@ export declare interface LocalAudioConfig {
   };
 }
 export declare interface UpdateLocalAudioConfig extends LocalAudioConfig {
-  mute?: boolean;
   option?: {
     microphoneId?: string;
     audioTrack?: MediaStreamTrack;
@@ -777,6 +796,7 @@ export declare interface RemoteStatistic {
   audio: {
     bitrate: number;
     audioLevel: number;
+    jitterBufferDelay: number;
   };
   video: {
     width: number;
@@ -784,6 +804,7 @@ export declare interface RemoteStatistic {
     frameRate: number;
     bitrate: number;
     videoType: TRTCVideoType;
+    jitterBufferDelay: number;
   }[];
   userId: string;
 }
