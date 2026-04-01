@@ -89,10 +89,9 @@ await trtc.startLocalAudio();
 ### Useful links
 
 - [Demo Quick Run](https://trtc.io/document/35607)
-- [Integration Quick Start](https://trtc.io/document/35096)
+- [Integration Quick Start](https://trtc.io/document/59649)
 - [TRTC Web SDK API Reference](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/index.html)
 - [Supported Browsers](https://trtc.io/document/59733)
-
 
 ## Common Questions This Repository Helps Answer
 
