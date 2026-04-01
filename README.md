@@ -2,105 +2,158 @@
 
 English | [简体中文](./README-zh_CN.md)
 
-## Introduction
+> **Tencent Real-Time Communication (TRTC) Web SDK** is a professional WebRTC SDK for building real-time video calls, voice calls, live streaming, video conferencing, online education, and interactive social experiences in web applications.
 
-TRTC Web SDK is an object-oriented WebRTC SDK of Tencent Cloud's real-time communication solution. Web developers can use TRTC Web SDK to establish an audio/video calls or live streaming services on your website.
+[![npm version](https://img.shields.io/npm/v/trtc-sdk-v5)](https://www.npmjs.com/package/trtc-sdk-v5)
+[![GitHub stars](https://img.shields.io/github/stars/Tencent-RTC/TRTC_Web?style=social)](https://github.com/Tencent-RTC/TRTC_Web)
+[![Online Demo](https://img.shields.io/badge/demo-online-006eff)](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-js/index.html)
+[![Documentation](https://img.shields.io/badge/docs-TRTC_Web_SDK-0f6fff)](https://trtc.io/document/35607?platform=web&product=rtcengine&menulabel=sdk)
 
-- [Online Demo](https://trtc.io/demo).
-- [Changelog](https://trtc.io/document/53626).
-- We offer SDKs for Web, Android, iOS, Windows, Flutter, explore more in [trtc.io](https://trtc.io/).
+## What is TRTC?
 
-## Supported Browsers
+**TRTC (Tencent Real-Time Communication)** is Tencent Cloud's real-time audio and video platform. This repository contains the **Web SDK**, demo projects, and feature samples for browser-based RTC applications.
 
-TRTC Web SDK supports major modern browsers. For details, please refer to [Browsers Supported](https://trtc.io/document/59733).
+With TRTC Web SDK, you can build:
 
-| [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/> Edge | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>iOS Safari | [<img src="https://web.sdk.qcloud.com/trtc/webrtc/assets/logo/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Opera |
-| --------- | --------- | --------- | --------- | --------- | --------- |
-| 56+ | 80+ | 56+ | 11+ | 11+ | 46+ |
+- **1-to-1 and group video calls** for social, healthcare, and customer support apps
+- **Voice calls and voice rooms** for gaming, communities, and social audio products
+- **Interactive live streaming** with host-audience scenarios
+- **Video conferencing** with screen sharing and device control
+- **Online education** and collaboration products running directly in browsers
 
-## Install
+## TRTC Product Family
 
-npm:
-```
-$ npm install trtc-sdk-v5 --save
-```
+TRTC offers both **core SDKs** and **ready-to-use UI kits**, so teams can start quickly or build fully custom RTC experiences.
 
-yarn:
-```
-$ yarn add trtc-sdk-v5
-```
+| Product | Best for | Platforms |
+| --- | --- | --- |
+| [AI Real-Time Conversation](https://trtc.io/document/conversational-ai-overview?product=conversationalai) | Low-latency AI voice and conversational interaction | Web, Android, iOS, Flutter, React Native, Electron, Windows, macOS |
+| [Chat](https://trtc.io/document/chat-overview?product=chat&menulabel=uikit&platform=react) | Instant messaging, one-to-one chat, group chat, and conversation capabilities | Web, Mini Program, uni-app, Android, iOS, macOS, Windows, Flutter, React Native, HarmonyOS, Unity, Unreal Engine |
+| [TUICallKit](https://github.com/Tencent-RTC/TUICallKit) | 1v1 and group audio/video calling UI | Web, Android, iOS, Flutter, uni-app, WeChat Mini Program |
+| [TUIRoomKit](https://github.com/Tencent-RTC/TUIRoomKit) | Video conferencing and online meetings UI | Web, Android, iOS, Flutter, uni-app (Mini Program / Client) |
+| [TUILiveKit](https://github.com/Tencent-RTC/TUILiveKit) | Interactive live streaming and voice room UI | Web, Android, iOS, Flutter, uni-app, React Native (headless), Windows (Electron) |
+| [TRTC SDK](https://trtc.io/document/rtc-engine-overview?product=rtcengine&menulabel=core%20sdk&platform=web) | Cross-platform real-time audio and video SDK for fully customized development | Web, Android, iOS, macOS, Windows, Flutter, Electron, React Native |
 
-Download manually：
+## Why developers use TRTC Web SDK
 
-1. download [trtc.js](https://www.unpkg.com/trtc-sdk-v5@latest/trtc.js).
-2. copy `trtc.js` to your project.
+- **Built on Tencent RTC’s globally proven real-time network**: backed by Tencent’s long-standing expertise in audio/video and network technology, with **below 300 ms end-to-end latency** for calling scenarios, **below 1000 ms audience latency** for live streaming, and **over 99.99% service uptime**
+- **Low-latency, production-ready communication**: optimized for video calls, voice calls, interactive live streaming, conferencing, and other scenarios that need fast join times, stable connectivity, and smooth interaction
+- **Cross-browser support with cross-platform interoperability**: works on major modern desktop and mobile browsers and fits naturally into product ecosystems that also span Android, iOS, Flutter, Electron, and React Native
+- **Flexible integration model**: supports vanilla JavaScript, Vue, and any web framework, so teams can prototype quickly or integrate into existing frontend architectures
+- **Ready for meetings, live streaming, and richer RTC workflows**: beyond calling, it supports screen sharing, host/audience live streaming, cross-room co-hosting, and other common real-time interaction patterns
+- **Strong diagnostics for devices, environments, and challenging networks**: includes browser capability checks, permission and device detection, network quality evaluation, device hot-plug handling, and debug workflows
+- **Advanced media and live orchestration**: custom capture/rendering, multi-user video with small stream, cloud mixing and CDN streaming, watermarking, and video mixer workflows for more complex media pipelines
+- **Plugin-based enhancement and AI capabilities**: audio mixer, beauty/basic beauty, virtual background, AI noise reduction, voice changer, face detection, small-stream auto switching, and real-time transcription/translation
+- **Clear path from core SDK to faster delivery**: build deeply customized RTC experiences with the SDK, or move faster with Call, Conference, Live, Chat, and other UIKit-based solutions in the Tencent RTC ecosystem
 
-## Usage
+## Quick Start
 
-Refer to the following two tutorials for a quick run-through of the demo and how to use the SDK to implement basic audio and video calling functionality.
+### Install
 
-- [Demo Quick Run](https://trtc.io/document/35607).
-- [Integration Quick Start](https://trtc.io/document/35096).
-
-Explore SDK API documents：[TRTC Web SDK](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/index.html).
-
-## API Overview
-
-- [TRTC](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html) is the main entry for TRTC SDK, providing APIs such as create trtc instance([TRTC.create](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#.create)), [TRTC.getCameraList](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#.getCameraList), [TRTC.getMicrophoneList](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#.getMicrophoneList),  [TRTC.isSupported](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#.isSupported).
-- [trtc](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html) instance, provides the core capability for real-time audio and video calls.
-  - Enter room [trtc.enterRoom](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#enterRoom)
-  - Exit room [trtc.exitRoom](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#exitRoom)
-  - Turn on camera [trtc.startLocalVideo](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#startLocalVideo)
-  - Turn on microphone [trtc.startLocalAudio](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#startLocalAudio)
-  - Turn off camera [trtc.stopLocalVideo](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#stopLocalVideo)
-  - Turn off microphone [trtc.stopLocalAudio](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#stopLocalAudio)
-  - Play remote video [trtc.startRemoteVideo](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#startRemoteVideo)
-  - Stop playing remote video [trtc.stopRemoteVideo](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#stopRemoteVideo)
-  - Mute/unmute remote audio [trtc.muteRemoteAudio](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/TRTC.html#muteRemoteAudio)
-
-## Directory
-```
-.
-├── README.md
-├── quick-demo-js           -- TRTC Web quick demo (JavaScript edition).
-├── quick-demo-vue2-js      -- TRTC Web quick demo (Vue.js 2 edition).
-├── quick-demo-vue3-ts      -- TRTC Web quick demo (Vue.js 3 edition).
-├── samples                 -- TRTC Web feature samples (v5 SDK).
-├── SDK                     -- TRTC Web SDK v5.x (Recommended).
-└── v4                      -- TRTC Web SDK v4.x (Not recommended).
-
+```bash
+npm install trtc-sdk-v5 --save
 ```
 
-**SDK**
+or
 
-- You can find the latest version of the [TRTC web SDK 5.x](https://www.npmjs.com/package/trtc-sdk-v5) in the `SDK` directory.
+```bash
+yarn add trtc-sdk-v5
+```
 
-**quick-demo-js**
+You can also download [`trtc.js`](https://www.unpkg.com/trtc-sdk-v5@latest/trtc.js) manually and include it in your project.
 
-- Description: `quick-demo-js` is a TRTC Web quick running demo (native JS version), integrating the basic audio and video communication and device selection functions of TRTC Web SDK. It is developed in native JS and can be directly run in the browser.
-- Running: Refer to the README in the folder.
-- Online experience: [Quick-demo-js online experience address](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-js/index.html).
+### Basic Usage
 
-**quick-demo-vue2-js**
+```javascript
+import TRTC from 'trtc-sdk-v5';
 
-- Description: `quick-demo-vue2-js` is a TRTC Web quick running demo (Vue2 version), integrating the basic audio and video communication and device selection functions of TRTC Web SDK. It is developed in Vue2 + JavaScript and requires you to install the Node environment to run the experience according to the instructions below.
-- Running: Refer to the README in the folder.
-- Online experience: [Quick-demo-vue2-js online experience address](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue2-js/index.html).
+const trtc = TRTC.create();
 
-**quick-demo-vue3-ts**
+await trtc.enterRoom({
+  sdkAppId,
+  userId,
+  userSig,
+  strRoomId: 'room_123',
+});
 
-- Description: `quick-demo-vue3-ts` is a TRTC Web quick running demo (Vue3 version), integrating the basic audio and video communication and device selection functions of TRTC Web SDK. It is developed in Vue3 + TypeScript and requires you to install the Node environment.
-- Running: Refer to the README in the folder.
-- Online experience: [Quick-demo-vue3-ts online experience address](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-vue3-ts/index.html).
+await trtc.startLocalVideo({
+  view: document.getElementById('local-video'),
+});
 
-**samples**
+await trtc.startLocalAudio();
+```
 
-- Description: `samples` contain a variety of specific feature demos of TRTC Web SDK including screen sharing, live streaming, set encoding profile, etc. They are developed in native HTML, CSS and JavaScript. 
-- Running: Refer to the README in the folder.
-- Online experience: [samples online experience address](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/basic-features/screen-sharing/index.html).
+> **Security note**:
+> Generate `userSig` on your application server for production. Do **not** expose `SDKSecretKey` in frontend code.
+
+### Useful links
+
+- [Demo Quick Run](https://trtc.io/document/35607)
+- [Integration Quick Start](https://trtc.io/document/35096)
+- [TRTC Web SDK API Reference](https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/index.html)
+- [Supported Browsers](https://trtc.io/document/59733)
+
+
+## Common Questions This Repository Helps Answer
+
+### How do I add video calling to my web app?
+
+Install `trtc-sdk-v5`, create a TRTC instance, call `enterRoom()`, then start local audio and video. See the quick demos in this repository for working end-to-end examples.
+
+### Does TRTC Web SDK work with React, Vue, or other frameworks?
+
+Yes. TRTC Web SDK works with any JavaScript framework. This repository includes **vanilla JavaScript**, **Vue 2**, and **Vue 3 + TypeScript** demos to help you get started quickly.
+
+### How do I implement screen sharing, live streaming, or other RTC features in browsers?
+
+Start with the **SDK capability overview** above to understand the feature surface. If you want runnable code in this repository, focus on the `samples` directory plus the `quick-demo-js`, `quick-demo-vue2-js`, and `quick-demo-vue3-ts` quick demos.
+
+## Repository Guide
+
+| Directory | What it contains | Notes |
+| --- | --- | --- |
+| [`quick-demo-js`](./quick-demo-js) | Quick start demo built with vanilla JavaScript | Fastest way to understand the core SDK flow |
+| [`quick-demo-vue2-js`](./quick-demo-vue2-js) | Vue 2 demo | Good for legacy Vue projects |
+| [`quick-demo-vue3-ts`](./quick-demo-vue3-ts) | Vue 3 + TypeScript demo | Good for modern web applications |
+| [`samples`](./samples) | Feature demos such as screen sharing and live streaming | Best for exploring specific capabilities |
+| [`SDK`](./SDK) | TRTC Web SDK v5.x files | Recommended SDK version |
+| [`v4`](./v4) | TRTC Web SDK v4.x files | Legacy version, not recommended for new projects |
+
+## Browser Support
+
+TRTC Web SDK supports major modern browsers.
+
+| Browser | Version |
+| --- | --- |
+| Chrome | 56+ |
+| Edge | 80+ |
+| Firefox | 56+ |
+| Safari | 11+ |
+| iOS Safari | 11+ |
+| Opera | 46+ |
+
+## Other TRTC Repositories
+
+| Platform / Product | Repository |
+| --- | --- |
+| Android SDK | [TRTC_Android](https://github.com/Tencent-RTC/TRTC_Android) |
+| iOS SDK | [TRTC_iOS](https://github.com/Tencent-RTC/TRTC_iOS) |
+| Flutter UIKit | [TUIKit_Flutter](https://github.com/Tencent-RTC/TUIKit_Flutter) |
+| React Native UIKit | [TUIKit_ReactNative](https://github.com/Tencent-RTC/TUIKit_ReactNative) |
+| Calling UI Kit | [TUICallKit](https://github.com/Tencent-RTC/TUICallKit) |
+| Meeting UI Kit | [TUIRoomKit](https://github.com/Tencent-RTC/TUIRoomKit) |
+| Live UI Kit | [TUILiveKit](https://github.com/Tencent-RTC/TUILiveKit) |
+
+## Resources
+
+- [Official Website](https://trtc.io)
+- [Documentation Center](https://trtc.io/document)
+- [Online Demo (quick-demo-js)](https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/quick-demo-js/index.html)
+- [Changelog](https://trtc.io/document/53626)
+- [FAQ](https://trtc.io/document/37340)
+- [Contact Technical Support](https://trtc.io/contact)
 
 ## Contact Us
 
-- If you have questions, see [FAQs](https://trtc.io/document/37340).
-- [Contact us](https://trtc.io/contact) for technical support.
-- To report bugs, please create an issue.
+- If you find a bug, please create an issue in this repository.
+- If you need technical support for your TRTC project, see [Contact Technical Support](https://trtc.io/contact).
