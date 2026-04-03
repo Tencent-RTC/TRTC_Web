@@ -1,0 +1,40 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, 'Microsoft YaHei', PingFang SC, sans-serif, 'Segoe UI Symbol';
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+ul {
+  padding-left: 1rem;
+}
+
+li {
+  font-size: 14px;
+  line-height: 22px;
+}
+
+input, select, button {
+  font-family: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}

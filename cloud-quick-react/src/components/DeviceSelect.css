@@ -1,0 +1,57 @@
+.device-select-container {
+  margin-bottom: 12px;
+}
+
+.device-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.device-group {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+}
+
+.device-dropdown {
+  flex: 1;
+  padding: 4px 10px;
+  font-size: 13px;
+  border: 1px solid #ced4da;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  background: #fff;
+  min-width: 0;
+}
+
+.device-dropdown:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
+}
+
+.device-label {
+  display: flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #495057;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0 4px 4px 0;
+  white-space: nowrap;
+}
+
+.device-tip {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 4px 0;
+}
+
+@media (max-width: 540px) {
+  .device-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

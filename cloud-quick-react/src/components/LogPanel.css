@@ -1,0 +1,32 @@
+.log-panel {
+  min-width: 180px;
+  width: calc(100% - 490px);
+  height: 360px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding: 6px;
+  overflow-y: scroll;
+}
+
+.log-item {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.log-success {
+  color: green;
+}
+
+.log-failed {
+  color: red;
+}
+
+@media (max-width: 540px) {
+  .log-panel {
+    width: 100%;
+    height: 150px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}

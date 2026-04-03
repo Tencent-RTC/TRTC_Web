@@ -1,0 +1,55 @@
+.local-video-container {
+  width: 480px;
+  height: 360px;
+  margin: 0 0 10px 0;
+  position: relative;
+}
+
+.local-video {
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.local-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.mute-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  opacity: 0.9;
+}
+
+.mute-btn:hover {
+  opacity: 1;
+}
+
+.mute-btn img {
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 540px) {
+  .local-video-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+}

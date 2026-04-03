@@ -1,0 +1,61 @@
+{
+  "title": "Quick Demo React | TRTC 实时音视频",
+  "nav": {
+    "documentation": "文档"
+  },
+  "guide": {
+    "step1Title": "步骤 1 : 创建新的应用",
+    "step1Content1": "登录实时音视频控制台，选择 开发辅助 > 快速跑通Demo",
+    "step2Title": "步骤 2 : 获取 SDKAppID 和 密钥 SDKSecretKey",
+    "step2Content": "复制 SDKAppId 和密钥（SDKSecretKey）填入输入框",
+    "step3Title": "步骤 3 : 开始视频通话",
+    "step3Item1": "输入 userId 和 roomId",
+    "step3Item2": "点击【进入房间】按钮进入房间",
+    "step3Item3": "点击【采集麦克风】【采集摄像头】按钮，可采集本地麦克风或摄像头",
+    "step3Item4": "点击【终止采集麦克风】【终止采集摄像头】按钮，可终止采集麦克风或摄像头",
+    "step3Item5": "点击【开始共享屏幕】按钮开始屏幕分享",
+    "step3Item6": "点击【停止共享屏幕】按钮取消屏幕分享"
+  },
+  "params": {
+    "title": "参数",
+    "sdkAppId": "SDKAppID",
+    "sdkSecretKey": "SDKSecretKey",
+    "userId": "UserId",
+    "roomId": "RoomId(String)",
+    "sdkAppIdPlaceholder": "SDKAppID",
+    "sdkSecretKeyPlaceholder": "SDKSecretKey",
+    "userIdPlaceholder": "userId",
+    "roomIdPlaceholder": "roomId(string)"
+  },
+  "device": {
+    "title": "设备",
+    "camera": "摄像头",
+    "microphone": "麦克风",
+    "permissionTip": "PS: 进房之前请确认当前页面允许使用摄像头和麦克风"
+  },
+  "operation": {
+    "title": "操作",
+    "enterRoom": "进入房间",
+    "exitRoom": "离开房间",
+    "startLocalAudio": "采集麦克风",
+    "stopLocalAudio": "终止采集麦克风",
+    "startLocalVideo": "采集摄像头",
+    "stopLocalVideo": "终止采集摄像头",
+    "startShareScreen": "开始共享屏幕",
+    "stopShareScreen": "停止共享屏幕"
+  },
+  "invite": {
+    "tip": "复制链接邀请好友加入视频通话，一条链接仅可邀请一人，复制后自动更新链接。",
+    "open": "在新页面打开链接",
+    "pageTitle": "你被邀请参加视频通话！",
+    "join": "Join",
+    "leave": "Leave"
+  },
+  "security": {
+    "warning": "注意️：本 Demo 仅用于调试，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。",
+    "viewDoc": "查看文档"
+  },
+  "log": {
+    "title": "日志"
+  }
+}

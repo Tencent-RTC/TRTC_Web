@@ -1,0 +1,61 @@
+{
+  "title": "Quick Demo React | Tencent RTC",
+  "nav": {
+    "documentation": "Documentation"
+  },
+  "guide": {
+    "step1Title": "Step 1 : Create New Application",
+    "step1Content1": "Please visit the TRTC console and create an RTC Engine application.",
+    "step2Title": "Step 2 : Get SDKAppID and SDKSecretKey",
+    "step2Content": "Copy the SDKAppId and SDKSecretKey into the input box",
+    "step3Title": "Step 3 : Start Video Call",
+    "step3Item1": "Input userId and roomId",
+    "step3Item2": "Click the \"Enter Room\" button to enter the room",
+    "step3Item3": "Click the \"Start Local Audio/Video\" button to capture microphone or camera",
+    "step3Item4": "Click the \"Stop Local Audio/Video\" button to stop capturing microphone or camera",
+    "step3Item5": "Click the \"Start Share Screen\" button to start screen sharing",
+    "step3Item6": "Click the \"Stop Share Screen\" button to stop screen sharing"
+  },
+  "params": {
+    "title": "Params",
+    "sdkAppId": "SDKAppID",
+    "sdkSecretKey": "SDKSecretKey",
+    "userId": "UserId",
+    "roomId": "RoomId(String)",
+    "sdkAppIdPlaceholder": "SDKAppID",
+    "sdkSecretKeyPlaceholder": "SDKSecretKey",
+    "userIdPlaceholder": "userId",
+    "roomIdPlaceholder": "roomId(string)"
+  },
+  "device": {
+    "title": "Device",
+    "camera": "Camera",
+    "microphone": "Microphone",
+    "permissionTip": "PS: Please make sure the current page allows camera and microphone permissions before joining the room."
+  },
+  "operation": {
+    "title": "Operation",
+    "enterRoom": "Enter Room",
+    "exitRoom": "Exit Room",
+    "startLocalAudio": "Start Local Audio",
+    "stopLocalAudio": "Stop Local Audio",
+    "startLocalVideo": "Start Local Video",
+    "stopLocalVideo": "Stop Local Video",
+    "startShareScreen": "Start Share Screen",
+    "stopShareScreen": "Stop Share Screen"
+  },
+  "invite": {
+    "tip": "Copy the link to invite friends to join the video call, one link can invite only one person, the link will be updated automatically after copying.",
+    "open": "Open link in new tab",
+    "pageTitle": "You are invited to this video chat room!",
+    "join": "Join",
+    "leave": "Leave"
+  },
+  "security": {
+    "warning": "Notes: this Demo is only applicable for debugging. Before official launch, please migrate the UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the leakage of encryption key.",
+    "viewDoc": "View Documents"
+  },
+  "log": {
+    "title": "Log:"
+  }
+}

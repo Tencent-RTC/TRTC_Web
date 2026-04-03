@@ -97,23 +97,24 @@ await trtc.startLocalAudio();
 
 ### How do I add video calling to my web app?
 
-Install `trtc-sdk-v5`, create a TRTC instance, call `enterRoom()`, then start local audio and video. See the quick demos in this repository for working end-to-end examples.
+Install `trtc-sdk-v5`, create a TRTC instance, call `enterRoom()`, then start local audio and video. If you want the most complete modern starter in this repository, begin with [`cloud-quick-react`](./cloud-quick-react), then use the other quick demos as framework-specific references.
 
 ### Does TRTC Web SDK work with React, Vue, or other frameworks?
 
-Yes. TRTC Web SDK works with any JavaScript framework. This repository includes **vanilla JavaScript**, **Vue 2**, and **Vue 3 + TypeScript** demos to help you get started quickly.
+Yes. TRTC Web SDK works with any JavaScript framework. This repository now includes a **React + TypeScript** demo as the primary recommended example, plus **vanilla JavaScript**, **Vue 2**, and **Vue 3 + TypeScript** demos for different project styles.
 
 ### How do I implement screen sharing, live streaming, or other RTC features in browsers?
 
-Start with the **SDK capability overview** above to understand the feature surface. If you want runnable code in this repository, focus on the `samples` directory plus the `quick-demo-js`, `quick-demo-vue2-js`, and `quick-demo-vue3-ts` quick demos.
+Start with the runnable demos in this repository. We recommend [`cloud-quick-react`](./cloud-quick-react) first for a modern React-based integration reference, then `samples` for feature-specific examples, followed by `quick-demo-js`, `quick-demo-vue2-js`, and `quick-demo-vue3-ts` when you want lighter or framework-targeted demos.
 
 ## Repository Guide
 
 | Directory | What it contains | Notes |
 | --- | --- | --- |
-| [`quick-demo-js`](./quick-demo-js) | Quick start demo built with vanilla JavaScript | Fastest way to understand the core SDK flow |
+| [`cloud-quick-react`](./cloud-quick-react) | React 18 + TypeScript + Vite quick demo | **Recommended first demo** for modern web projects |
+| [`quick-demo-js`](./quick-demo-js) | Quick start demo built with vanilla JavaScript | Good for understanding the bare SDK flow quickly |
 | [`quick-demo-vue2-js`](./quick-demo-vue2-js) | Vue 2 demo | Good for legacy Vue projects |
-| [`quick-demo-vue3-ts`](./quick-demo-vue3-ts) | Vue 3 + TypeScript demo | Good for modern web applications |
+| [`quick-demo-vue3-ts`](./quick-demo-vue3-ts) | Vue 3 + TypeScript demo | Good for Vue 3 + TypeScript projects |
 | [`samples`](./samples) | Feature demos such as screen sharing and live streaming | Best for exploring specific capabilities |
 | [`SDK`](./SDK) | TRTC Web SDK v5.x files | Recommended SDK version |
 | [`v4`](./v4) | TRTC Web SDK v4.x files | Legacy version, not recommended for new projects |

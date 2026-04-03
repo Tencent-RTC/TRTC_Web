@@ -1,0 +1,57 @@
+.navbar-container {
+  height: 50px;
+  padding: 10px;
+  background-color: #00182F;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  height: 100%;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar-doc-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 16px;
+}
+
+.navbar-doc-link:hover {
+  color: #007bff;
+}
+
+.navbar-lang-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.navbar-lang-btn:hover {
+  color: #007bff;
+}
+
+.navbar-github {
+  color: #fff;
+  fill: #fff;
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-github:hover {
+  opacity: 0.8;
+}

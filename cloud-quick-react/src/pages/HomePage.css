@@ -1,0 +1,24 @@
+.home-page {
+  padding: 0 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.home-content {
+  width: 100%;
+  max-width: 960px;
+}
+
+.home-media-section {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+@media (max-width: 540px) {
+  .home-media-section {
+    flex-direction: column;
+  }
+}
