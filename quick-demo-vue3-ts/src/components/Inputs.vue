@@ -37,6 +37,7 @@
 </template>
 
 <script lang='ts' setup>
+import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getParamKey } from '@/utils/utils';
 import appStore from '../store/index';
@@ -44,14 +45,24 @@ import appStore from '../store/index';
 const { t } = useI18n();
 // init input params
 const store = appStore();
+const urlSdkAppId = getParamKey('sdkAppId');
+const urlSecretKey = getParamKey('sdkSecretKey');
 store.$patch({
-  sdkAppId: getParamKey('sdkAppId'),
-  sdkSecretKey: getParamKey('sdkSecretKey'),
+  sdkAppId: urlSdkAppId || localStorage.getItem('trtc_sdkAppId') || '',
+  sdkSecretKey: urlSecretKey || localStorage.getItem('trtc_sdkSecretKey') || '',
   userId: getParamKey('userId'),
   strRoomId: getParamKey('strRoomId'),
 });
 const state = { url: window.location.href.split('?')[0] };
 window.history.pushState(state, '', 'index.html#/');
+
+// Cache sdkAppId and sdkSecretKey to localStorage
+watch(() => store.sdkAppId, (val) => {
+  try { localStorage.setItem('trtc_sdkAppId', val); } catch (e) {}
+});
+watch(() => store.sdkSecretKey, (val) => {
+  try { localStorage.setItem('trtc_sdkSecretKey', val); } catch (e) {}
+});
 
 </script>
 

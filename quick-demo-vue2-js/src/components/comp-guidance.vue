@@ -3,20 +3,8 @@
 		<el-collapse v-model="activeNames">
 			<el-collapse-item name="1">
 				<template slot="title">
-					<span v-if="isEnLang" class="collapse-title">Step 1 :  Check Current Environment</span>
-					<span v-if="isZhLang" class="collapse-title">步骤 1 : 判断当前环境是否满足条件</span>
-				</template>
-        <ul class="collapse-content">
-          <li v-if="isEnLang">Determine if the current browser environment is suitable for using TRTC，You can visit <a
-            target="_blank" href="https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html">TRTC Detect Page</a></li>
-          <li v-if="isZhLang">判断当前浏览器环境是否满足使用 TRTC，您可以访问 <a
-            target="_blank" href="https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html">TRTC 检测页面</a></li>
-        </ul>
-			</el-collapse-item>
-			<el-collapse-item name="2">
-				<template slot="title">
-					<span v-if="isEnLang" class="collapse-title">Step 2 : Create New Application</span>
-					<span v-if="isZhLang" class="collapse-title">步骤 2 : 创建新的应用</span>
+					<span v-if="isEnLang" class="collapse-title">Step 1 : Create New Application</span>
+					<span v-if="isZhLang" class="collapse-title">步骤 1 : 创建新的应用</span>
 				</template>
         <ul v-if="isEnLang" class="collapse-content">
 			Please visit the <a href="https://console.trtc.io/?quickclaim=engine_trial" target="_blank" rel="noopener noreferrer"> TRTC console </a> and create an RTC Engine application.
@@ -29,10 +17,10 @@
 					<img src="@/assets/image/step1.png" alt="创建应用" style="width: 400px"/>
 				</ul>
 			</el-collapse-item>
-			<el-collapse-item name="3">
+			<el-collapse-item name="2">
 				<template slot="title">
-					<span v-if="isEnLang" class="collapse-title">Step 3 : Get SDKAppID and SDKSecretKey</span>
-					<span v-if="isZhLang" class="collapse-title">步骤 3 : 获取 SDKAppID 和 密钥 SDKSecretKey</span>
+					<span v-if="isEnLang" class="collapse-title">Step 2 : Get SDKAppID and SDKSecretKey</span>
+					<span v-if="isZhLang" class="collapse-title">步骤 2 : 获取 SDKAppID 和 密钥 SDKSecretKey</span>
 				</template>
         <ul v-if="isEnLang" class="collapse-content">
 					<li>Copy the SDKAppId and SDKSecretKey into the input box</li>
@@ -43,10 +31,10 @@
 					<img src="@/assets/image/step2.png" alt="SDKAppId" style="width: 400px"/>
 				</ul>
 			</el-collapse-item>
-			<el-collapse-item name="4">
+			<el-collapse-item name="3">
 				<template slot="title">
-          <span v-if="isEnLang" class="collapse-title">Step 4 : Start Video Call</span>
-					<span v-if="isZhLang" class="collapse-title">步骤 4 : 开始视频通话</span>
+          <span v-if="isEnLang" class="collapse-title">Step 3 : Start Video Call</span>
+					<span v-if="isZhLang" class="collapse-title">步骤 3 : 开始视频通话</span>
 				</template>
         <ul v-if="isEnLang" class="collapse-content">
                   <li>Input userId and strRoomId</li>
@@ -74,7 +62,7 @@ export default {
   name: 'compGuidance',
   data() {
     return {
-      activeNames: ['1', '4'],
+      activeNames: ['3'],
     };
   },
   computed: {

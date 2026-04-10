@@ -15,8 +15,15 @@ const $aegis: any = inject('$aegis');
 TRTC.isSupported().then((checkResult: any) => {
   console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
   if (!checkResult.result) {
-    ElMessage({ message: 'Your browser does not supported TRTC!', type: 'error' });
-    window.location.href = 'https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html';
+    const isZh = document.documentElement.lang === 'zh' || navigator.language.toLowerCase().startsWith('zh');
+    ElMessage({
+      message: isZh
+        ? '当前浏览器不支持 TRTC，请使用最新版本的 Chrome 浏览器。'
+        : 'Your browser does not support TRTC. Please use the latest version of Chrome.',
+      type: 'error',
+      duration: 0,
+      showClose: true,
+    });
   }
 });
 

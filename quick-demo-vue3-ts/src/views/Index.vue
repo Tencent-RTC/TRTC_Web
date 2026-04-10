@@ -38,6 +38,9 @@
             <img src="../assets/clippy.svg" alt="Copy to clipboard" class='clip'>
           </button>
           <el-input id="foo" v-model="inviteLink"></el-input>
+          <button class="invite-open-btn" @click='openLink' :title="t('openLink')">
+            ↗
+          </button>
         </div>
       </div>
       <div class='pusher'>
@@ -484,10 +487,28 @@ function copy() {
     justify-content center
     align-items center
     border: 1px solid #d5d5d5;
-    border-radius 3px
+    border-radius 3px 0 0 3px
     padding 6px 12px
     cursor pointer
     background-color #eee
+
+  .invite-open-btn
+    height 32px
+    display flex
+    justify-content center
+    align-items center
+    border: 1px solid #d5d5d5;
+    border-left none
+    border-radius 0 3px 3px 0
+    padding 0 10px
+    cursor pointer
+    background-color #eee
+    font-size 14px
+    font-weight 700
+    color #333
+    flex-shrink 0
+    &:hover
+      background-color #ddd
 
   .clip
     width 12px
