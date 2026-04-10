@@ -3,16 +3,6 @@
     <el-collapse v-model="active">
       <el-collapse-item :title="t('step1')" class="header" name="1">
         <div class="item">
-          <ul>
-            <li v-if="isEnLang">Determine if the current browser environment is suitable for using TRTC，You can visit <a
-              target="_blank" href="https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html">TRTC Detect Page</a></li>
-            <li v-if="isZhLang">判断当前浏览器环境是否满足使用 TRTC，您可以访问 <a
-              target="_blank" href="https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html">TRTC 检测页面</a></li>
-          </ul>
-        </div>
-      </el-collapse-item>
-      <el-collapse-item :title="t('step2')" class="header" name="2">
-        <div class="item">
           <ul v-if="isEnLang" class="collapse-content">
             Please visit the <a href="https://console.trtc.io/?quickclaim=engine_trial" target="_blank" rel="noopener noreferrer"> TRTC console </a> and create an RTC Engine application.
           </ul>
@@ -25,7 +15,7 @@
           </ul>
         </div>
       </el-collapse-item>
-      <el-collapse-item :title="t('step3')" class="header" name="3">
+      <el-collapse-item :title="t('step2')" class="header" name="2">
         <div class="item">
           <ul v-if="isEnLang" class="collapse-content">
             <li>Copy the SDKAppId and SDKSecretKey into the input box</li>
@@ -37,7 +27,7 @@
           </ul>
         </div>
       </el-collapse-item>
-      <el-collapse-item :title="t('step4')" class="header" name="4">
+      <el-collapse-item :title="t('step3')" class="header" name="3">
         <div class="item">
           <ul v-if="isEnLang" class="collapse-content">
             <li>Input userId and roomId</li>
@@ -69,7 +59,7 @@ const { locale, t } = useI18n();
 const isEnLang = computed(() => locale.value === 'en');
 const isZhLang = computed(() => locale.value === 'zh-cn');
 
-const active = ref<Array<string>>(['1', '4']);
+const active = ref<Array<string>>(['3']);
 
 </script>
 

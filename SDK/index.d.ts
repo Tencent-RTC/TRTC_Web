@@ -20,10 +20,15 @@ export interface PlaybackQualityStream {
   streamType?: TRTCStreamType;
   bitrate: number;
 }
-
+export interface ResolutionConfig {
+  userId: string;
+  streamType: TRTCStreamType;
+  name: string;
+}
 export interface SwitchPlaybackQualityOptions {
   quality?: string;
   streamList?: PlaybackQualityStream[];
+  onSwitched?: (from: ResolutionConfig, to: ResolutionConfig) => void;
 }
 
 export type ExperimentalAPIFunctionMap = {
@@ -431,11 +436,18 @@ export declare interface EnterRoomConfig {
   scene?: Scene;
   userDefineRecordId?: string;
   playoutDelay?: PlayoutDelay;
+  quickStart?: QuickStartConfig;
 }
 
 export interface PlayoutDelay {
   min: number;
   max: number;
+}
+
+export interface QuickStartConfig {
+  remoteUserId: string;
+  small?: boolean;
+  domain?: string;
 }
 
 export declare interface SwitchRoomConfig {

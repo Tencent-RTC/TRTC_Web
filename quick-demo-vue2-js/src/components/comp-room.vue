@@ -68,21 +68,26 @@
       <span v-if="isEnLang">Copy the link to invite friends to enter the video call, one link can invite only one person,
         the link will be updated automatically after copying.</span>
       <span v-else>复制链接邀请好友加入视频通话，一条链接仅可邀请一人，复制后自动更新链接。</span>
-      <el-input class="invite-input" v-model="inviteLink">
-        <template slot="prepend">
-          <el-tooltip
-            :visibleArrow="false"
-            effect="dark"
-            content="Copied!"
-            placement="bottom"
-            :manual="true"
-            v-model="showCopiedTip">
-            <span class="invite-btn" @click="handleCopyInviteLink">
-              <svg-icon icon-name="copy"></svg-icon>
-            </span>
-          </el-tooltip>
-        </template>
-      </el-input>
+      <div class="invite-row">
+        <el-input class="invite-input" v-model="inviteLink">
+          <template slot="prepend">
+            <el-tooltip
+              :visibleArrow="false"
+              effect="dark"
+              content="Copied!"
+              placement="bottom"
+              :manual="true"
+              v-model="showCopiedTip">
+              <span class="invite-btn" @click="handleCopyInviteLink">
+                <svg-icon icon-name="copy"></svg-icon>
+              </span>
+            </el-tooltip>
+          </template>
+        </el-input>
+        <button class="invite-open-btn" @click="handleOpenInviteLink" :title="isEnLang ? 'Open link in new tab' : '在新页面打开链接'">
+          ↗
+        </button>
+      </div>
     </div>
 
     <div class="info-container" :class="$isMobile && 'info-container-mobile'">
@@ -194,6 +199,12 @@ export default {
         this.showCopiedTip = false;
       }, 1500);
       this.generateInviteLink();
+    },
+    handleOpenInviteLink() {
+      if (this.inviteLink) {
+        window.open(this.inviteLink, '_blank', 'noopener,noreferrer');
+        this.generateInviteLink();
+      }
     },
     async handleEnterRoom() {
       if (this.isHostMode) {
@@ -328,12 +339,38 @@ export default {
     margin-bottom: 16px;
     border: 1px solid #b6d4fe;
     border-radius: 0.25rem;
-    .invite-input {
+    .invite-row {
+      display: flex;
+      align-items: center;
       margin-top: 10px;
+    }
+    .invite-input {
+      flex: 1;
     }
     .invite-btn {
       display: flex;
       cursor: pointer;
+    }
+    .invite-open-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      background-color: #eee;
+      border: 1px solid #d5d5d5;
+      border-left: none;
+      border-radius: 0 3px 3px 0;
+      cursor: pointer;
+      user-select: none;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      &:hover {
+        background-color: #ddd;
+      }
     }
   }
 

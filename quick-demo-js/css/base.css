@@ -191,14 +191,6 @@ ul {
   align-items: center;
   margin-top: 4px;
 }
-.invite-input {
-  border: 1px solid #d5d5d5;
-  line-height: 30px;
-  font-size: 12px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 1px 6px;
-}
 .invite-btn {
   position: relative;
   display: inline-block;
@@ -212,12 +204,46 @@ ul {
   cursor: pointer;
   background-color: #eee;
   border: 1px solid #d5d5d5;
-  border-radius: 3px;
+  border-radius: 3px 0 0 3px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   -webkit-appearance: none;
+}
+.invite-input {
+  border: 1px solid #d5d5d5;
+  border-left: none;
+  line-height: 30px;
+  font-size: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1px 6px;
+}
+.invite-open-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #333;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #eee;
+  border: 1px solid #d5d5d5;
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+}
+.invite-open-btn:hover {
+  background-color: #ddd;
 }
 
 @media (max-width: 540px) {

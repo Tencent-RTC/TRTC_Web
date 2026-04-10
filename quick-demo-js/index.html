@@ -84,42 +84,16 @@
             <div class='accordion-item'>
               <h2 class='accordion-header' id='panelsStayOpen-headingOne'>
                 <button class='accordion-button collapsed bold' type='button' data-bs-toggle='collapse'
-                  data-bs-target='#panelsStayOpen-collapseOne' aria-expanded='true'
+                  data-bs-target='#panelsStayOpen-collapseOne' aria-expanded='false'
                   aria-controls='panelsStayOpen-collapseOne'>
                   <div style='display: flex;flex-direction: column'>
-                    <span class='en'>Step 1 : Check Current Environment</span>
-                    <span class='zh-cn'>步骤 1 : 判断当前环境是否满足条件</span>
+                    <span class='en'>Step 1 : Create New Application</span>
+                    <span class='zh-cn'>步骤 1 : 创建新的应用</span>
                   </div>
                 </button>
               </h2>
-              <div id='panelsStayOpen-collapseOne' class='accordion-collapse collapse show'
+              <div id='panelsStayOpen-collapseOne' class='accordion-collapse collapse'
                 aria-labelledby='panelsStayOpen-headingOne'>
-                <div class='accordion-body'>
-                  <ul class='zh-cn'>
-                    <li>判断当前浏览器环境是否满足使用 TRTC，您可以访问 <a target="_blank"
-                        href='https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html'>TRTC 检测页面</a></li>
-                  </ul>
-                  <ul class='en'>
-                    <li>Determine if the current browser environment is suitable for using TRTC，You can visit <a
-                        target="_blank" href='https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html'>TRTC Detect
-                        Page</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class='accordion-item'>
-              <h1 class='accordion-header' id='panelsStayOpen-headingTwo'>
-                <button class='accordion-button collapsed bold' type='button' data-bs-toggle='collapse'
-                  data-bs-target='#panelsStayOpen-collapseTwo' aria-expanded='false'
-                  aria-controls='panelsStayOpen-collapseTwo'>
-                  <div style='display: flex;flex-direction: column'>
-                    <span class='en'>Step 2 : Create New Application</span>
-                    <span class='zh-cn'>步骤 2 : 创建新的应用</span>
-                  </div>
-                </button>
-              </h1>
-              <div id='panelsStayOpen-collapseTwo' class='accordion-collapse collapse'
-                aria-labelledby='panelsStayOpen-headingTwo'>
                 <div class='accordion-body'>
                   <ul class='en'>
                     Please visit the <a href="https://console.trtc.io/?quickclaim=engine_trial" target="_blank"
@@ -136,19 +110,18 @@
               </div>
             </div>
             <div class='accordion-item'>
-              <h2 class='accordion-header' id='panelsStayOpen-headingThree'>
+              <h2 class='accordion-header' id='panelsStayOpen-headingTwo'>
                 <button class='accordion-button collapsed bold' type='button' data-bs-toggle='collapse'
-                  data-bs-target='#panelsStayOpen-collapseThree' aria-expanded='false'
-                  aria-controls='panelsStayOpen-collapseThree'>
+                  data-bs-target='#panelsStayOpen-collapseTwo' aria-expanded='false'
+                  aria-controls='panelsStayOpen-collapseTwo'>
                   <div style='display: flex;flex-direction: column'>
-                    <span class='en'>Step 3 : Get SDKAppID and SDKSecretKey</span>
-                    <span class='zh-cn'>步骤 3 : 获取 SDKAppID 和 密钥 SDKSecretKey</span>
+                    <span class='en'>Step 2 : Get SDKAppID and SDKSecretKey</span>
+                    <span class='zh-cn'>步骤 2 : 获取 SDKAppID 和 密钥 SDKSecretKey</span>
                   </div>
-
                 </button>
               </h2>
-              <div id='panelsStayOpen-collapseThree' class='accordion-collapse collapse'
-                aria-labelledby='panelsStayOpen-headingThree'>
+              <div id='panelsStayOpen-collapseTwo' class='accordion-collapse collapse'
+                aria-labelledby='panelsStayOpen-headingTwo'>
                 <div class='accordion-body'>
                   <ul class='en'>
                     <li>Copy the SDKAppId and SDKSecretKey into the input box</li>
@@ -162,18 +135,18 @@
               </div>
             </div>
             <div class='accordion-item'>
-              <h2 class='accordion-header' id='panelsStayOpen-headingFour'>
+              <h2 class='accordion-header' id='panelsStayOpen-headingThree'>
                 <button class='accordion-button collapsed bold' type='button' data-bs-toggle='collapse'
-                  data-bs-target='#panelsStayOpen-collapseFour' aria-expanded='true'
-                  aria-controls='panelsStayOpen-collapseFour'>
+                  data-bs-target='#panelsStayOpen-collapseThree' aria-expanded='true'
+                  aria-controls='panelsStayOpen-collapseThree'>
                   <div style='display: flex;flex-direction: column'>
-                    <span class='en'>Step 4 : Start Video Call</span>
-                    <span class='zh-cn'>步骤 4 : 开始视频通话</span>
+                    <span class='en'>Step 3 : Start Video Call</span>
+                    <span class='zh-cn'>步骤 3 : 开始视频通话</span>
                   </div>
                 </button>
               </h2>
-              <div id='panelsStayOpen-collapseFour' class='accordion-collapse collapse show'
-                aria-labelledby='panelsStayOpen-headingFour'>
+              <div id='panelsStayOpen-collapseThree' class='accordion-collapse collapse show'
+                aria-labelledby='panelsStayOpen-headingThree'>
                 <div class='accordion-body'>
                   <ul class='zh-cn'>
                     <li>输入 userId 和 roomId</li>
@@ -312,6 +285,9 @@
               <img src='./icon/clippy.svg' width='12px' height='12px' alt='Copy to clipboard'>
             </button>
             <input id='inviteUrl' class='invite-input' value='https://github.com/zenorocha/clipboard.js.git'>
+            <button class='invite-open-btn' id='openLinkBtn' title='Open in new tab'>
+              ↗
+            </button>
           </div>
         </div>
         <div class='pusher'>

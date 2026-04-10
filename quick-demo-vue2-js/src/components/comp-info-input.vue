@@ -24,6 +24,10 @@ export default {
       immediate: true,
       handler(val) {
         this.$emit('change', this.type === 'number' ? Number(val) : val);
+        // Cache sdkAppId and sdkSecretKey to localStorage
+        if (this.label === 'sdkAppId' || this.label === 'sdkSecretKey') {
+          try { localStorage.setItem(`trtc_${this.label}`, String(val)); } catch (e) {}
+        }
       },
     },
   },
@@ -42,12 +46,12 @@ export default {
       case 'sdkAppId': {
         const sdkAppId = getUrlParam('sdkAppId');
         this.type = 'number';
-        this.infoValue = sdkAppId ? sdkAppId : '';
+        this.infoValue = sdkAppId || localStorage.getItem('trtc_sdkAppId') || '';
         break;
       }
       case 'sdkSecretKey': {
         const sdkSecretKey = getUrlParam('sdkSecretKey');
-        this.infoValue = sdkSecretKey ? sdkSecretKey : '';
+        this.infoValue = sdkSecretKey || localStorage.getItem('trtc_sdkSecretKey') || '';
         break;
       }
       default:
