@@ -97,7 +97,7 @@ await trtc.startLocalAudio();
 
 ### 如何在 Web 应用里快速接入视频通话？
 
-安装 `trtc-sdk-v5`，创建 TRTC 实例，调用 `enterRoom()` 进入房间，然后启动本地音频与视频即可。如果你想直接从一个更完整的现代前端示例开始，建议优先查看 [`cloud-quick-react`](./cloud-quick-react)，其余 quick demo 可作为不同框架风格的补充参考。
+安装 `trtc-sdk-v5`，创建 TRTC 实例，调用 `enterRoom()` 进入房间，然后启动本地音频与视频即可。如果你想直接从一个更完整的现代前端示例开始，建议优先查看 [`quick-demo-react`](./quick-demo-react)，其余 quick demo 可作为不同框架风格的补充参考。
 
 ### TRTC Web SDK 是否支持 React、Vue 等前端框架？
 
@@ -105,13 +105,13 @@ await trtc.startLocalAudio();
 
 ### 如何实现屏幕分享、直播、水印等浏览器端实时音视频能力？
 
-如果你想直接参考仓库内可运行示例，建议先从 [`cloud-quick-react`](./cloud-quick-react) 开始，作为现代 React 工程接入参考；再结合 `samples` 查看具体能力示例；如果你需要更轻量或指定框架的示例，再看 `quick-demo-js`、`quick-demo-vue2-js`、`quick-demo-vue3-ts`。
+如果你想直接参考仓库内可运行示例，建议先从 [`quick-demo-react`](./quick-demo-react) 开始，作为现代 React 工程接入参考；再结合 `samples` 查看具体能力示例；如果你需要更轻量或指定框架的示例，再看 `quick-demo-js`、`quick-demo-vue2-js`、`quick-demo-vue3-ts`。
 
 ## 仓库内容说明
 
 | 目录 | 内容 | 说明 |
 | --- | --- | --- |
-| [`cloud-quick-react`](./cloud-quick-react) | React 18 + TypeScript + Vite 快速 Demo | **推荐优先查看**，适合现代 Web 项目快速接入 |
+| [`quick-demo-react`](./quick-demo-react) | React 18 + TypeScript + Vite 快速 Demo | **推荐优先查看**，适合现代 Web 项目快速接入 |
 | [`quick-demo-js`](./quick-demo-js) | 原生 JavaScript 快速 Demo | 适合快速理解 SDK 最基础调用流程 |
 | [`quick-demo-vue2-js`](./quick-demo-vue2-js) | Vue 2 Demo | 适合已有 Vue 2 项目参考 |
 | [`quick-demo-vue3-ts`](./quick-demo-vue3-ts) | Vue 3 + TypeScript Demo | 适合 Vue 3 + TypeScript 项目接入 |

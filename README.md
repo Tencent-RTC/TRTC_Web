@@ -97,7 +97,7 @@ await trtc.startLocalAudio();
 
 ### How do I add video calling to my web app?
 
-Install `trtc-sdk-v5`, create a TRTC instance, call `enterRoom()`, then start local audio and video. If you want the most complete modern starter in this repository, begin with [`cloud-quick-react`](./cloud-quick-react), then use the other quick demos as framework-specific references.
+Install `trtc-sdk-v5`, create a TRTC instance, call `enterRoom()`, then start local audio and video. If you want the most complete modern starter in this repository, begin with [`quick-demo-react`](./quick-demo-react), then use the other quick demos as framework-specific references.
 
 ### Does TRTC Web SDK work with React, Vue, or other frameworks?
 
@@ -105,13 +105,13 @@ Yes. TRTC Web SDK works with any JavaScript framework. This repository now inclu
 
 ### How do I implement screen sharing, live streaming, or other RTC features in browsers?
 
-Start with the runnable demos in this repository. We recommend [`cloud-quick-react`](./cloud-quick-react) first for a modern React-based integration reference, then `samples` for feature-specific examples, followed by `quick-demo-js`, `quick-demo-vue2-js`, and `quick-demo-vue3-ts` when you want lighter or framework-targeted demos.
+Start with the runnable demos in this repository. We recommend [`quick-demo-react`](./quick-demo-react) first for a modern React-based integration reference, then `samples` for feature-specific examples, followed by `quick-demo-js`, `quick-demo-vue2-js`, and `quick-demo-vue3-ts` when you want lighter or framework-targeted demos.
 
 ## Repository Guide
 
 | Directory | What it contains | Notes |
 | --- | --- | --- |
-| [`cloud-quick-react`](./cloud-quick-react) | React 18 + TypeScript + Vite quick demo | **Recommended first demo** for modern web projects |
+| [`quick-demo-react`](./quick-demo-react) | React 18 + TypeScript + Vite quick demo | **Recommended first demo** for modern web projects |
 | [`quick-demo-js`](./quick-demo-js) | Quick start demo built with vanilla JavaScript | Good for understanding the bare SDK flow quickly |
 | [`quick-demo-vue2-js`](./quick-demo-vue2-js) | Vue 2 demo | Good for legacy Vue projects |
 | [`quick-demo-vue3-ts`](./quick-demo-vue3-ts) | Vue 3 + TypeScript demo | Good for Vue 3 + TypeScript projects |
