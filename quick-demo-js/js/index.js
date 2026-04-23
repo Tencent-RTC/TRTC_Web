@@ -91,9 +91,9 @@ function initParams() {
 
 async function enterRoom() {
 	if (window.isIframe) initDevice();
-	initParams()
 	setButtonLoading('enter', true);
 	try {
+		initParams()
 		const { userSig } = genTestUserSig({ sdkAppId, userId, sdkSecretKey });
 		await trtc.enterRoom({ strRoomId, sdkAppId, userId, userSig })
 		reportSuccessEvent('enterRoom', sdkAppId)
@@ -108,14 +108,11 @@ async function enterRoom() {
 		reportFailedEvent({
 			name: 'enterRoom',
 			sdkAppId,
-			roomId,
+			roomId: strRoomId,
 			error
 		})
-		addFailedLog(`[${userId}] enterRoom failed.`);
+		addFailedLog(`[${userId}] enterRoom failed. Reason: ${error.message || error}`);
 	}
-
-	startLocalVideo();
-	startLocalAudio();
 }
 
 async function exitRoom() {
@@ -203,7 +200,7 @@ async function stopLocalAudio() {
 		} catch (error) {
 			setButtonLoading('stopLocalAudio', false);
 			reportFailedEvent({ name: 'stopLocalAudio', sdkAppId, roomId, error })
-			addFailedLog(`${userId ? `[${userId}]` : ''} startLocalAudio failed.`);
+			addFailedLog(`${userId ? `[${userId}]` : ''} stopLocalAudio failed. Reason: ${error.message || error}`);
 		}
 	}
 }
@@ -280,7 +277,7 @@ async function stopShare() {
 			error,
 			type: 'share'
 		})
-		addFailedLog(`${userId ? `[${userId}]` : ''} stopScreenShare failed.`);
+		addFailedLog(`${userId ? `[${userId}]` : ''} stopScreenShare failed. Reason: ${error.message || error}`);
 	}
 }
 

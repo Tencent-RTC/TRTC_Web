@@ -268,8 +268,8 @@ export default {
 
     async handleKickedOut(event) {
       this.addFailedLog(`User has been kicked out for ${event.reason}`);
-      this.trtc = null;
       await this.exitRoom();
+      this.trtc = null;
     },
 
     handleRemoteUserEnter(event) {

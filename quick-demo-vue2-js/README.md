@@ -15,7 +15,7 @@ When entered the room, you can use the share link to invite others to try the au
 1. Clone this repository
 
 ```bash
-git clone https://github.com/LiteAVSDK/TRTC_Web.git
+git clone https://github.com/Tencent-RTC/TRTC_Web.git
 ```
 
 2. Enter this folder

@@ -60,7 +60,7 @@ export default {
         ext2: this.$DEMOKEY,
         ext3: 0,
       });
-      window.open('https://github.com/LiteAVSDK/TRTC_Web', '_blank');
+      window.open('https://github.com/Tencent-RTC/TRTC_Web', '_blank');
     },
     goToDocument() {
       this.$aegis.reportEvent({

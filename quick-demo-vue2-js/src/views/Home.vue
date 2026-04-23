@@ -132,7 +132,7 @@ export default {
 		"Params": "Params",
     "Device Select": "Device Select",
     "Alert": "Notes: this Demo is only applicable for debugging. Before official launch, please migrate the UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the leakage of encryption key.",
-    "Click": "View documents",
+    "Click": "Learn More",
     "Url": "https://trtc.io/document/35166"
 	},
 	"zh-cn": {
