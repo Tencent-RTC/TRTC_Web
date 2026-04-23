@@ -9,7 +9,11 @@
       rel="stylesheet"
     />
     <title>Media Device</title>
+    <script src="../../util/i18n.js" defer></script>
     <script src="../../components/header.js" defer></script>
+    <script src="../../components/params-form.js" defer></script>
+    <script src="../../components/invite-section.js" defer></script>
+    <script src="../../components/video-views.js" defer></script>
     <script
       src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
       defer
@@ -27,80 +31,31 @@
     <header-nav></header-nav>
     <main>
       <div class="feature-container">
-        <h1 style="color: #1c66e5">Media Device</h1>
+        <h1 style="color: #1c66e5" data-i18n="mediaDevice.title">Media Device</h1>
+        <params-form></params-form>
         <section>
-          <h3>Step-1: Fill in the blanks</h3>
-          <span class="note"
-            >Get SDKAppId and SDKSecretKey from
-            <a
-              target="_top"
-              href="https://console.trtc.io/?quickclaim=engine_trial"
-              >TRTC Console</a
-            >
-          </span>
-          <span class="warning"
-            >Note: This demo is for demonstration purposes only. Before official
-            launch, please migrate SDKSecretKey and the UserSig calculation code
-            to your own backend server to avoid unauthorized traffic use caused
-            by the key leakage.
-            <a target="_top" href="https://trtc.io/document/35166"
-              >View Documents</a
-            ></span
-          >
-          <div class="input-list">
-            <div class="input-group">
-              <label for="sdk-app-id">SDKAppId</label>
-              <input
-                id="sdk-app-id"
-                type="number"
-                class="form-control"
-                placeholder="SDKAppId"
-              />
-            </div>
-            <div class="input-group">
-              <label for="sdk-secret-key">SDKSecretKey</label>
-              <input
-                id="sdk-secret-key"
-                type="text"
-                class="form-control"
-                placeholder="SDKSecretKey"
-              />
-            </div>
-          </div>
-          <div class="input-list">
-            <div class="input-group">
-              <label for="user-id">UserId</label>
-              <input id="user-id" type="text" class="form-control" />
-            </div>
-            <div class="input-group">
-              <label for="room-id">RoomId</label>
-              <input id="room-id" type="number" class="form-control" />
-            </div>
-          </div>
-        </section>
-        <section>
-          <h3>Step-2: Enter the room</h3>
+          <h3><span class="step-badge">2</span><span data-i18n="common.enterTheRoom">Enter the room</span></h3>
           <div class="btn-list">
             <button id="enter-btn" class="btn" onclick="enterRoom()">
-              <span class="btn-text">Enter Room</span>
+              <span class="btn-text" data-i18n="common.enterRoom">Enter Room</span>
             </button>
             <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
-              <span class="btn-text">Exit Room</span>
+              <span class="btn-text" data-i18n="common.exitRoom">Exit Room</span>
             </button>
           </div>
         </section>
         <section>
           <h3>
-            Step-3.1: Different options to turn on/off the microphone and camera
+            <span class="step-badge">3</span><span data-i18n="mediaDevice.differentOptions">Different options to turn on/off the microphone and camera</span>
           </h3>
           <div>
-            <label>Options:</label>
+            <label data-i18n="mediaDevice.options">Options:</label>
             <select id="option">
-              <option value="mute" selected>
+              <option value="mute" selected data-i18n="mediaDevice.useMute">
                 Use the mute parameter (recommended)
               </option>
-              <option value="publish">Use the publish parameter</option>
-              <option value="stop">
+              <option value="publish" data-i18n="mediaDevice.usePublish">Use the publish parameter</option>
+              <option value="stop" data-i18n="mediaDevice.useStop">
                 Use stopLocalVideo() & stopLocalAudio()
               </option>
             </select>
@@ -111,7 +66,7 @@
               class="btn"
               onclick="startLocalAudio()"
             >
-              <span class="btn-text">Start Local Audio</span>
+              <span class="btn-text" data-i18n="common.startLocalAudio">Start Local Audio</span>
             </button>
             <button
               id="stop-audio-btn"
@@ -119,10 +74,10 @@
               onclick="stopLocalAudio()"
               disabled
             >
-              <span class="btn-text">Stop Local Audio</span>
+              <span class="btn-text" data-i18n="common.stopLocalAudio">Stop Local Audio</span>
             </button>
             <button id="mute-mic-btn" class="btn mute-btn" disabled>
-              <span class="btn-text">Mute Microphone</span>
+              <span class="btn-text" data-i18n="mediaDevice.muteMicrophone">Mute Microphone</span>
             </button>
             <button
               id="publish-mic-btn"
@@ -130,10 +85,10 @@
               disabled
               style="display: none"
             >
-              <span class="btn-text">Publish Microphone</span>
+              <span class="btn-text" data-i18n="mediaDevice.publishMicrophone">Publish Microphone</span>
             </button>
             <button id="unmute-mic-btn" class="btn mute-btn" disabled>
-              <span class="btn-text">Unmute Microphone</span>
+              <span class="btn-text" data-i18n="mediaDevice.unmuteMicrophone">Unmute Microphone</span>
             </button>
             <button
               id="unpublish-mic-btn"
@@ -141,7 +96,7 @@
               disabled
               style="display: none"
             >
-              <span class="btn-text">Unpublish Microphone</span>
+              <span class="btn-text" data-i18n="mediaDevice.unpublishMicrophone">Unpublish Microphone</span>
             </button>
           </div>
           <div class="btn-list">
@@ -150,7 +105,7 @@
               class="btn"
               onclick="startLocalVideo()"
             >
-              <span class="btn-text">Start Local Video</span>
+              <span class="btn-text" data-i18n="common.startLocalVideo">Start Local Video</span>
             </button>
             <button
               id="stop-video-btn"
@@ -158,10 +113,10 @@
               onclick="stopLocalVideo()"
               disabled
             >
-              <span class="btn-text">Stop Local Video</span>
+              <span class="btn-text" data-i18n="common.stopLocalVideo">Stop Local Video</span>
             </button>
             <button id="mute-camera-btn" class="btn mute-btn" disabled>
-              <span class="btn-text">Mute Camera</span>
+              <span class="btn-text" data-i18n="mediaDevice.muteCamera">Mute Camera</span>
             </button>
             <button
               id="publish-camera-btn"
@@ -169,10 +124,10 @@
               disabled
               style="display: none"
             >
-              <span class="btn-text">Publish Camera</span>
+              <span class="btn-text" data-i18n="mediaDevice.publishCamera">Publish Camera</span>
             </button>
             <button id="unmute-camera-btn" class="btn mute-btn" disabled>
-              <span class="btn-text">Unmute Camera</span>
+              <span class="btn-text" data-i18n="mediaDevice.unmuteCamera">Unmute Camera</span>
             </button>
             <button
               id="unpublish-camera-btn"
@@ -180,15 +135,15 @@
               disabled
               style="display: none"
             >
-              <span class="btn-text">Unpublish Camera</span>
+              <span class="btn-text" data-i18n="mediaDevice.unpublishCamera">Unpublish Camera</span>
             </button>
           </div>
         </section>
         <section>
-          <h3>Step-3.2: Switch the microphone, camera and speaker</h3>
+          <h3><span class="step-badge">3</span><span data-i18n="mediaDevice.switchDevices">Switch the microphone, camera and speaker</span></h3>
           <div class="device-container">
             <div class="device-item">
-              <label for="microphone-select">Microphones:</label>
+              <label for="microphone-select" data-i18n="mediaDevice.microphones">Microphones:</label>
               <select id="microphone-select"></select>
               <button
                 id="update-mic-btn"
@@ -196,11 +151,11 @@
                 style="display: block"
                 disabled
               >
-                <span class="btn-text">Update Microphone</span>
+                <span class="btn-text" data-i18n="mediaDevice.updateMicrophone">Update Microphone</span>
               </button>
             </div>
             <div class="device-item">
-              <label for="camera-select">Cameras:</label>
+              <label for="camera-select" data-i18n="mediaDevice.cameras">Cameras:</label>
               <select id="camera-select"></select>
               <button
                 id="update-camera-btn"
@@ -208,11 +163,11 @@
                 style="display: block"
                 disabled
               >
-                <span class="btn-text">Update Camera</span>
+                <span class="btn-text" data-i18n="mediaDevice.updateCamera">Update Camera</span>
               </button>
             </div>
             <div class="device-item">
-              <label for="speaker-select">Speakers:</label>
+              <label for="speaker-select" data-i18n="mediaDevice.speakers">Speakers:</label>
               <select id="speaker-select"></select>
               <button
                 id="update-speaker-btn"
@@ -220,42 +175,14 @@
                 style="display: block"
                 disabled
               >
-                <span class="btn-text">Update Speaker</span>
+                <span class="btn-text" data-i18n="mediaDevice.updateSpeaker">Update Speaker</span>
               </button>
             </div>
           </div>
         </section>
-        <section>
-          <h3>Activate remote stream</h3>
-          <div>
-            <span class="note"
-              >Use the link below to join the room as another user. The link
-              will be updated after being copied.</span
-            >
-            <div class="copy">
-              <button id="invite-btn" data-clipboard-target="#invite-url">
-                <img
-                  src="https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/icons/clippy.svg"
-                  width="12px"
-                  height="12px"
-                  alt="Copy to clipboard"
-                />
-              </button>
-              <input id="invite-url" class="invite-input" readonly />
-            </div>
-          </div>
-        </section>
+        <invite-section></invite-section>
       </div>
-      <div class="video-container">
-        <div class="video-sub-container">
-          <h2>Local Video</h2>
-          <div id="local-video-view" class="video-view"></div>
-        </div>
-        <div class="video-sub-container">
-          <h2>Remote Video</h2>
-          <div id="remote-video-view" class="video-view"></div>
-        </div>
-      </div>
+      <video-views></video-views>
     </main>
   </body>
 </html>

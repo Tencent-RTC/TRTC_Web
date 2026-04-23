@@ -25,19 +25,30 @@ document.getElementById('update-speaker-btn').addEventListener('click', async ()
 
 // --------functions----------
 async function enterRoom() {
-    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-    await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-    switchButtonStatus('enter-btn', 'exit-btn', true);
-    refreshLink({ sdkAppId, sdkSecretKey, roomId });
-    reportSuccessEvent('enterRoom', sdkAppId);
+    try {
+        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
+        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
+        switchButtonStatus('enter-btn', 'exit-btn', true);
+        refreshLink({ sdkAppId, sdkSecretKey, roomId });
+        reportSuccessEvent('enterRoom', sdkAppId);
+    } catch (error) {
+        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
+        throw error;
+    }
 }
 
 async function exitRoom() {
-    await trtc.exitRoom();
-    await stopLocalAudio();
-    await stopLocalVideo();
-    cleanShareLink();
-    switchButtonStatus('enter-btn', 'exit-btn', false);
+    try {
+        await trtc.exitRoom();
+        await stopLocalAudio();
+        await stopLocalVideo();
+        cleanShareLink();
+        switchButtonStatus('enter-btn', 'exit-btn', false);
+        reportSuccessEvent('exitRoom', 0);
+    } catch (error) {
+        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
+        throw error;
+    }
 }
 
 async function startLocalAudio() {
@@ -88,3 +99,14 @@ function handleEvent() {
         await handleDeviceChange(event.type);
     });
 }
+
+// i18n initialization
+applyI18n();
+document.addEventListener('lang-changed', () => {
+    applyI18n();
+    // Update video-views titles
+    const localTitle = document.querySelector('video-views .local-title');
+    const remoteTitle = document.querySelector('video-views .remote-title');
+    if (localTitle) localTitle.textContent = t('video.localVideo');
+    if (remoteTitle) remoteTitle.textContent = t('video.remoteVideo');
+});

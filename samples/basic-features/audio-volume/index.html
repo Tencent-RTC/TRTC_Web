@@ -9,7 +9,10 @@
       rel="stylesheet"
     />
     <title>Audio Volume</title>
+    <script src="../../util/i18n.js" defer></script>
     <script src="../../components/header.js" defer></script>
+    <script src="../../components/params-form.js" defer></script>
+    <script src="../../components/invite-section.js" defer></script>
     <script
       src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
       defer
@@ -27,74 +30,25 @@
     <header-nav></header-nav>
     <main>
       <div class="feature-container">
-        <h1 style="color: #1c66e5">Audio Volume</h1>
+        <h1 style="color: #1c66e5" data-i18n="audioVolume.title">Audio Volume</h1>
+        <params-form></params-form>
         <section>
-          <h3>Step-1: Fill in the blanks</h3>
-          <span class="note"
-            >Get SDKAppId and SDKSecretKey from
-            <a
-              target="_top"
-              href="https://console.trtc.io/?quickclaim=engine_trial"
-              >TRTC Console</a
-            >
-          </span>
-          <span class="warning"
-            >Note: This demo is for demonstration purposes only. Before official
-            launch, please migrate SDKSecretKey and the UserSig calculation code
-            to your own backend server to avoid unauthorized traffic use caused
-            by the key leakage.
-            <a target="_top" href="https://trtc.io/document/35166"
-              >View Documents</a
-            ></span
-          >
-          <div class="input-list">
-            <div class="input-group">
-              <label for="sdk-app-id">SDKAppId</label>
-              <input
-                id="sdk-app-id"
-                type="number"
-                class="form-control"
-                placeholder="SDKAppId"
-              />
-            </div>
-            <div class="input-group">
-              <label for="sdk-secret-key">SDKSecretKey</label>
-              <input
-                id="sdk-secret-key"
-                type="text"
-                class="form-control"
-                placeholder="SDKSecretKey"
-              />
-            </div>
-          </div>
-          <div class="input-list">
-            <div class="input-group">
-              <label for="user-id">UserId</label>
-              <input id="user-id" type="text" class="form-control" />
-            </div>
-            <div class="input-group">
-              <label for="room-id">RoomId</label>
-              <input id="room-id" type="number" class="form-control" />
-            </div>
-          </div>
-        </section>
-        <section>
-          <h3>Step-2: Enter the room</h3>
+          <h3><span class="step-badge">2</span><span data-i18n="common.enterTheRoom">Enter the room</span></h3>
           <div class="btn-list">
             <button id="enter-btn" class="btn" onclick="enterRoom()">
-              <span class="btn-text">Enter Room</span>
+              <span class="btn-text" data-i18n="common.enterRoom">Enter Room</span>
             </button>
             <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
-              <span class="btn-text">Exit Room</span>
+              <span class="btn-text" data-i18n="common.exitRoom">Exit Room</span>
             </button>
           </div>
         </section>
         <section>
-          <h3>Step-3.1: Detect audio volume</h3>
-          <span class="note">Speaking after muting can still be detected</span>
+          <h3><span class="step-badge">3</span><span data-i18n="audioVolume.detectAudioVolume">Detect audio volume</span></h3>
+          <span class="note" data-i18n="audioVolume.speakingAfterMuting">Speaking after muting can still be detected</span>
           <div>
             <div class="volume-detect">
-              <label for="local-volume-detect">Local volume:</label>
+              <label for="local-volume-detect" data-i18n="audioVolume.localVolume">Local volume:</label>
               <input
                 id="local-volume-detect"
                 class="volume-display"
@@ -103,7 +57,7 @@
               />
             </div>
             <div class="volume-detect">
-              <label for="remote-volume-detect">Remote volume:</label>
+              <label for="remote-volume-detect" data-i18n="audioVolume.remoteVolume">Remote volume:</label>
               <input
                 id="remote-volume-detect"
                 class="volume-display"
@@ -116,11 +70,11 @@
             <div class="option-item">
               <input type="checkbox" id="enable-background" />
               <label for="enable-background" style="white-space: nowrap"
-                >Enable in background</label
+                data-i18n="audioVolume.enableInBackground">Enable in background</label
               >
             </div>
             <div class="option-item">
-              <label for="detect-interval">Detect interval:</label>
+              <label for="detect-interval" data-i18n="audioVolume.detectInterval">Detect interval:</label>
               <select id="detect-interval">
                 <option value="500">500ms</option>
                 <option value="1000">1000ms</option>
@@ -135,7 +89,7 @@
               onclick="startAudioVolumeDetection()"
               disabled
             >
-              <span class="btn-text">Start Detection</span>
+              <span class="btn-text" data-i18n="audioVolume.startDetection">Start Detection</span>
             </button>
             <button
               id="stop-detect-btn"
@@ -143,15 +97,15 @@
               onclick="stopAudioVolumeDetection()"
               disabled
             >
-              <span class="btn-text">Stop Detection</span>
+              <span class="btn-text" data-i18n="audioVolume.stopDetection">Stop Detection</span>
             </button>
           </div>
         </section>
         <section>
-          <h3>Step-3.2: Adjust audio volume</h3>
+          <h3><span class="step-badge">3</span><span data-i18n="audioVolume.adjustAudioVolume">Adjust audio volume</span></h3>
           <div class="volume-adjust">
             <div class="volume-adjust-display">
-              <label for="local-volume-display">Local volume:</label>
+              <label for="local-volume-display" data-i18n="audioVolume.localVolume">Local volume:</label>
               <input
                 id="local-volume-display"
                 class="volume-display"
@@ -176,7 +130,7 @@
                 onclick="muteLocalAudio()"
                 disabled
               >
-                <span class="btn-text">Mute Local Audio</span>
+                <span class="btn-text" data-i18n="audioVolume.muteLocalAudio">Mute Local Audio</span>
               </button>
               <button
                 id="unmute-btn"
@@ -184,13 +138,13 @@
                 onclick="muteLocalAudio()"
                 disabled
               >
-                <span class="btn-text">Unmute Local Audio</span>
+                <span class="btn-text" data-i18n="audioVolume.unmuteLocalAudio">Unmute Local Audio</span>
               </button>
             </div>
           </div>
           <div class="volume-adjust">
             <div class="volume-adjust-display">
-              <label for="remote-volume-display">Remote volume:</label>
+              <label for="remote-volume-display" data-i18n="audioVolume.remoteVolume">Remote volume:</label>
               <input
                 id="remote-volume-display"
                 class="volume-display"
@@ -210,26 +164,7 @@
             />
           </div>
         </section>
-        <section>
-          <h3>Activate remote stream</h3>
-          <div>
-            <span class="note"
-              >Use the link below to join the room as another user. The link
-              will be updated after being copied.</span
-            >
-            <div class="copy">
-              <button id="invite-btn" data-clipboard-target="#invite-url">
-                <img
-                  src="https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/icons/clippy.svg"
-                  width="12px"
-                  height="12px"
-                  alt="Copy to clipboard"
-                />
-              </button>
-              <input id="invite-url" class="invite-input" readonly />
-            </div>
-          </div>
-        </section>
+        <invite-section></invite-section>
       </div>
     </main>
   </body>

@@ -13,6 +13,7 @@ A React-based quick demo for [Tencent Real-Time Communication (TRTC)](https://ww
 - **Invite Link** – Generate a one-time invite link after entering a room, auto-refresh on copy
 - **Invite Page** – Simplified page for invited users to join a call directly
 - **i18n** – Chinese (zh-cn) and English (en) language switching
+- **Aegis Monitoring** – Integrated Tencent Cloud frontend monitoring
 
 ## Tech Stack
 

@@ -296,33 +296,38 @@ template.innerHTML = `
               <!-- basic features -->
               <li>
                 <button class="nav-link dropdown-btn" data-dropdown="dropdown1">
-                  Basic Features
+                  <span data-i18n="nav.basicFeatures">Basic Features</span>
                   <img src='../../icons/chevron-down.svg' width='16px' height='16px' id="arrow1" alt='Arrow icon'>
                 </button>
                 <div id="dropdown1" class="dropdown">
                   <ul>
                     <li>
-                      <a class="dropdown-link" href="../../basic-features/screen-sharing/index.html">
+                      <a class="dropdown-link" href="../../basic-features/quick-start/index.html" data-i18n="nav.quickStart">
+                        Quick Start
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-link" href="../../basic-features/screen-sharing/index.html" data-i18n="nav.screenSharing">
                         Screen Sharing
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-link" href="../../basic-features/live-streaming/index.html">
+                      <a class="dropdown-link" href="../../basic-features/live-streaming/index.html" data-i18n="nav.liveStreaming">
                         Live Streaming
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-link" href="../../basic-features/media-device/index.html">
+                      <a class="dropdown-link" href="../../basic-features/media-device/index.html" data-i18n="nav.mediaDevice">
                         Media Device
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-link" href="../../basic-features/audio-volume/index.html">
+                      <a class="dropdown-link" href="../../basic-features/audio-volume/index.html" data-i18n="nav.audioVolume">
                         Audio Volume
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-link" href="../../basic-features/set-encoding-profile/index.html">
+                      <a class="dropdown-link" href="../../basic-features/set-encoding-profile/index.html" data-i18n="nav.setEncodingProfile">
                         Set Encoding Profile
                       </a>
                     </li>
@@ -332,24 +337,24 @@ template.innerHTML = `
               <!-- advance features -->
               <li>
                 <button class="nav-link dropdown-btn" data-dropdown="dropdown2">
-                  Advance Features
+                  <span data-i18n="nav.advanceFeatures">Advance Features</span>
                   <img src='../../icons/chevron-down.svg' width='16px' height='16px' id="arrow2" alt='Arrow icon'>
                 </button>
                 <div id="dropdown2" class="dropdown">
                   <ul>
                     <li>
                       <a class="dropdown-link" href="../../advance-features/enable-audio-mixer/index.html"
-                        >Enable Audio Mixer</a
+                        data-i18n="nav.enableAudioMixer">Enable Audio Mixer</a
                       >
                     </li>
                     <li>
                       <a class="dropdown-link" href="../../advance-features/enable-watermark/index.html"
-                        >Enable Watermark</a
+                        data-i18n="nav.enableWatermark">Enable Watermark</a
                       >
                     </li>
                     <li>
                       <a class="dropdown-link" href="../../advance-features/data-messages/index.html"
-                        >Data Messages</a
+                        data-i18n="nav.dataMessages">Data Messages</a
                       >
                     </li>
                   </ul>
@@ -377,7 +382,7 @@ template.innerHTML = `
             <img src='../../icons/menu.svg' width='32px' height='32px' alt='Menu icon'>
           </button>
           <!-- switch language -->
-          <!-- <span class="lang-switch">En/中</span> -->
+          <span class="lang-switch" id="lang-switch">En/中</span>
         </div>
       </div>
   </header>
@@ -386,8 +391,32 @@ template.innerHTML = `
 class HeaderNav extends HTMLElement {
   constructor() {
     super();
+    if (window.self !== window.top) {
+      this.style.display = 'none';
+      return;
+    }
     const _shadowRoot = this.attachShadow({ mode: 'open' });
     _shadowRoot.appendChild(template.content.cloneNode(true));
+
+    // Report click on logo link
+    const logoLink = _shadowRoot.querySelector('.logo');
+    if (logoLink) {
+      logoLink.addEventListener('click', () => {
+        aegis?.reportEvent({
+          name: 'jumpDocInfo',
+          ext1: 'jumpDocInfo',
+          ext2: DEMOKEY,
+          ext3: 0,
+        });
+      });
+    }
+
+    // Apply i18n to shadow DOM elements
+    _shadowRoot.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      el.textContent = t(key);
+    });
+    
     const _dropdownBtn = _shadowRoot.querySelectorAll(".dropdown-btn");
     const _dropdown = _shadowRoot.querySelectorAll(".dropdown");
     const _hamburgerBtn = _shadowRoot.getElementById("hamburger");
@@ -438,17 +467,39 @@ class HeaderNav extends HTMLElement {
     });
 
     _hamburgerBtn.addEventListener("click", () => _navMenu.classList.toggle("show"));
+
+    // Language switch
+    const _langSwitch = _shadowRoot.getElementById("lang-switch");
+    if (_langSwitch) {
+      _langSwitch.textContent = t('nav.langSwitch');
+      _langSwitch.addEventListener("click", () => {
+        toggleLang();
+        applyI18n();
+        // Re-apply i18n inside shadow DOM
+        _shadowRoot.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          el.textContent = t(key);
+        });
+        // Dispatch custom event for page-level i18n refresh
+        document.dispatchEvent(new CustomEvent('lang-changed', { detail: { lang: getLang() } }));
+      });
+    }
   }
 }
 
 function closeDropdownMenu(shadowRoot) {
   // change all the arrow's direction from pointing up to pointing down
-  shadowRoot.getElementById('arrow1').src = '../../icons/chevron-down.svg';
-  shadowRoot.getElementById('arrow2').src = '../../icons/chevron-down.svg';
+  const arrow1 = shadowRoot.getElementById('arrow1');
+  const arrow2 = shadowRoot.getElementById('arrow2');
+  if (arrow1 && !arrow1.src.includes('chevron-down.svg')) {
+    arrow1.src = '../../icons/chevron-down.svg';
+  }
+  if (arrow2 && !arrow2.src.includes('chevron-down.svg')) {
+    arrow2.src = '../../icons/chevron-down.svg';
+  }
   const dropdown = shadowRoot.querySelectorAll(".dropdown")
   dropdown.forEach((drop) => {
     drop.classList.remove("active");
-    drop.addEventListener("click", (e) => e.stopPropagation());
   });
 }
 

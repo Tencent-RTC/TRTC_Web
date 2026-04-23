@@ -9,7 +9,11 @@
       rel="stylesheet"
     />
     <title>Live Streaming</title>
+    <script src="../../util/i18n.js" defer></script>
     <script src="../../components/header.js" defer></script>
+    <script src="../../components/params-form.js" defer></script>
+    <script src="../../components/invite-section.js" defer></script>
+    <script src="../../components/video-views.js" defer></script>
     <script
       src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
       defer
@@ -27,93 +31,25 @@
     <header-nav></header-nav>
     <main>
       <div class="feature-container">
-        <h1 style="color: #1c66e5">Live Streaming</h1>
+        <h1 style="color: #1c66e5" data-i18n="liveStreaming.title">Live Streaming</h1>
+        <params-form></params-form>
         <section>
-          <h3>Step-1: Fill in the blanks</h3>
-          <span class="note"
-            >Get SDKAppId and SDKSecretKey from
-            <a
-              target="_top"
-              href="https://console.trtc.io/?quickclaim=engine_trial"
-              >TRTC Console</a
-            >
-          </span>
-          <span class="warning"
-            >Note: This demo is for demonstration purposes only. Before official
-            launch, please migrate SDKSecretKey and the UserSig calculation code
-            to your own backend server to avoid unauthorized traffic use caused
-            by the key leakage.
-            <a target="_top" href="https://trtc.io/document/35166"
-              >View Documents</a
-            ></span
-          >
-          <div class="input-list">
-            <div class="input-group">
-              <label for="sdk-app-id">SDKAppId</label>
-              <input
-                id="sdk-app-id"
-                type="number"
-                class="form-control"
-                placeholder="SDKAppId"
-              />
-            </div>
-            <div class="input-group">
-              <label for="sdk-secret-key">SDKSecretKey</label>
-              <input
-                id="sdk-secret-key"
-                type="text"
-                class="form-control"
-                placeholder="SDKSecretKey"
-              />
-            </div>
-          </div>
-          <div class="input-list">
-            <div class="input-group">
-              <label for="user-id">UserId</label>
-              <input id="user-id" type="text" class="form-control" />
-            </div>
-            <div class="input-group">
-              <label for="room-id">RoomId</label>
-              <input id="room-id" type="number" class="form-control" />
-            </div>
-          </div>
-        </section>
-        <section>
-          <h3 id="enter-room-title">Step-2: Enter the room as anchor</h3>
+          <h3 id="enter-room-title"><span class="step-badge">2</span><span data-i18n="liveStreaming.enterAsAnchor">Enter the room as anchor</span></h3>
           <div class="btn-list">
             <button id="enter-btn" class="btn" onclick="enterRoom()">
-              <span class="btn-text">Enter Room</span>
+              <span class="btn-text" data-i18n="common.enterRoom">Enter Room</span>
             </button>
             <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
-              <span class="btn-text">Exit Room</span>
+              <span class="btn-text" data-i18n="common.exitRoom">Exit Room</span>
             </button>
           </div>
         </section>
-        <section id="invite-container">
-          <h3>Step-3: Copy link to join as audience</h3>
-          <div>
-            <span class="note"
-              >Use the link below to join the room as another user. The link
-              will be updated after being copied.</span
-            >
-            <div class="copy">
-              <button id="invite-btn" data-clipboard-target="#invite-url">
-                <img
-                  src="https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/icons/clippy.svg"
-                  width="12px"
-                  height="12px"
-                  alt="Copy to clipboard"
-                />
-              </button>
-              <input id="invite-url" class="invite-input" readonly />
-            </div>
-          </div>
-        </section>
+        <invite-section id="invite-container"></invite-section>
         <section id="role-switch-container">
-          <h3>Step-3: Switch roles</h3>
+          <h3><span class="step-badge">3</span><span data-i18n="liveStreaming.switchRoles">Switch roles</span></h3>
           <div class="role-switch-content">
             <div class="role-content">
-              <label id="role-label" for="role">Audience</label>
+              <label id="role-label" for="role" data-i18n="liveStreaming.audience">Audience</label>
               <label class="switch">
                 <input
                   id="role"
@@ -149,16 +85,7 @@
           </div>
         </section>
       </div>
-      <div class="video-container">
-        <div class="video-sub-container">
-          <h2>Local Video</h2>
-          <div id="local-video-view" class="video-view"></div>
-        </div>
-        <div class="video-sub-container">
-          <h2>Remote Video</h2>
-          <div id="remote-video-view" class="video-view"></div>
-        </div>
-      </div>
+      <video-views></video-views>
     </main>
   </body>
 </html>

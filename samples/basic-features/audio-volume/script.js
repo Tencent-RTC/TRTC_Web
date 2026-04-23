@@ -5,22 +5,33 @@ let isMuted = false;
 
 // --------functions----------
 async function enterRoom() {
-    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-    await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-    reportSuccessEvent('enterRoom', sdkAppId);
-    await trtc.startLocalAudio();
-    await trtcSpeakDetect.startLocalAudio();
-    switchElementStatusOnRoomStatus(true);
-    refreshLink({ sdkAppId, sdkSecretKey, roomId });
+    try {
+        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
+        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
+        reportSuccessEvent('enterRoom', sdkAppId);
+        await trtc.startLocalAudio();
+        await trtcSpeakDetect.startLocalAudio();
+        switchElementStatusOnRoomStatus(true);
+        refreshLink({ sdkAppId, sdkSecretKey, roomId });
+    } catch (error) {
+        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
+        throw error;
+    }
 }
 
 async function exitRoom() {
-    await trtc.exitRoom();
-    await trtc.stopLocalAudio();
-    await trtcSpeakDetect.stopLocalAudio();
-    stopAudioVolumeDetection();
-    switchElementStatusOnRoomStatus(false);
-    cleanShareLink();
+    try {
+        await trtc.exitRoom();
+        await trtc.stopLocalAudio();
+        await trtcSpeakDetect.stopLocalAudio();
+        stopAudioVolumeDetection();
+        switchElementStatusOnRoomStatus(false);
+        cleanShareLink();
+        reportSuccessEvent('exitRoom', 0);
+    } catch (error) {
+        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
+        throw error;
+    }
 }
 
 function startAudioVolumeDetection() {
@@ -48,7 +59,7 @@ function handleAfterMuteDetection() {
         event.result.forEach(({ userId, volume }) => {
             // it is generally believed that when the volume is greater than 10, the user is talking
             if (userId === '' && volume > 10 && isMuted) {
-                alert('Speaking after muting microphone is detected!');
+                alert(t('audioVolume.speakingAfterMutingDetected'));
             }
         })
     });
@@ -77,3 +88,7 @@ async function muteLocalAudio() {
     switchButtonStatus('mute-btn', 'unmute-btn', !isMuted);
     isMuted = !isMuted;
 }
+
+// i18n initialization
+applyI18n();
+document.addEventListener('lang-changed', () => { applyI18n(); });

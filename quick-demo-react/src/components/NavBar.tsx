@@ -34,7 +34,7 @@ export default function NavBar() {
         </a>
         <button className="navbar-lang-btn" onClick={toggleLanguage}>中/En</button>
         <a
-          href="https://github.com/LiteAVSDK/TRTC_Web"
+          href="https://github.com/Tencent-RTC/TRTC_Web"
           target="_blank"
           rel="noopener noreferrer"
           className="navbar-github"
