@@ -56,9 +56,6 @@ export default function HomePage() {
 
   const handleEnterRoom = async () => {
     await enterRoom();
-    // Auto start audio and video after entering room
-    startLocalVideo();
-    startLocalAudio();
   };
 
   return (

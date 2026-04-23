@@ -118,7 +118,7 @@ select {
 }
 
 .video-sub-container {
-  width: 40%;
+  width: 50%;
   padding: 8px;
 }
 
@@ -129,40 +129,6 @@ select {
 
 .video-view video {
   vertical-align: top;
-}
-
-.input-list {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.input-group {
-  flex-basis: 40%;
-  display: flex;
-}
-
-.input-group label {
-  width: 6rem;
-  font-size: 0.85rem;
-  font-family: "Oxygen";
-  background-color: #f2f5fc;
-  padding: 8px;
-  border: 1px solid #ced4da;
-  border-right: none;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-
-.form-control {
-  width: 15vw;
-  min-width: 8rem;
-  padding: 8px;
-  border: 1px solid #ced4da;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  color: #4f586b;
 }
 
 .btn-list {
@@ -204,7 +170,10 @@ select {
 
 .invite-input {
   border: 1px solid #d5d5d5;
+  border-left: none;
+  border-radius: 0 6px 6px 0;
   line-height: 30px;
+  height: 32px;
   font-size: 12px;
   width: 100%;
   box-sizing: border-box;
@@ -215,26 +184,51 @@ select {
   display: flex;
   align-items: center;
   padding-top: 0.8rem;
+  gap: 0;
 }
 
-#invite-btn {
-  position: relative;
-  display: inline-block;
-  padding: 6px 12px;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 20px;
-  color: #333;
-  white-space: nowrap;
-  vertical-align: middle;
+.invite-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.invite-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  color: #555;
   cursor: pointer;
-  background-color: #f2f5fc;
+  background-color: #f8f9fa;
   border: 1px solid #d5d5d5;
-  border-radius: 3px;
+  border-radius: 0;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.invite-action-btn:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.invite-action-btn:last-child {
+  border-radius: 0;
+  border-left: none;
+}
+
+.invite-action-btn:hover {
+  background-color: #e9ecef;
+  color: #0d6efd;
+}
+
+.invite-action-btn:active {
+  background-color: #dee2e6;
 }
 
 .tooltipped {

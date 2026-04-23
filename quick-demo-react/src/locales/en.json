@@ -53,7 +53,7 @@
   },
   "security": {
     "warning": "Notes: this Demo is only applicable for debugging. Before official launch, please migrate the UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the leakage of encryption key.",
-    "viewDoc": "View Documents"
+    "viewDoc": "Learn More"
   },
   "log": {
     "title": "Log:"

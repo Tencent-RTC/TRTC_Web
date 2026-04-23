@@ -127,7 +127,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('enterRoom error', error);
       reportFailedEvent({ name: 'enterRoom', error, roomId: strRoomId });
-      store.addFailedLog(`[${userId}] enterRoom failed.`);
+      store.addFailedLog(`[${userId}] enterRoom failed. Reason: ${error.message || error}`);
       setRoomStatus('idle');
       unbindEvents();
     }
@@ -164,7 +164,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('exitRoom error', error);
       reportFailedEvent({ name: 'exitRoom', error });
-      store.addFailedLog(`[${userId}] exitRoom failed.`);
+      store.addFailedLog(`[${userId}] exitRoom failed. Reason: ${error.message || error}`);
       setRoomStatus('entered');
     }
   }, [store, micStatus, camStatus, shareStatus, unbindEvents]);
@@ -184,7 +184,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('startLocalAudio error', error);
       reportFailedEvent({ name: 'startLocalAudio', error });
-      store.addFailedLog(`${userId ? `[${userId}]` : ''} startLocalAudio failed.`);
+      store.addFailedLog(`${userId ? `[${userId}]` : ''} startLocalAudio failed. Reason: ${error.message || error}`);
       setMicStatus('idle');
     }
   }, [store]);
@@ -205,7 +205,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('stopLocalAudio error', error);
       reportFailedEvent({ name: 'stopLocalAudio', error });
-      store.addFailedLog(`${userId ? `[${userId}]` : ''} stopLocalAudio failed.`);
+      store.addFailedLog(`${userId ? `[${userId}]` : ''} stopLocalAudio failed. Reason: ${error.message || error}`);
       setMicStatus('started');
     }
   }, [store, micStatus]);
@@ -226,7 +226,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('startLocalVideo error', error);
       reportFailedEvent({ name: 'startLocalVideo', error });
-      store.addFailedLog(`${userId ? `[${userId}]` : ''} startLocalVideo failed.`);
+      store.addFailedLog(`${userId ? `[${userId}]` : ''} startLocalVideo failed. Reason: ${error.message || error}`);
       setCamStatus('idle');
     }
   }, [store]);
@@ -247,7 +247,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('stopLocalVideo error', error);
       reportFailedEvent({ name: 'stopLocalVideo', error });
-      store.addFailedLog(`${userId ? `[${userId}]` : ''} stopLocalVideo failed.`);
+      store.addFailedLog(`${userId ? `[${userId}]` : ''} stopLocalVideo failed. Reason: ${error.message || error}`);
       setCamStatus('started');
     }
   }, [store, camStatus]);
@@ -264,7 +264,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('startScreenShare error', error);
       reportFailedEvent({ name: 'startScreenShare', error, type: 'share' });
-      store.addFailedLog(`${userId ? `[${userId}]` : ''} startScreenShare failed.`);
+      store.addFailedLog(`${userId ? `[${userId}]` : ''} startScreenShare failed. Reason: ${error.message || error}`);
       setShareStatus('idle');
     }
   }, [store]);
@@ -285,7 +285,7 @@ export function useTRTC() {
     } catch (error: any) {
       console.error('stopScreenShare error', error);
       reportFailedEvent({ name: 'stopScreenShare', error, type: 'share' });
-      store.addFailedLog(`${userId ? `[${userId}]` : ''} stopScreenShare failed.`);
+      store.addFailedLog(`${userId ? `[${userId}]` : ''} stopScreenShare failed. Reason: ${error.message || error}`);
       setShareStatus('started');
     }
   }, [store, shareStatus]);

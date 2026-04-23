@@ -7,6 +7,26 @@ let isCameraOn = false;
 
 // initialization
 changePageDisplay();
+applyI18n();
+updateInviteSection();
+document.addEventListener('lang-changed', () => {
+    applyI18n();
+    updateInviteSection();
+    // Re-apply dynamic texts
+    document.getElementById('role-label').textContent = isAudience ? t('liveStreaming.audience') : t('liveStreaming.anchor');
+});
+
+function updateInviteSection() {
+    const inviteEl = document.getElementById('invite-container');
+    if (inviteEl) {
+        inviteEl.querySelector('h3').textContent = t('liveStreaming.copyLinkToJoin');
+    }
+    // Update video-views titles
+    const localTitle = document.querySelector('video-views .local-title');
+    const remoteTitle = document.querySelector('video-views .remote-title');
+    if (localTitle) localTitle.textContent = t('video.localVideo');
+    if (remoteTitle) remoteTitle.textContent = t('video.remoteVideo');
+}
 
 // listen for events
 trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
@@ -15,46 +35,57 @@ trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
 
 // --------functions----------
 async function enterRoom() {
-    const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-    let role;
-    if (isInvited) {
-        role = TRTC.TYPE.ROLE_AUDIENCE;
-        document.getElementById('role').disabled = false;
-    } else {
-        role = TRTC.TYPE.ROLE_ANCHOR;
-        await trtc.startLocalAudio();
-        await trtc.startLocalVideo({ view: 'local-video-view' });
-        refreshLink({ sdkAppId, sdkSecretKey, roomId });
+    try {
+        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
+        let role;
+        if (isInvited) {
+            role = TRTC.TYPE.ROLE_AUDIENCE;
+            document.getElementById('role').disabled = false;
+        } else {
+            role = TRTC.TYPE.ROLE_ANCHOR;
+            await trtc.startLocalAudio();
+            await trtc.startLocalVideo({ view: 'local-video-view' });
+            refreshLink({ sdkAppId, sdkSecretKey, roomId });
+        }
+        const scene = TRTC.TYPE.SCENE_LIVE;
+        await trtc.enterRoom({ scene, role, roomId, sdkAppId, userId, userSig });
+        switchButtonStatus('enter-btn', 'exit-btn', true);
+        reportSuccessEvent('enterRoom', sdkAppId);
+    } catch (error) {
+        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
+        throw error;
     }
-    const scene = TRTC.TYPE.SCENE_LIVE;
-    await trtc.enterRoom({ scene, role, roomId, sdkAppId, userId, userSig });
-    switchButtonStatus('enter-btn', 'exit-btn', true);
-    reportSuccessEvent('enterRoom', sdkAppId);
 }
 
 async function exitRoom() {
-    if (isInvited) {
-        if (!isAudience) {
-            await switchRole();
-            document.getElementById('role').checked = false;
+    try {
+        if (isInvited) {
+            if (!isAudience) {
+                await switchRole();
+                document.getElementById('role').checked = false;
+            }
+            document.getElementById('role').disabled = true;
+        } else {
+            cleanShareLink();
         }
-        document.getElementById('role').disabled = true;
-    } else {
-        cleanShareLink();
+        await trtc.stopLocalAudio();
+        await trtc.stopLocalVideo();
+        await trtc.exitRoom();
+        switchButtonStatus('enter-btn', 'exit-btn', false);
+        reportSuccessEvent('exitRoom', 0);
+    } catch (error) {
+        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
+        throw error;
     }
-    await trtc.stopLocalAudio();
-    await trtc.stopLocalVideo();
-    await trtc.exitRoom();
-    switchButtonStatus('enter-btn', 'exit-btn', false);
 }
 
 async function switchRole() {
     if (isAudience) {
-        document.getElementById('role-label').innerHTML = 'Anchor';
+        document.getElementById('role-label').textContent = t('liveStreaming.anchor');
         document.querySelectorAll('.device-icon').forEach(icon => icon.style.display = 'inline-block');
         await trtc.switchRole(TRTC.TYPE.ROLE_ANCHOR);
     } else {
-        document.getElementById('role-label').innerHTML = 'Audience';
+        document.getElementById('role-label').textContent = t('liveStreaming.audience');
         document.querySelectorAll('.device-icon').forEach(icon => icon.style.display = 'none');
         if (isMicOn) switchMicrophoneStatus();
         if (isCameraOn) switchCameraStatus();

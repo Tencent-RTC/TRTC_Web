@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Quick Start</title>
+    <script src="../../util/i18n.js" defer></script>
+    <script src="../../components/header.js" defer></script>
+    <script src="../../components/params-form.js" defer></script>
+    <script src="../../components/invite-section.js" defer></script>
+    <script
+      src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
+      defer
+    ></script>
+    <script src="../../libs/lib-generate-test-usersig.min.js" defer></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/dist/trtc.js"
+      defer
+    ></script>
+    <script src="../../libs/clipboard.min.js" defer></script>
+    <script src="../../util/utils.js" defer></script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <header-nav></header-nav>
+    <main>
+      <div class="feature-container">
+        <h1 style="color: #1c66e5" data-i18n="quickStart.title">Quick Start</h1>
+
+        <!-- Step 1: Parameters -->
+        <div class="step-section" id="step-1">
+          <params-form></params-form>
+        </div>
+
+        <!-- Step 2: Enter Room -->
+        <section class="step-section" id="step-2">
+          <h3><span class="step-badge">2</span><span data-i18n="common.enterTheRoom">Enter the room</span></h3>
+          <div class="btn-list">
+            <button id="enter-btn" class="btn" onclick="enterRoom()">
+              <span class="btn-text" data-i18n="common.enterRoom">Enter Room</span>
+            </button>
+            <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
+              <span class="btn-text" data-i18n="common.exitRoom">Exit Room</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 3: Manage Stream -->
+        <section class="step-section disabled" id="step-3">
+          <h3><span class="step-badge">3</span><span data-i18n="quickStart.manageLocalStream">Manage Local Stream</span></h3>
+          <div class="stream-controls">
+            <div class="control-item">
+              <button
+                id="mute-audio-btn"
+                class="btn btn-secondary"
+                onclick="toggleLocalAudio()"
+                disabled
+              >
+                <span class="btn-text" data-i18n="quickStart.startMicrophone">Start Microphone</span>
+              </button>
+              <select id="microphone-select" class="device-select"></select>
+            </div>
+            <div class="control-item">
+              <button
+                id="mute-video-btn"
+                class="btn btn-secondary"
+                onclick="toggleLocalVideo()"
+                disabled
+              >
+                <span class="btn-text" data-i18n="quickStart.startCamera">Start Camera</span>
+              </button>
+              <select id="camera-select" class="device-select"></select>
+            </div>
+            <div class="control-item">
+              <button
+                id="start-screen-btn"
+                class="btn btn-secondary"
+                onclick="toggleScreenShare()"
+                disabled
+              >
+                <span class="btn-text" data-i18n="quickStart.startScreenShare">Start Screen Share</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Invite -->
+        <div class="step-section disabled" id="step-invite">
+          <invite-section id="invite-section-el"></invite-section>
+        </div>
+      </div>
+
+      <div class="video-container">
+        <div class="video-sub-container">
+          <h2 data-i18n="quickStart.localStream">Local Stream</h2>
+          <div id="local-video-view" class="video-view"></div>
+          <div id="local-status" class="video-status">
+            <span class="status-dot offline"></span>
+            <span class="status-text" data-i18n="quickStart.notPublished">Not published</span>
+          </div>
+          <div id="local-screen-wrapper" class="local-screen-wrapper" style="display: none">
+            <h2 data-i18n="quickStart.localScreen">Local Screen</h2>
+            <div id="local-screen-view" class="video-view"></div>
+            <div id="screen-status" class="video-status">
+              <span class="status-dot offline"></span>
+              <span class="status-text" data-i18n="quickStart.noScreenSharing">No screen sharing</span>
+            </div>
+          </div>
+        </div>
+        <div class="video-sub-container">
+          <h2 data-i18n="quickStart.remoteStream">Remote Stream</h2>
+          <div id="remote-video-view" class="video-view"></div>
+          <div id="remote-status" class="video-status">
+            <span class="status-dot offline"></span>
+            <span class="status-text" data-i18n="quickStart.noRemoteUser">No remote user</span>
+          </div>
+          <div id="remote-screen-wrapper" class="local-screen-wrapper" style="display: none">
+            <h2 data-i18n="quickStart.remoteScreen">Remote Screen</h2>
+            <div id="remote-screen-view" class="video-view"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+  </body>
+</html>

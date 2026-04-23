@@ -1,6 +1,5 @@
 // initialization
 checkEnvironment();
-stopMediaTracks();
 handleError();
 fillParamsFromUrl();
 
@@ -10,7 +9,7 @@ function checkEnvironment() {
     TRTC.isSupported().then((checkResult) => {
         console.log('checkResult', checkResult.result, 'checkDetail', checkResult.detail);
         if (!checkResult.result) {
-            alert('Your browser does not supported TRTC!');
+            alert(t('utils.browserNotSupported'));
             window.location.href = 'https://web.sdk.qcloud.com/trtc/webrtc/demo/detect/index.html';
         }
     });
@@ -18,9 +17,9 @@ function checkEnvironment() {
 
 async function stopMediaTracks() {
     const currentFeature = document.querySelector('h1').innerHTML;
-    const featuresUseVideoAndAuido = ['Live Streaming', 'Media Device', 'Set Encoding Profile', 'Detect Capabilities', 'Custom Capturing and Rendering'];
-    const featureUseVideoOnly = ['Enable Watermark'];
-    const featureUseAudioOnly = ['Audio Volume', 'Enable Audio Mixer'];
+    const featuresUseVideoAndAuido = [t('quickStart.title'), t('liveStreaming.title'), t('mediaDevice.title'), t('encodingProfile.title'), 'Detect Capabilities', 'Custom Capturing and Rendering'];
+    const featureUseVideoOnly = [t('watermark.title')];
+    const featureUseAudioOnly = [t('audioVolume.title'), t('audioMixer.title')];
     let stream;
     try {
         if (featuresUseVideoAndAuido.includes(currentFeature)) {
@@ -34,6 +33,7 @@ async function stopMediaTracks() {
         }
         stream?.getTracks().forEach(track => track.stop());
     } catch (error) {
+        document.getElementById('enter-btn').disabled = true;
         throw new Error(error);
     }
 }
@@ -47,10 +47,35 @@ function handleError() {
 
 // extract params from url and fill them in the blanks
 function fillParamsFromUrl() {
-    document.getElementById('user-id').value = getQueryString('userId') || Math.floor(Math.random() * 1000000);
-    document.getElementById('room-id').value = getQueryString('roomId') || Math.floor(Math.random() * 1000);
-    document.getElementById('sdk-app-id').value = getQueryString('sdkAppId') || localStorage.getItem('sdkAppId');
-    document.getElementById('sdk-secret-key').value = getQueryString('sdkSecretKey') || localStorage.getItem('sdkSecretKey');
+    const urlUserId = getQueryString('userId');
+    const urlRoomId = getQueryString('roomId');
+    const urlSdkAppId = getQueryString('sdkAppId');
+    const urlUserSig = getQueryString('userSig');
+
+    // If userSig is present in URL, this is an invited user
+    if (urlUserSig && urlSdkAppId && urlUserId && urlRoomId) {
+        document.getElementById('user-id').value = urlUserId;
+        document.getElementById('room-id').value = urlRoomId;
+        document.getElementById('sdk-app-id').value = urlSdkAppId;
+        // Invited users cannot edit sdkAppId, userId, roomId
+        document.getElementById('user-id').readOnly = true;
+        document.getElementById('room-id').readOnly = true;
+        document.getElementById('sdk-app-id').readOnly = true;
+        // Hide SDKSecretKey field for invited users (they use userSig directly)
+        const secretKeyGroup = document.getElementById('sdk-secret-key')?.closest('.input-group');
+        if (secretKeyGroup) {
+            secretKeyGroup.style.display = 'none';
+        }
+        // Store userSig for later use
+        window.inviteUserSig = urlUserSig;
+    } else {
+        document.getElementById('user-id').value = urlUserId || Math.floor(Math.random() * 1000000);
+        document.getElementById('room-id').value = urlRoomId || Math.floor(Math.random() * 1000);
+        const storedSdkAppId = localStorage.getItem('sdkAppId');
+        document.getElementById('sdk-app-id').value = urlSdkAppId || (storedSdkAppId && storedSdkAppId !== 'NaN' ? storedSdkAppId : '');
+        const storedSdkSecretKey = localStorage.getItem('sdkSecretKey');
+        document.getElementById('sdk-secret-key').value = storedSdkSecretKey || '';
+    }
 }
 
 function getQueryString(name) {
@@ -91,10 +116,19 @@ function initParams() {
     const sdkSecretKey = document.getElementById('sdk-secret-key').value;
     const userId = document.getElementById('user-id').value;
     const roomId = parseInt(document.getElementById('room-id').value);
-    localStorage.setItem('sdkAppId', sdkAppId);
-    localStorage.setItem('sdkSecretKey', sdkSecretKey);
+
+    // If userSig is provided via invite link, use it directly
+    if (window.inviteUserSig) {
+        if (!(sdkAppId && roomId && userId)) {
+            throw new Error(t('utils.enterCorrectParams'));
+        }
+        return { sdkAppId, userId, roomId, userSig: window.inviteUserSig };
+    }
+
+    if (!isNaN(sdkAppId)) localStorage.setItem('sdkAppId', sdkAppId);
+    if (sdkSecretKey) localStorage.setItem('sdkSecretKey', sdkSecretKey);
     if (!(sdkAppId && sdkSecretKey && roomId && userId)) {
-        throw new Error('Please enter the correct SDKAppId, SDKSecretKey, userId, roomId');
+        throw new Error(t('utils.enterCorrectParams'));
     }
     const { userSig } = genTestUserSig({ sdkAppId, userId, sdkSecretKey });
     return { sdkAppId, sdkSecretKey, userId, roomId, userSig };
@@ -115,22 +149,18 @@ function getSelectedElement(id) {
     return selected;
 }
 
-// generate invite url 
+// generate invite url - uses userSig instead of sdkSecretKey for security
 function refreshLink({ sdkAppId, sdkSecretKey, roomId }) {
-    const basicFeatures = ['screen-sharing', 'live-streaming', 'media-device', 'audio-volume', 'set-encoding-profile'];
-    const currentFeature = toLowerCaseAndReplaceSpaces(document.querySelector('h1').innerHTML);
-    const path = basicFeatures.includes(currentFeature) ? `basic-features/${currentFeature}/index.html` : `advance-features/${currentFeature}/index.html`;
     const userId = String(Math.floor(Math.random() * 1000000));
-    const linkTail = `${path}?sdkSecretKey=${sdkSecretKey}&&sdkAppId=${sdkAppId}&&userId=${userId}&&roomId=${roomId}`;
-    const link = window.location.href.indexOf('127.0.0.1') > -1 ? `http://127.0.0.1:5500/${linkTail}` : `https://web.sdk.qcloud.com/trtc/webrtc/v5/demo/samples/${linkTail}`;
-    document.getElementById('invite-url').value = link;
-}
-
-function toLowerCaseAndReplaceSpaces(str) {
-    return str
-        .toLowerCase()
-        .split(' ')
-        .join('-');
+    const { userSig } = genTestUserSig({ sdkAppId, userId, sdkSecretKey });
+    const url = new URL(window.location.href);
+    url.searchParams.set('sdkAppId', sdkAppId);
+    url.searchParams.set('userId', userId);
+    url.searchParams.set('roomId', roomId);
+    url.searchParams.set('userSig', userSig);
+    // Remove sdkSecretKey from URL to prevent key leakage
+    url.searchParams.delete('sdkSecretKey');
+    document.getElementById('invite-url').value = url.toString();
 }
 
 function cleanShareLink() {
@@ -161,7 +191,7 @@ async function handleDeviceChange(deviceType) {
 // called in Live Streaming
 function changePageDisplay() {
     if (isInvited) {
-        document.getElementById('enter-room-title').innerHTML = 'Step-2: Enter the room as audience';
+        document.getElementById('enter-room-title').innerHTML = `<span class="step-badge">2</span>${t('liveStreaming.enterAsAudience')}`;
         document.getElementById('invite-container').style.display = 'none';
         document.getElementById('role-switch-container').style.display = 'block';
     }
@@ -242,42 +272,104 @@ function toastify(text) {
 }
 
 // handle the logic of clipboard
-let clipboard = new ClipboardJS('#invite-btn');
-clipboard.on('success', (e) => {
-    refreshLink({ sdkAppId, sdkSecretKey, roomId });
-    showTooltip(e.trigger, 'Copied!');
-});
+let clipboard;
 const inviteBtn = document.getElementById('invite-btn');
-inviteBtn.addEventListener('mouseleave', clearTooltip);
-inviteBtn.addEventListener('blur', clearTooltip);
+if (inviteBtn) {
+    clipboard = new ClipboardJS('#invite-btn');
+    clipboard.on('success', (e) => {
+        const sdkAppId = parseInt(document.getElementById('sdk-app-id').value);
+        const sdkSecretKey = document.getElementById('sdk-secret-key').value;
+        const roomId = parseInt(document.getElementById('room-id').value);
+        refreshLink({ sdkAppId, sdkSecretKey, roomId });
+        showTooltip(e.trigger, t('invite.copied'));
+    });
+    inviteBtn.addEventListener('mouseleave', clearTooltip);
+    inviteBtn.addEventListener('blur', clearTooltip);
+}
+
+// handle the logic of open invite link
+const inviteOpenBtn = document.getElementById('invite-open-btn');
+if (inviteOpenBtn) {
+    inviteOpenBtn.addEventListener('click', () => {
+        const inviteUrl = document.getElementById('invite-url').value;
+        if (inviteUrl) {
+            window.open(inviteUrl, '_blank');
+        }
+        const sdkAppId = parseInt(document.getElementById('sdk-app-id').value);
+        const sdkSecretKey = document.getElementById('sdk-secret-key').value;
+        const roomId = parseInt(document.getElementById('room-id').value);
+        refreshLink({ sdkAppId, sdkSecretKey, roomId });
+    });
+}
 
 function clearTooltip(e) {
-    e.currentTarget.setAttribute('class', 'invite-btn');
+    e.currentTarget.setAttribute('class', 'invite-action-btn');
     e.currentTarget.removeAttribute('aria-label');
 }
 
 function showTooltip(elem, msg) {
-    elem.setAttribute('class', 'invite-btn tooltipped tooltipped-s');
+    elem.setAttribute('class', 'invite-action-btn tooltipped tooltipped-s');
     elem.setAttribute('aria-label', msg);
 }
 
 // handle the logic of report
-const isProd = ['https://web.sdk.qcloud.com', 'https://cdpn.io'].includes(location.origin);
-const DEMONAME = document.querySelector('h1').innerHTML;
-const AEGIS_ID = 'iHWefAYqfabTMlEOzl';
-const aegis = new Aegis({
-    id: AEGIS_ID,
-    uin: '',
-    reportApiSpeed: false,
-    reportAssetSpeed: false
-})
+const isProd = location.origin === 'https://web.sdk.qcloud.com';
+const isDev = location.origin.includes('localhost') || location.origin.includes('127.0.0.1');
+const DEMOKEY = isProd ? 'v5SamplesV5' : 'v5SamplesV5Dev';
+const AEGIS_ID = {
+    dev: 'iHWefAYqBEHVFrSxnV',
+    prod: 'iHWefAYqVGQzlNLveU',
+};
+
+let aegis;
+
+if (isProd || isDev) {
+    try {
+        aegis = new Aegis({
+            id: isProd ? AEGIS_ID.prod : AEGIS_ID.dev,
+            uin: '',
+            reportApiSpeed: false,
+            reportAssetSpeed: false
+        });
+    } catch (e) {
+        console.warn('Aegis initialization failed:', e);
+    }
+}
 
 function reportSuccessEvent(name, sdkAppId) {
-    if (!isProd) return;
-    aegis.reportEvent({
+    aegis?.reportEvent({
         name,
-        ext1: `${name}-success`,
-        ext2: DEMONAME,
+        ext1: `${name}-success${window.self !== window.top ? '-iframe' : ''}`,
+        ext2: DEMOKEY,
         ext3: sdkAppId,
     });
 }
+
+function reportFailedEvent({ name, error, type = 'rtc', roomId }) {
+    aegis?.reportEvent({
+        name,
+        ext1: `${name}-failed#${roomId}*${type}*${error.message}`,
+        ext2: DEMOKEY,
+        ext3: 0,
+    });
+}
+
+// report loaded event
+try {
+    reportSuccessEvent('loaded', 0);
+} catch (e) {
+    console.warn('Failed to report loaded event:', e);
+}
+
+// When running inside an iframe, report the content height to the parent window
+(function autoResizeIframe() {
+    if (window.self === window.top) return;
+    function postHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ type: 'trtc-demo-resize', height }, '*');
+    }
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    const observer = new MutationObserver(postHeight);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+})();
