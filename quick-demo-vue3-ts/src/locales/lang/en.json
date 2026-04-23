@@ -5,7 +5,7 @@
   "step3": "Step 3 : Start Video Call",
   "param": "Params",
   "alert": "Notes: this Demo is only applicable for debugging. Before official launch, please migrate the UserSig calculation code and key to your backend server to avoid unauthorized traffic use caused by the leakage of encryption key.",
-  "click": "View documents",
+  "click": "Learn More",
   "url": "https://trtc.io/document/35166",
   "device": "Device",
   "operation": "Operation",

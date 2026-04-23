@@ -275,29 +275,29 @@ async function handleStartLocalVideo() {
     });
     videoMuted.value = false;
     camStatus.value = 'started';
-    addSuccessLog('Local audio stopped successfully');
+    addSuccessLog('Local video started successfully');
     reportSuccessEvent('startLocalVideo');
   } catch (error: any) {
     camStatus.value = 'stopped';
-    addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
+    addFailedLog(`Local video is failed to started. Error: ${error.message}`);
     reportFailedEvent('startLocalVideo', error.message);
   }
 }
 
 async function handleStopLocalVideo() {
   if (camStatus.value !== 'started') {
-    addFailedLog('The audio has not been started');
+    addFailedLog('The video has not been started');
     return;
   }
   camStatus.value = 'stopping';
   try {
     await trtc.stopLocalVideo();
     camStatus.value = 'stopped';
-    addSuccessLog('Local audio stopped successfully');
+    addSuccessLog('Local video stopped successfully');
     reportSuccessEvent('stopLocalVideo');
   } catch (error: any) {
     camStatus.value = 'started';
-    addFailedLog(`Local audio is failed to stopped. Error: ${error.message}`);
+    addFailedLog(`Local video is failed to stopped. Error: ${error.message}`);
     reportFailedEvent('stopLocalVideo', error.message);
   }
 }
@@ -320,7 +320,7 @@ async function handleExit() {
   } catch (error: any) {
     roomStatus.value = 'entered';
     addFailedLog(`Exit room failed. Error: ${error.message}`);
-    reportSuccessEvent('exitRoom');
+    reportFailedEvent('exitRoom', error.message);
   }
 
   if (micStatus.value === 'started') handleStopLocalAudio();

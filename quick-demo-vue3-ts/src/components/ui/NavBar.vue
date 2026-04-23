@@ -50,7 +50,7 @@ function goToGithub() {
     ext2: proxy.$aegis?.DEMOKEY,
     // ext3: sdkAppId,
   });
-  window.open('https://github.com/LiteAVSDK/TRTC_Web', '_blank');
+  window.open('https://github.com/Tencent-RTC/TRTC_Web', '_blank');
 }
 
 function goToDocument() {
