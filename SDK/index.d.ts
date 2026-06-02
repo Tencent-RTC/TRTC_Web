@@ -2457,7 +2457,10 @@ export declare class TRTC {
    * **Note**
    * - This interface does not support use under the http protocol, please use the https protocol to deploy your website. {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
    * - You can call the browser's native interface [getCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/InputDeviceInfo/getCapabilities) to get the maximum resolutions supported by the camera, frame rate, mobile devices to distinguish between front and rear cameras, etc. This interface supports Chrome 67+, Edge 79+, Safari 17+, Opera 54+.
-   * @param {boolean} [requestPermission=true] `Since v5.6.3`. Whether to request permission to use the camera. If requestPermission is true, calling this method may temporarily open the camera to ensure that the camera list can be normally obtained, and the SDK will automatically stop the camera capture later.
+   * - By default, virtual camera devices are included in the returned list. Set `filterVirtualDevice: true` to filter out unavailable virtual devices while preserving legitimate ones (e.g. OBS Virtual Camera).
+   * @param {boolean | object} [option=true] `Since v5.6.3`. When passing a boolean, it indicates whether to request permission. When passing an object, it supports the following properties:
+   * @param {boolean} [option.requestPermission=true] Whether to request permission to use the camera. If true, calling this method may temporarily open the camera to ensure that the camera list can be normally obtained, and the SDK will automatically stop the camera capture later.
+   * @param {boolean} [option.filterVirtualDevice=false] Whether to filter virtual camera devices. Default is false. When set to true, the SDK will filter out unavailable virtual devices while preserving legitimate capture devices (e.g. OBS Virtual Camera).
    * @example
    * const cameraList = await TRTC.getCameraList();
    * if (cameraList[0] && cameraList[0].getCapabilities) {
@@ -2471,25 +2474,34 @@ export declare class TRTC {
    *     }
    *   }
    * }
+   * @example
+   * // Filter out virtual cameras
+   * const realCameras = await TRTC.getCameraList({ requestPermission: true, filterVirtualDevice: true });
    * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
    */
-  static getCameraList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
+  static getCameraList(option?: boolean | { requestPermission?: boolean; filterVirtualDevice?: boolean }): Promise<MediaDeviceInfo[]>;
   /**
    * Returns the list of microphone devices
    * <br>
    * **Note**
    * - This interface does not support use under the http protocol, please use the https protocol to deploy your website. {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Privacy_and_security Privacy and security}
    * - You can call the browser's native interface [getCapabilities](https://developer.mozilla.org/en-US/docs/Web/API/InputDeviceInfo/getCapabilities) to get information about the microphone's capabilities, e.g. the maximum number of channels supported, etc. This interface supports Chrome 67+, Edge 79+, Safari 17+, Opera 54+.
-   * @param {boolean} [requestPermission=true] `Since v5.6.3`. Whether to request permission to use the microphone. If requestPermission is true, calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically stop the microphone capture later.
+   * - By default, virtual microphone devices are included in the returned list. Set `filterVirtualDevice: true` to filter out devices whose label contains the "virtual" keyword.
+   * @param {boolean | object} [option=true] `Since v5.6.3`. When passing a boolean, it indicates whether to request permission. When passing an object, it supports the following properties:
+   * @param {boolean} [option.requestPermission=true] Whether to request permission to use the microphone. If true, calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically stop the microphone capture later.
+   * @param {boolean} [option.filterVirtualDevice=false] Whether to filter virtual microphone devices.  If all devices are filtered out, the original list will be returned.
    * @example
    * const microphoneList = await TRTC.getMicrophoneList();
    * if (microphoneList[0] && microphoneList[0].getCapabilities) {
    *   const { channelCount } = microphoneList[0].getCapabilities();
    *   console.log(channelCount.max);
    * }
+   * @example
+   * // Filter out virtual microphones
+   * const realMicrophones = await TRTC.getMicrophoneList({ requestPermission: true, filterVirtualDevice: true });
    * @returns {Promise.<MediaDeviceInfo[]>} Promise returns an array of {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo|MediaDeviceInfo}
    */
-  static getMicrophoneList(requestPermission?: boolean): Promise<MediaDeviceInfo[]>;
+  static getMicrophoneList(option?: boolean | { requestPermission?: boolean; filterVirtualDevice?: boolean }): Promise<MediaDeviceInfo[]>;
   /**
    * Returns the list of speaker devices. Only support PC browser, not support mobile browser.
    * <br>
