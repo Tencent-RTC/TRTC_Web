@@ -1,45 +1,26 @@
 const trtc = TRTC.create({ enableSEI: true });
 
-let size;
-let imageUrl;
-
 // listen for events
 handleEvent();
 
 // --------functions----------
-function initOptions() {
-    size = document.getElementById('size').checked;
-    imageUrl = document.getElementById('image-url').value;
-}
-
 async function enterRoom() {
-    try {
-        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-        document.getElementById('send-custom-message-btn').disabled = false;
-        document.getElementById('start-video-btn').disabled = false;
-        switchButtonStatus('enter-btn', 'exit-btn', true);
-        reportSuccessEvent('enterRoom', sdkAppId);
-        refreshLink({ sdkAppId, sdkSecretKey, roomId });
-    } catch (error) {
-        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoEnterRoom(trtc, {
+        afterEnter: async () => {
+            document.getElementById('send-custom-message-btn').disabled = false;
+            document.getElementById('start-video-btn').disabled = false;
+        }
+    });
 }
 
 async function exitRoom() {
-    try {
-        await trtc.exitRoom();
-        await stopLocalVideo();
-        document.getElementById('send-custom-message-btn').disabled = true;
-        document.getElementById('start-video-btn').disabled = true;
-        switchButtonStatus('enter-btn', 'exit-btn', false);
-        cleanShareLink();
-        reportSuccessEvent('exitRoom', 0);
-    } catch (error) {
-        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoExitRoom(trtc, {
+        afterExit: async () => {
+            await stopLocalVideo();
+            document.getElementById('send-custom-message-btn').disabled = true;
+            document.getElementById('start-video-btn').disabled = true;
+        }
+    });
 }
 
 function sendCustomMessage() {
@@ -85,12 +66,7 @@ function handleEvent() {
 }
 
 // i18n initialization
-applyI18n();
-updateInviteSection();
-document.addEventListener('lang-changed', () => {
-    applyI18n();
-    updateInviteSection();
-});
+initPageI18n(updateInviteSection);
 
 function updateInviteSection() {
     const inviteEl = document.getElementById('invite-section-el');

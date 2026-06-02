@@ -1,0 +1,389 @@
+/* ---- Player Cards Area ---- */
+.player-cards-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.empty-state {
+  margin-top: 16px;
+  padding: 24px;
+  text-align: center;
+  color: #8c939d;
+  font-size: 0.95rem;
+  border: 2px dashed #dcdfe6;
+  border-radius: 12px;
+  background: #fafbfc;
+}
+
+/* ---- Player Card ---- */
+.player-card {
+  width: 340px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef1f5 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow 0.2s ease;
+}
+
+.player-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.player-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-id {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #303133;
+}
+
+.player-type-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.player-type-badge.url {
+  background: #e1f3d8;
+  color: #67c23a;
+}
+
+.player-card-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.player-card-delete:hover {
+  background: #fde2e2;
+}
+
+.player-card-delete svg {
+  width: 18px;
+  height: 18px;
+  fill: #909399;
+  transition: fill 0.2s;
+}
+
+.player-card-delete:hover svg {
+  fill: #f56c6c;
+}
+
+/* ---- Card Controls ---- */
+.player-controls {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ctrl-btn {
+  padding: 5px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  background: #fff;
+  color: #606266;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ctrl-btn:hover {
+  border-color: #409eff;
+  color: #409eff;
+  background: #ecf5ff;
+}
+
+.ctrl-btn:active {
+  background: #d9ecff;
+}
+
+/* ---- Card Properties ---- */
+.player-props {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prop-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #606266;
+}
+
+.prop-item label {
+  min-width: 50px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.prop-item input[type="range"] {
+  flex: 1;
+  height: 4px;
+  accent-color: #409eff;
+  cursor: pointer;
+}
+
+.prop-value {
+  min-width: 32px;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #909399;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Toggle Switch ---- */
+.toggle-switch {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: #dcdfe6;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.toggle-switch.on {
+  background: #409eff;
+}
+
+.toggle-switch.on::after {
+  transform: translateX(18px);
+}
+
+/* ---- Card Status ---- */
+.player-status {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: #909399;
+  padding-top: 8px;
+  border-top: 1px solid #e4e7ed;
+  flex-wrap: wrap;
+}
+
+.status-item {
+  white-space: nowrap;
+}
+
+.status-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-value.playing {
+  color: #67c23a;
+}
+
+.status-value.paused {
+  color: #e6a23c;
+}
+
+.status-value.stopped {
+  color: #909399;
+}
+
+/* ---- Modal ---- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.visible {
+  display: flex;
+}
+
+.modal-panel {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  animation: modalIn 0.25s ease;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #303133;
+  margin-bottom: 20px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #606266;
+}
+
+.form-group select,
+.form-group input[type="file"] {
+  padding: 8px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #303133;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group select:focus {
+  border-color: #409eff;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-row label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #606266;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-cancel {
+  padding: 8px 20px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  background: #fff;
+  color: #606266;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  border-color: #c0c4cc;
+  color: #303133;
+}
+
+.btn-confirm {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #409eff;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-confirm:hover {
+  background: #337ecc;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .player-card {
+    width: 100%;
+  }
+
+  .modal-panel {
+    width: 95vw;
+    padding: 20px;
+  }
+
+  .player-controls {
+    gap: 4px;
+  }
+
+  .ctrl-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ---- iframe mode ---- */
+body.in-iframe header-nav {
+  display: none;
+}
+
+body.in-iframe .feature-container {
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+body.in-iframe .player-card {
+  box-shadow: none;
+}

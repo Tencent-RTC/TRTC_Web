@@ -25,30 +25,16 @@ document.getElementById('update-speaker-btn').addEventListener('click', async ()
 
 // --------functions----------
 async function enterRoom() {
-    try {
-        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-        switchButtonStatus('enter-btn', 'exit-btn', true);
-        refreshLink({ sdkAppId, sdkSecretKey, roomId });
-        reportSuccessEvent('enterRoom', sdkAppId);
-    } catch (error) {
-        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoEnterRoom(trtc);
 }
 
 async function exitRoom() {
-    try {
-        await trtc.exitRoom();
-        await stopLocalAudio();
-        await stopLocalVideo();
-        cleanShareLink();
-        switchButtonStatus('enter-btn', 'exit-btn', false);
-        reportSuccessEvent('exitRoom', 0);
-    } catch (error) {
-        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoExitRoom(trtc, {
+        afterExit: async () => {
+            await stopLocalAudio();
+            await stopLocalVideo();
+        }
+    });
 }
 
 async function startLocalAudio() {
@@ -101,10 +87,7 @@ function handleEvent() {
 }
 
 // i18n initialization
-applyI18n();
-document.addEventListener('lang-changed', () => {
-    applyI18n();
-    // Update video-views titles
+initPageI18n(() => {
     const localTitle = document.querySelector('video-views .local-title');
     const remoteTitle = document.querySelector('video-views .remote-title');
     if (localTitle) localTitle.textContent = t('video.localVideo');

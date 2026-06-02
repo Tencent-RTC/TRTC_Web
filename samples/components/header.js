@@ -348,6 +348,16 @@ template.innerHTML = `
                       >
                     </li>
                     <li>
+                      <a class="dropdown-link" href="../../advance-features/enable-audio-player-bgm/index.html"
+                        data-i18n="nav.audioPlayerBgm">Audio Player BGM</a
+                      >
+                    </li>
+                    <li>
+                      <a class="dropdown-link" href="../../advance-features/enable-audio-player-pcm/index.html"
+                        data-i18n="nav.audioPlayerPcm">Audio Player PCM</a
+                      >
+                    </li>
+                    <li>
                       <a class="dropdown-link" href="../../advance-features/enable-watermark/index.html"
                         data-i18n="nav.enableWatermark">Enable Watermark</a
                       >

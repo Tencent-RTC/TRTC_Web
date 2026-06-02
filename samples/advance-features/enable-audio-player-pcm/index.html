@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../../assets/common.css" rel="stylesheet" type="text/css" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Audio Player PCM</title>
+    <script src="../../util/i18n.js" defer></script>
+    <script src="../../components/header.js" defer></script>
+    <script src="../../components/params-form.js" defer></script>
+    <script src="../../components/invite-section.js" defer></script>
+    <script
+      src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
+      defer
+    ></script>
+    <script src="../../libs/lib-generate-test-usersig.min.js" defer></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/ander/audio-player/dist/npm-package/trtc.js"
+      defer
+    ></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/ander/audio-player/dist/npm-package/plugins/audio-player/audio-player.umd.js"
+      defer
+    ></script>
+    <script src="../../libs/clipboard.min.js" defer></script>
+    <script src="../../util/utils.js" defer></script>
+    <script src="../../util/demo-base.js" defer></script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <header-nav></header-nav>
+    <main>
+      <div class="feature-container">
+        <h1 style="color: #1c66e5" data-i18n="audioPlayerPcm.title">Audio Player PCM</h1>
+        <params-form></params-form>
+
+        <!-- Step 2: Enter / Exit Room -->
+        <section>
+          <h3><span class="step-badge">2</span><span data-i18n="common.enterTheRoom">Enter the room</span></h3>
+          <div class="btn-list">
+            <button id="enter-btn" class="btn" onclick="enterRoom()">
+              <span class="btn-text" data-i18n="common.enterRoom">Enter Room</span>
+            </button>
+            <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
+              <span class="btn-text" data-i18n="common.exitRoom">Exit Room</span>
+            </button>
+            <span data-i18n="audioPlayerPcm.publishTip">Enter room first and allow microphone access for publish to work</span>
+          </div>
+        </section>
+
+        <!-- Step 3: PCM Audio Player & Microphone -->
+        <section>
+          <h3><span class="step-badge">3</span><span data-i18n="audioPlayerPcm.description">Play PCM audio using AudioPlayer plugin</span></h3>
+          <div class="btn-list">
+            <button id="create-player-btn" class="btn" onclick="openModal()">
+              <span class="btn-text" data-i18n="audioPlayerPcm.createPlayer">Create PCM Player</span>
+            </button>
+            <button id="toggle-mic-btn" class="btn" onclick="toggleMicrophone()">
+              <span class="btn-text" data-i18n="audioPlayerPcm.micOff">Mic Off</span>
+            </button>
+          </div>
+
+          <!-- Player Cards Area -->
+          <div id="player-cards-area" class="player-cards-area"></div>
+          <div id="empty-state" class="empty-state">
+            <span data-i18n="audioPlayerPcm.emptyState">No PCM players created yet. Click "Create PCM Player" to add one.</span>
+          </div>
+        </section>
+
+        <invite-section id="invite-section-el"></invite-section>
+      </div>
+    </main>
+
+    <!-- Modal: Create PCM Player -->
+    <div class="modal-overlay" id="modal-create-player" onclick="onModalOverlayClick(event)">
+      <div class="modal-panel">
+        <div class="modal-title" data-i18n="audioPlayerPcm.createPcmPlayer">Create PCM Player</div>
+
+        <!-- PCM Player form -->
+        <div class="modal-form">
+          <div class="form-group">
+            <label data-i18n="audioPlayerPcm.dataSource">Data Source</label>
+            <select id="pcm-source-select" onchange="onSourceSelectChange()">
+              <option value="remote" data-i18n="audioPlayerPcm.presetRemote">Preset: Remote PCM Data (16kHz)</option>
+              <option value="generate" data-i18n="audioPlayerPcm.presetSineWave">Preset: 440Hz Sine Wave (48kHz)</option>
+              <option value="local" data-i18n="audioPlayerPcm.localFile">Local PCM File (.pcm, .raw)</option>
+            </select>
+          </div>
+          <div class="form-group" id="pcm-file-group" style="display: none;">
+            <label data-i18n="audioPlayerPcm.selectFile">Select PCM File</label>
+            <input type="file" id="pcm-file-input" accept=".pcm,.raw" />
+            <div class="form-hint">
+              <label data-i18n="audioPlayerPcm.sampleRateLabel">Sample Rate (Hz)</label>
+              <input type="number" id="pcm-sample-rate-input" value="16000" min="8000" max="48000" step="1000" />
+            </div>
+            <div class="form-hint">
+              <label data-i18n="audioPlayerPcm.channelsLabel">Channels</label>
+              <input type="number" id="pcm-channels-input" value="1" min="1" max="8" step="1" />
+            </div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="audioPlayerPcm.publish">Publish (mix to stream)</label>
+            <div class="toggle-switch" id="pcm-publish-toggle" onclick="toggleSwitch(this)"></div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="audioPlayerPcm.realtimeMode">Realtime Mode</label>
+            <div class="toggle-switch on" id="pcm-realtime-toggle" onclick="toggleSwitch(this)"></div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()" data-i18n="audioPlayerPcm.cancel">Cancel</button>
+            <button class="btn-confirm" onclick="createPCMPlayer()" data-i18n="audioPlayerPcm.create">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

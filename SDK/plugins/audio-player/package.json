@@ -1,0 +1,24 @@
+{
+  "name": "@rtc-plugin/audio-player",
+  "version": "5.18.0",
+  "description": "TRTC Web SDK AudioPlayer plugin - unified audio player supporting PCM, URL, and Track sources",
+  "main": "./audio-player.esm.js",
+  "module": "./audio-player.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
+  },
+  "homepage": "",
+  "keywords": [
+    "webrtc",
+    "TRTC",
+    "rtc",
+    "javascript",
+    "audio",
+    "audio-player",
+    "pcm",
+    "background-music",
+    "real-time communication"
+  ],
+  "types": "./audio-player.esm.d.ts"
+}
