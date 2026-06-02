@@ -10,31 +10,18 @@ let isPause = false;
 
 // --------functions----------
 async function enterRoom() {
-    try {
-        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-        await trtc.startLocalAudio();
-        switchButtonStatus('enter-btn', 'exit-btn', true);
-        reportSuccessEvent('enterRoom', sdkAppId);
-        refreshLink({ sdkAppId, sdkSecretKey, roomId });
-    } catch (error) {
-        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoEnterRoom(trtc, {
+        afterEnter: async () => { await trtc.startLocalAudio(); }
+    });
 }
 
 async function exitRoom() {
-    try {
-        await trtc.exitRoom();
-        await trtc.stopLocalAudio();
-        await stopAudioMixer();
-        switchButtonStatus('enter-btn', 'exit-btn', false);
-        cleanShareLink();
-        reportSuccessEvent('exitRoom', 0);
-    } catch (error) {
-        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoExitRoom(trtc, {
+        afterExit: async () => {
+            await trtc.stopLocalAudio();
+            await stopAudioMixer();
+        }
+    });
 }
 
 async function startAudioMixer() {
@@ -80,12 +67,7 @@ async function playFromSpecificSecond() {
 }
 
 // i18n initialization
-applyI18n();
-updateInviteSection();
-document.addEventListener('lang-changed', () => {
-    applyI18n();
-    updateInviteSection();
-});
+initPageI18n(updateInviteSection);
 
 function updateInviteSection() {
     const inviteEl = document.getElementById('invite-section-el');

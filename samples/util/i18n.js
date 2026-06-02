@@ -17,6 +17,8 @@ const translations = {
     'nav.setEncodingProfile': 'Set Encoding Profile',
     'nav.advanceFeatures': 'Advance Features',
     'nav.enableAudioMixer': 'Enable Audio Mixer',
+    'nav.audioPlayerBgm': 'Audio Player BGM',
+    'nav.audioPlayerPcm': 'Audio Player PCM',
     'nav.enableWatermark': 'Enable Watermark',
     'nav.dataMessages': 'Data Messages',
     'nav.langSwitch': 'En/中',
@@ -179,6 +181,70 @@ const translations = {
     'audioMixer.customMessageSent': 'Custom message sent!',
     'audioMixer.seiMessageSent': 'SEI message sent!',
 
+    // ---- Audio Player BGM ----
+    'audioPlayerBgm.title': 'Audio Player',
+    'audioPlayerBgm.description': 'Play background music using AudioPlayer plugin',
+    'audioPlayerBgm.createPlayer': 'Create Audio Player',
+    'audioPlayerBgm.toggleMic': 'Toggle Microphone',
+    'audioPlayerBgm.micOn': 'Mic On',
+    'audioPlayerBgm.micOff': 'Mic Off',
+    'audioPlayerBgm.playerCards': 'Audio Players',
+    'audioPlayerBgm.emptyState': 'No audio players created yet. Click "Create Audio Player" to add one.',
+    'audioPlayerBgm.audioSource': 'Audio Source',
+    'audioPlayerBgm.localFile': 'Local File (.mp3, .aac, .flac)',
+    'audioPlayerBgm.selectFile': 'Select Audio File',
+    'audioPlayerBgm.publish': 'Publish (mix to stream)',
+    'audioPlayerBgm.loop': 'Loop',
+    'audioPlayerBgm.volume': 'Volume',
+    'audioPlayerBgm.playbackRate': 'Rate',
+    'audioPlayerBgm.start': 'Start',
+    'audioPlayerBgm.pause': 'Pause',
+    'audioPlayerBgm.resume': 'Resume',
+    'audioPlayerBgm.stop': 'Stop',
+    'audioPlayerBgm.delete': 'Delete',
+    'audioPlayerBgm.state': 'State',
+    'audioPlayerBgm.currentTime': 'Time',
+    'audioPlayerBgm.duration': 'Duration',
+    'audioPlayerBgm.create': 'Create',
+    'audioPlayerBgm.cancel': 'Cancel',
+    'audioPlayerBgm.createUrlPlayer': 'Create URL Player',
+    'audioPlayerBgm.selectFileFirst': 'Please select an audio file first',
+    'audioPlayerBgm.playerCreated': 'Player "${id}" created',
+    'audioPlayerBgm.playerDeleted': 'Player "${id}" deleted',
+    'audioPlayerBgm.publishTip': 'Tip: Enter room first and allow microphone access for publish to work',
+
+    // ---- Audio Player PCM ----
+    'audioPlayerPcm.title': 'Audio Player PCM',
+    'audioPlayerPcm.description': 'Play PCM audio using AudioPlayer plugin',
+    'audioPlayerPcm.createPlayer': 'Create PCM Player',
+    'audioPlayerPcm.micOn': 'Mic On',
+    'audioPlayerPcm.micOff': 'Mic Off',
+    'audioPlayerPcm.emptyState': 'No PCM players created yet. Click "Create PCM Player" to add one.',
+    'audioPlayerPcm.dataSource': 'Data Source',
+    'audioPlayerPcm.presetRemote': 'Preset: Remote PCM Data (16kHz)',
+    'audioPlayerPcm.presetSineWave': 'Preset: 440Hz Sine Wave (48kHz)',
+    'audioPlayerPcm.localFile': 'Local PCM File (.pcm, .raw)',
+    'audioPlayerPcm.selectFile': 'Select PCM File',
+    'audioPlayerPcm.sampleRateLabel': 'Sample Rate (Hz)',
+    'audioPlayerPcm.channelsLabel': 'Channels',
+    'audioPlayerPcm.publish': 'Publish (mix to stream)',
+    'audioPlayerPcm.realtimeMode': 'Realtime Mode',
+    'audioPlayerPcm.start': 'Start',
+    'audioPlayerPcm.pause': 'Pause',
+    'audioPlayerPcm.resume': 'Resume',
+    'audioPlayerPcm.stop': 'Stop',
+    'audioPlayerPcm.inputData': 'Input Data',
+    'audioPlayerPcm.clearInput': 'Clear Input',
+    'audioPlayerPcm.delete': 'Delete',
+    'audioPlayerPcm.state': 'State',
+    'audioPlayerPcm.currentTime': 'Time',
+    'audioPlayerPcm.duration': 'Duration',
+    'audioPlayerPcm.create': 'Create',
+    'audioPlayerPcm.cancel': 'Cancel',
+    'audioPlayerPcm.createPcmPlayer': 'Create PCM Player',
+    'audioPlayerPcm.selectFileFirst': 'Please select a PCM file first',
+    'audioPlayerPcm.publishTip': 'Tip: Enter room first and allow microphone access for publish to work',
+
     // ---- Enable Watermark ----
     'watermark.title': 'Enable Watermark',
     'watermark.startWatermarkPlugin': 'Start watermark plugin',
@@ -213,6 +279,8 @@ const translations = {
     'nav.setEncodingProfile': '设置编码参数',
     'nav.advanceFeatures': '高级功能',
     'nav.enableAudioMixer': '混音',
+    'nav.audioPlayerBgm': '音频播放器 BGM',
+    'nav.audioPlayerPcm': '音频播放器 PCM',
     'nav.enableWatermark': '水印',
     'nav.dataMessages': '数据消息',
     'nav.langSwitch': 'En/中',
@@ -375,6 +443,70 @@ const translations = {
     'audioMixer.customMessageSent': '自定义消息已发送！',
     'audioMixer.seiMessageSent': 'SEI 消息已发送！',
 
+    // ---- Audio Player BGM ----
+    'audioPlayerBgm.title': 'AudioPlayer',
+    'audioPlayerBgm.description': '使用 AudioPlayer 插件播放背景音乐',
+    'audioPlayerBgm.createPlayer': '创建音频播放器',
+    'audioPlayerBgm.toggleMic': '切换麦克风',
+    'audioPlayerBgm.micOn': '麦克风开',
+    'audioPlayerBgm.micOff': '麦克风关',
+    'audioPlayerBgm.playerCards': '音频播放器',
+    'audioPlayerBgm.emptyState': '暂无音频播放器。点击"创建音频播放器"添加。',
+    'audioPlayerBgm.audioSource': '音频源',
+    'audioPlayerBgm.localFile': '本地文件 (.mp3, .aac, .flac)',
+    'audioPlayerBgm.selectFile': '选择音频文件',
+    'audioPlayerBgm.publish': '发布（让远端听到）',
+    'audioPlayerBgm.loop': '循环',
+    'audioPlayerBgm.volume': '音量',
+    'audioPlayerBgm.playbackRate': '倍速',
+    'audioPlayerBgm.start': '开始',
+    'audioPlayerBgm.pause': '暂停',
+    'audioPlayerBgm.resume': '恢复',
+    'audioPlayerBgm.stop': '停止',
+    'audioPlayerBgm.delete': '删除',
+    'audioPlayerBgm.state': '状态',
+    'audioPlayerBgm.currentTime': '时间',
+    'audioPlayerBgm.duration': '时长',
+    'audioPlayerBgm.create': '创建',
+    'audioPlayerBgm.cancel': '取消',
+    'audioPlayerBgm.createUrlPlayer': '创建 URL 播放器',
+    'audioPlayerBgm.selectFileFirst': '请先选择音频文件',
+    'audioPlayerBgm.playerCreated': '播放器 "${id}" 已创建',
+    'audioPlayerBgm.playerDeleted': '播放器 "${id}" 已删除',
+    'audioPlayerBgm.publishTip': '提示：进入房间并允许使用麦克风才能推送给远端',
+
+    // ---- Audio Player PCM ----
+    'audioPlayerPcm.title': 'AudioPlayer PCM',
+    'audioPlayerPcm.description': '使用 AudioPlayer 插件播放 PCM 音频',
+    'audioPlayerPcm.createPlayer': '创建 PCM 播放器',
+    'audioPlayerPcm.micOn': '麦克风开',
+    'audioPlayerPcm.micOff': '麦克风关',
+    'audioPlayerPcm.emptyState': '暂无 PCM 播放器。点击"创建 PCM 播放器"添加。',
+    'audioPlayerPcm.dataSource': '数据源',
+    'audioPlayerPcm.presetRemote': '预设：远程 PCM 数据 (16kHz)',
+    'audioPlayerPcm.presetSineWave': '预设：440Hz 正弦波 (48kHz)',
+    'audioPlayerPcm.localFile': '本地 PCM 文件 (.pcm, .raw)',
+    'audioPlayerPcm.selectFile': '选择 PCM 文件',
+    'audioPlayerPcm.sampleRateLabel': '采样率 (Hz)',
+    'audioPlayerPcm.channelsLabel': '声道数',
+    'audioPlayerPcm.publish': '发布（让远端听到）',
+    'audioPlayerPcm.realtimeMode': '实时模式',
+    'audioPlayerPcm.start': '开始',
+    'audioPlayerPcm.pause': '暂停',
+    'audioPlayerPcm.resume': '恢复',
+    'audioPlayerPcm.stop': '停止',
+    'audioPlayerPcm.inputData': '输入数据',
+    'audioPlayerPcm.clearInput': '清空输入',
+    'audioPlayerPcm.delete': '删除',
+    'audioPlayerPcm.state': '状态',
+    'audioPlayerPcm.currentTime': '时间',
+    'audioPlayerPcm.duration': '时长',
+    'audioPlayerPcm.create': '创建',
+    'audioPlayerPcm.cancel': '取消',
+    'audioPlayerPcm.createPcmPlayer': '创建 PCM 播放器',
+    'audioPlayerPcm.selectFileFirst': '请先选择 PCM 文件',
+    'audioPlayerPcm.publishTip': '提示：进入房间并允许使用麦克风才能推送给远端',
+
     // ---- Enable Watermark ----
     'watermark.title': '水印',
     'watermark.startWatermarkPlugin': '启用水印插件',
@@ -414,10 +546,10 @@ if (urlLang && (urlLang === 'en' || urlLang === 'zh')) {
  * @returns {string} Translated text
  */
 function t(key, params) {
-  let text = translations[currentLang]?.[key] || translations['en']?.[key] || key;
+  let text = translations[currentLang]?.[key] || translations.en?.[key] || key;
   if (params) {
-    Object.keys(params).forEach(k => {
-      text = text.replace(new RegExp('\\$\\{' + k + '\\}', 'g'), params[k]);
+    Object.keys(params).forEach((k) => {
+      text = text.replace(new RegExp(`\\$\\{${k}\\}`, 'g'), params[k]);
     });
   }
   return text;
@@ -459,22 +591,22 @@ function toggleLang() {
  */
 function applyI18n() {
   // Text content
-  document.querySelectorAll('[data-i18n]').forEach(el => {
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
     const key = el.getAttribute('data-i18n');
     el.textContent = t(key);
   });
   // Placeholder
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
     const key = el.getAttribute('data-i18n-placeholder');
     el.placeholder = t(key);
   });
   // Title attribute
-  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+  document.querySelectorAll('[data-i18n-title]').forEach((el) => {
     const key = el.getAttribute('data-i18n-title');
     el.title = t(key);
   });
   // Href attribute
-  document.querySelectorAll('[data-i18n-href]').forEach(el => {
+  document.querySelectorAll('[data-i18n-href]').forEach((el) => {
     const key = el.getAttribute('data-i18n-href');
     el.href = t(key);
   });

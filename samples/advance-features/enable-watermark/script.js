@@ -15,33 +15,22 @@ function initOptions() {
 }
 
 async function enterRoom() {
-    try {
-        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-        await trtc.startLocalVideo({ view: 'local-video-view', option: { mirror: false } });
-        document.getElementById('start-watermark-btn').disabled = false;
-        switchButtonStatus('enter-btn', 'exit-btn', true);
-        reportSuccessEvent('enterRoom', sdkAppId);
-        refreshLink({ sdkAppId, sdkSecretKey, roomId });
-    } catch (error) {
-        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoEnterRoom(trtc, {
+        afterEnter: async () => {
+            await trtc.startLocalVideo({ view: 'local-video-view', option: { mirror: false } });
+            document.getElementById('start-watermark-btn').disabled = false;
+        }
+    });
 }
 
 async function exitRoom() {
-    try {
-        await trtc.exitRoom();
-        await trtc.stopLocalVideo();
-        await stopWatermark();
-        document.getElementById('start-watermark-btn').disabled = true;
-        switchButtonStatus('enter-btn', 'exit-btn', false);
-        cleanShareLink();
-        reportSuccessEvent('exitRoom', 0);
-    } catch (error) {
-        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoExitRoom(trtc, {
+        afterExit: async () => {
+            await trtc.stopLocalVideo();
+            await stopWatermark();
+            document.getElementById('start-watermark-btn').disabled = true;
+        }
+    });
 }
 
 async function startWatermark() {
@@ -56,12 +45,7 @@ async function stopWatermark() {
 }
 
 // i18n initialization
-applyI18n();
-updateInviteSection();
-document.addEventListener('lang-changed', () => {
-    applyI18n();
-    updateInviteSection();
-});
+initPageI18n(updateInviteSection);
 
 function updateInviteSection() {
     const inviteEl = document.getElementById('invite-section-el');

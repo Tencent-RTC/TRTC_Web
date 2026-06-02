@@ -7,17 +7,11 @@ let isScreenSharing = false;
 let remoteUserId = '';
 
 // Detect iframe mode
-if (window.self !== window.top) {
-  document.body.classList.add('in-iframe');
-}
+detectIframeMode();
 
 // Apply i18n on page load and listen for language changes
-applyI18n();
-updateInviteSection();
-document.addEventListener('lang-changed', () => {
-  applyI18n();
+initPageI18n(() => {
   updateInviteSection();
-  // Re-apply dynamic button texts based on current state
   updateDynamicButtonTexts();
 });
 

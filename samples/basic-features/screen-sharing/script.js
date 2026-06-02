@@ -8,29 +8,13 @@ checkIsInIframe();
 
 // --------functions----------
 async function enterRoom() {
-    try {
-        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-        switchButtonStatus('enter-btn', 'exit-btn', true);
-        reportSuccessEvent('enterRoom', sdkAppId);
-        refreshLink({ sdkAppId, sdkSecretKey, roomId });
-    } catch (error) {
-        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoEnterRoom(trtc);
 }
 
 async function exitRoom() {
-    try {
-        await trtc.exitRoom();
-        await stopShare();
-        switchButtonStatus('enter-btn', 'exit-btn', false);
-        cleanShareLink();
-        reportSuccessEvent('exitRoom', 0);
-    } catch (error) {
-        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoExitRoom(trtc, {
+        afterExit: async () => { await stopShare(); }
+    });
 }
 
 async function startShare() {
@@ -57,12 +41,7 @@ function handleEvents() {
 }
 
 // i18n initialization
-applyI18n();
-updateInviteSection();
-document.addEventListener('lang-changed', () => {
-    applyI18n();
-    updateInviteSection();
-});
+initPageI18n(updateInviteSection);
 
 function updateInviteSection() {
     const inviteEl = document.getElementById('invite-section-el');

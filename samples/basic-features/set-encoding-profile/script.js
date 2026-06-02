@@ -8,28 +8,11 @@ trtc.on(TRTC.EVENT.REMOTE_VIDEO_AVAILABLE, ({ userId, streamType }) => {
 
 // --------functions----------
 async function enterRoom() {
-    try {
-        const { sdkAppId, sdkSecretKey, userId, roomId, userSig } = initParams();
-        await trtc.enterRoom({ roomId, sdkAppId, userId, userSig });
-        switchButtonStatus('enter-btn', 'exit-btn', true);
-        reportSuccessEvent('enterRoom', sdkAppId);
-        refreshLink({ sdkAppId, sdkSecretKey, roomId });
-    } catch (error) {
-        reportFailedEvent({ name: 'enterRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoEnterRoom(trtc);
 }
 
 async function exitRoom() {
-    try {
-        await trtc.exitRoom();
-        switchButtonStatus('enter-btn', 'exit-btn', false);
-        cleanShareLink();
-        reportSuccessEvent('exitRoom', 0);
-    } catch (error) {
-        reportFailedEvent({ name: 'exitRoom', roomId: 0, error });
-        throw error;
-    }
+    await demoExitRoom(trtc);
 }
 
 async function startLocalAudio() {
@@ -60,9 +43,7 @@ async function updateVideoProfile() {
 }
 
 // i18n initialization
-applyI18n();
-document.addEventListener('lang-changed', () => {
-    applyI18n();
+initPageI18n(() => {
     const localTitle = document.querySelector('video-views .local-title');
     const remoteTitle = document.querySelector('video-views .remote-title');
     if (localTitle) localTitle.textContent = t('video.localVideo');

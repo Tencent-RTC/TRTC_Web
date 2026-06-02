@@ -7,10 +7,7 @@ let isCameraOn = false;
 
 // initialization
 changePageDisplay();
-applyI18n();
-updateInviteSection();
-document.addEventListener('lang-changed', () => {
-    applyI18n();
+initPageI18n(() => {
     updateInviteSection();
     // Re-apply dynamic texts
     document.getElementById('role-label').textContent = isAudience ? t('liveStreaming.audience') : t('liveStreaming.anchor');

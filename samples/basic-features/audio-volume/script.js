@@ -90,5 +90,4 @@ async function muteLocalAudio() {
 }
 
 // i18n initialization
-applyI18n();
-document.addEventListener('lang-changed', () => { applyI18n(); });
+initPageI18n();

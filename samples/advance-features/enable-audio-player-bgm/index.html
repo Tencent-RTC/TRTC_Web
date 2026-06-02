@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../../assets/common.css" rel="stylesheet" type="text/css" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Audio Player BGM</title>
+    <script src="../../util/i18n.js" defer></script>
+    <script src="../../components/header.js" defer></script>
+    <script src="../../components/params-form.js" defer></script>
+    <script src="../../components/invite-section.js" defer></script>
+    <script
+      src="https://cdn-go.cn/aegis/aegis-sdk/latest/aegis.min.js"
+      defer
+    ></script>
+    <script src="../../libs/lib-generate-test-usersig.min.js" defer></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/ander/audio-player/dist/npm-package/trtc.js"
+      defer
+    ></script>
+    <script
+      src="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/ander/audio-player/dist/npm-package/plugins/audio-player/audio-player.umd.js"
+      defer
+    ></script>
+    <script src="../../libs/clipboard.min.js" defer></script>
+    <script src="../../util/utils.js" defer></script>
+    <script src="../../util/demo-base.js" defer></script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <header-nav></header-nav>
+    <main>
+      <div class="feature-container">
+        <h1 style="color: #1c66e5" data-i18n="audioPlayerBgm.title">Audio Player BGM</h1>
+        <params-form></params-form>
+
+        <!-- Step 2: Enter / Exit Room -->
+        <section>
+          <h3><span class="step-badge">2</span><span data-i18n="common.enterTheRoom">Enter the room</span></h3>
+          <div class="btn-list">
+            <button id="enter-btn" class="btn" onclick="enterRoom()">
+              <span class="btn-text" data-i18n="common.enterRoom">Enter Room</span>
+            </button>
+            <button id="exit-btn" class="btn" onclick="exitRoom()" disabled>
+              <span class="btn-text" data-i18n="common.exitRoom">Exit Room</span>
+            </button>
+            <span data-i18n="audioPlayerBgm.publishTip">Enter room first and allow microphone access for publish to work</span>
+          </div>
+        </section>
+
+        <!-- Step 3: Audio Player & Microphone -->
+        <section>
+          <h3><span class="step-badge">3</span><span data-i18n="audioPlayerBgm.description">Play background music using AudioPlayer plugin</span></h3>
+          <div class="btn-list">
+            <button id="create-player-btn" class="btn" onclick="openModal()">
+              <span class="btn-text" data-i18n="audioPlayerBgm.createPlayer">Create Audio Player</span>
+            </button>
+            <button id="toggle-mic-btn" class="btn" onclick="toggleMicrophone()">
+              <span class="btn-text" data-i18n="audioPlayerBgm.micOff">Mic Off</span>
+            </button>
+          </div>
+
+          <!-- Player Cards Area -->
+          <div id="player-cards-area" class="player-cards-area"></div>
+          <div id="empty-state" class="empty-state">
+            <span data-i18n="audioPlayerBgm.emptyState">No audio players created yet. Click "Create Audio Player" to add one.</span>
+          </div>
+        </section>
+
+        <invite-section id="invite-section-el"></invite-section>
+      </div>
+    </main>
+
+    <!-- Modal: Create Audio Player -->
+    <div class="modal-overlay" id="modal-create-player" onclick="onModalOverlayClick(event)">
+      <div class="modal-panel">
+        <div class="modal-title" data-i18n="audioPlayerBgm.createUrlPlayer">Create URL Player</div>
+
+        <!-- URL Player form -->
+        <div class="modal-form">
+          <div class="form-group">
+            <label data-i18n="audioPlayerBgm.audioSource">Audio Source</label>
+            <select id="url-source-select" onchange="onSourceSelectChange()">
+              <option value="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/ander/audio-player/rtc/asset/If_I_were_a_DJ.mp3">Preset: dj.mp3</option>
+              <option value="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/ander/audio-player/assets/music/wow.mp3">Preset: wow.mp3</option>
+              <option value="https://web.sdk.qcloud.com/trtc/webrtc/v5/test/latest/assets/music/bgm.mp3">Preset: bgm.mp3</option>
+              <option value="local" data-i18n="audioPlayerBgm.localFile">Local File (.mp3, .aac, .flac)</option>
+            </select>
+          </div>
+          <div class="form-group" id="url-file-group" style="display: none;">
+            <label data-i18n="audioPlayerBgm.selectFile">Select Audio File</label>
+            <input type="file" id="url-file-input" accept=".mp3,.aac,audio/mpeg,audio/aac,audio/flac,.flac" />
+          </div>
+          <div class="form-row">
+            <label data-i18n="audioPlayerBgm.publish">Publish (mix to stream)</label>
+            <div class="toggle-switch on" id="url-publish-toggle" onclick="toggleSwitch(this)"></div>
+          </div>
+          <div class="form-row">
+            <label data-i18n="audioPlayerBgm.loop">Loop</label>
+            <div class="toggle-switch" id="url-loop-toggle" onclick="toggleSwitch(this)"></div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()" data-i18n="audioPlayerBgm.cancel">Cancel</button>
+            <button class="btn-confirm" onclick="createURLPlayer()" data-i18n="audioPlayerBgm.create">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
