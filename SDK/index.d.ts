@@ -2460,7 +2460,7 @@ export declare class TRTC {
    * - By default, virtual camera devices are included in the returned list. Set `filterVirtualDevice: true` to filter out unavailable virtual devices while preserving legitimate ones (e.g. OBS Virtual Camera).
    * @param {boolean | object} [option=true] `Since v5.6.3`. When passing a boolean, it indicates whether to request permission. When passing an object, it supports the following properties:
    * @param {boolean} [option.requestPermission=true] Whether to request permission to use the camera. If true, calling this method may temporarily open the camera to ensure that the camera list can be normally obtained, and the SDK will automatically stop the camera capture later.
-   * @param {boolean} [option.filterVirtualDevice=false] Whether to filter virtual camera devices. Default is false. When set to true, the SDK will filter out unavailable virtual devices while preserving legitimate capture devices (e.g. OBS Virtual Camera).
+   * @param {boolean} [option.filterVirtualDevice=false] `Since v5.18.0`. Whether to filter virtual camera devices. Default is false. When set to true, the SDK will filter out unavailable virtual devices while preserving legitimate capture devices (e.g. OBS Virtual Camera).
    * @example
    * const cameraList = await TRTC.getCameraList();
    * if (cameraList[0] && cameraList[0].getCapabilities) {
@@ -2489,7 +2489,7 @@ export declare class TRTC {
    * - By default, virtual microphone devices are included in the returned list. Set `filterVirtualDevice: true` to filter out devices whose label contains the "virtual" keyword.
    * @param {boolean | object} [option=true] `Since v5.6.3`. When passing a boolean, it indicates whether to request permission. When passing an object, it supports the following properties:
    * @param {boolean} [option.requestPermission=true] Whether to request permission to use the microphone. If true, calling this method may temporarily open the microphone to ensure that the microphone list can be normally obtained, and the SDK will automatically stop the microphone capture later.
-   * @param {boolean} [option.filterVirtualDevice=false] Whether to filter virtual microphone devices.  If all devices are filtered out, the original list will be returned.
+   * @param {boolean} [option.filterVirtualDevice=false] `Since v5.18.0`. Whether to filter virtual microphone devices.  If all devices are filtered out, the original list will be returned.
    * @example
    * const microphoneList = await TRTC.getMicrophoneList();
    * if (microphoneList[0] && microphoneList[0].getCapabilities) {

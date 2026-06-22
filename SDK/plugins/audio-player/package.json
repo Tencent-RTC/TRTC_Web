@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/audio-player",
-  "version": "5.18.0",
+  "version": "5.18.1",
   "description": "TRTC Web SDK AudioPlayer plugin - unified audio player supporting PCM, URL, and Track sources",
   "main": "./audio-player.esm.js",
   "module": "./audio-player.esm.js",
