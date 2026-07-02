@@ -480,6 +480,7 @@ export declare interface ScreenShareConfig {
 export declare interface UpdateScreenShareConfig extends ScreenShareConfig {
   option?: {
     fillMode?: 'contain' | 'cover' | 'fill';
+    profile?: keyof typeof screenProfileMap | VideoProfile;
     qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
     audioTrack?: MediaStreamTrack;
     videoTrack?: MediaStreamTrack;
