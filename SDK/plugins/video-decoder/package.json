@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/video-decoder",
-  "version": "5.18.2",
+  "version": "5.18.3",
   "description": "Video decoder plugin for TRTC",
   "main": "./video-decoder.esm.js",
   "module": "./video-decoder.esm.js",

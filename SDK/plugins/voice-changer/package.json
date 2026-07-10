@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/voice-changer",
-  "version": "5.18.2",
+  "version": "5.18.3",
   "description": "",
   "main": "./voice-changer.esm.js",
   "keywords": [],

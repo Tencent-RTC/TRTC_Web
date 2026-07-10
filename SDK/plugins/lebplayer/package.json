@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/lebplayer",
-  "version": "5.18.2",
+  "version": "5.18.3",
   "description": "TRTC Web SDK 5.x LEBPlayer plugin",
   "main": "./lebplayer.esm.js",
   "module": "./lebplayer.esm.js",
