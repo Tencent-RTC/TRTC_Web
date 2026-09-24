@@ -1984,7 +1984,7 @@ export declare class TRTC {
    * @param {string | HTMLElement | HTMLElement[] | null} [config.view] - The HTMLElement instance or Id for previewing local screen sharing. If not passed or passed as null, local screen sharing will not be rendered.
    * @param {boolean} [config.publish] - Whether to publish screen sharing to the room. The default is true. If you call this interface before entering the room and publish = true, the SDK will automatically publish after entering the room. You can get the publish state by listening this event {@link module:EVENT.PUBLISH_STATE_CHANGED PUBLISH_STATE_CHANGED}.
    * @param {object} [config.option] - Screen sharing configuration
-   * @param {boolean} [config.option.systemAudio] - Whether to capture system audio. The default is false.
+   * @param {boolean} [config.option.systemAudio] - Whether to capture system audio. The default is false. To determine whether system audio is captured successfully, refer to <a href="https://web.sdk.qcloud.com/trtc/webrtc/v5/doc/en/tutorial-16-basic-screencast.html#h3-2">Common Issues</a>.
    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `contain`, refer to {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
    * @param {ScreenShareProfile} [config.option.profile] - Screen sharing encoding configuration.
    * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first(default) ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR})
@@ -2227,8 +2227,9 @@ export declare class TRTC {
    * trtc.getAudioTrack(); // Get local microphone audioTrack, captured by trtc.startLocalAudio()
    * trtc.getAudioTrack('remoteUserId'); // Get remote audioTrack
    *
-   * // Since v5.4.3+, you can get local screen audioTrack by passing the streamType = TRTC.STREAM_TYPE_SUB
-   * trtc.getAudioTrack({ streamType: TRTC.STREAM_TYPE_SUB });
+   * // Since v5.4.3+, you can get local screen audioTrack by passing the streamType = TRTC.TYPE.STREAM_TYPE_SUB
+   * // After screen sharing starts, it returns null if the user did not share tab/system audio in the picker
+   * trtc.getAudioTrack({ streamType: TRTC.TYPE.STREAM_TYPE_SUB });
    *
    * // Since v5.8.2+, you can get the processed audioTrack by passing processed = true
    * trtc.getAudioTrack({ processed: true });
@@ -2293,13 +2294,13 @@ export declare class TRTC {
    *
    * Applicable scenarios: synchronization of lyrics, live answering questions, etc.
    *
-   * When to call: call after {@link TRTC#startLocalVideo trtc.startLocalVideo} or {@link TRTC#startLocalScreen trtc.startLocalScreen} when set 'toSubStream' option to true successfully.
+   * When to call: call after {@link TRTC#startLocalVideo trtc.startLocalVideo} or {@link TRTC#startScreenShare trtc.startScreenShare} when set 'toSubStream' option to true successfully.
    *
    * Note:
    * 1. Maximum 1KB(Byte) sent in a single call, maximum 30 calls per second, maximum 8KB sent per second.
    * 2. Currently only support Chrome 86+, Edge 86+, Opera 72+ browsers.
    * 3. Since SEI is sent along with video frames, there is a possibility that video frames may be lost, and therefore SEI may be lost as well. The number of times it can be sent can be increased within the frequency limit, and the business side needs to do message de-duplication on the receiving side.
-   * 4. SEI cannot be sent without trtc.startLocalVideo(or trtc.startLocalScreen when set 'toSubStream' option to true); SEI cannot be received without startRemoteVideo.
+   * 4. SEI cannot be sent without trtc.startLocalVideo(or trtc.startScreenShare when set 'toSubStream' option to true); SEI cannot be received without startRemoteVideo.
    * 5. Only H264 encoder is supported to send SEI.
    * 6. SEI sending and receiving is not supported for small streams for the time being.
    * @see {@link module:EVENT.SEI_MESSAGE TRTC.EVENT.SEI_MESSAGE}
@@ -2307,7 +2308,7 @@ export declare class TRTC {
    * @param {ArrayBuffer} buffer SEI data to be sent
    * @param {Object=} options
    * @param {Number} options.seiPayloadType Set the SEI payload type. SDK uses the custom payloadType 243 by default, the business side can use this parameter to set the payloadType to the standard 5. When the business side uses the 5 payloadType, you need to follow the specification to make sure that the first 16 bytes of the `buffer` are the business side's customized uuid.
-   * @param {Boolean} [options.toSubStream=false] Send SEI data to substream. Need call trtc.startLocalScreen first. Since v5.7.0+.
+   * @param {Boolean} [options.toSubStream=false] Send SEI data to substream. Need call trtc.startScreenShare first. Since v5.7.0+.
    * @example
    * // 1. enable SEI
    * const trtc = TRTC.create({
