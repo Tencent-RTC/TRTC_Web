@@ -4579,6 +4579,7 @@ var Vision = (() => {
         _VisionTaskRegistry.instance = new _VisionTaskRegistry(path);
         _VisionTaskRegistry.initPromise = _VisionTaskRegistry.instance.initVision().then(() => _VisionTaskRegistry.instance).catch((error) => {
           _VisionTaskRegistry.initPromise = null;
+          _VisionTaskRegistry.instance = void 0;
           throw error;
         });
         return _VisionTaskRegistry.initPromise;
@@ -4692,12 +4693,21 @@ var Vision = (() => {
             resolve(new Blob([decompressed2], { type: this.isWasmFile(decompressed2) ? "application/wasm" : "application/javascript" }));
           });
         });
-      } else decompressed = await response.blob();
+      } else {
+        const modelBlob = await response.blob();
+        if (!await this.isTfliteFile(modelBlob)) throw new Error("The file is not a valid TFLite model file, please check the assetsPath");
+        decompressed = modelBlob;
+      }
       if (!(decompressed instanceof Blob)) throw new Error("Decompressed data is not a valid Blob");
       return URL.createObjectURL(decompressed);
     }
     isWasmFile(buffer) {
       return buffer.length >= 4 && buffer[0] === 0 && buffer[1] === 97 && buffer[2] === 115 && buffer[3] === 109;
+    }
+    async isTfliteFile(blob) {
+      if (blob.size < 8) return false;
+      const header = new Uint8Array(await blob.slice(4, 8).arrayBuffer());
+      return header[0] === 84 && header[1] === 70 && header[2] === 76 && header[3] === 51;
     }
     resetHashResults() {
       this.hashResults = /* @__PURE__ */ new Map();
@@ -4707,25 +4717,7 @@ var Vision = (() => {
   /** Cached init promise — any caller awaiting getInstance() shares the same flight */
   __publicField(_VisionTaskRegistry, "initPromise", null);
   var VisionTaskRegistry = _VisionTaskRegistry;
+  window.VisionTaskType = VisionTaskType;
+  window.VisionTaskRegistry = VisionTaskRegistry;
   return __toCommonJS(vision_exports);
 })();
-
-      (() => {
-        if (typeof Vision !== 'undefined') {
-          // 如果是 default 导出
-          if (Vision.default) {
-            for (const key in Vision.default) {
-              if (Vision.default.hasOwnProperty(key)) {
-                window[key] = Vision.default[key];
-              }
-            }
-          } else {
-            // 如果是命名导出
-            for (const key in Vision) {
-              if (Vision.hasOwnProperty(key)) {
-                window[key] = Vision[key];
-              }
-            }
-          }
-        }
-      })();
