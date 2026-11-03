@@ -1,6 +1,6 @@
 {
   "name": "@rtc-plugin/whiteboard",
-  "version": "5.20.1",
+  "version": "5.20.2",
   "description": "TRTC Web SDK Whiteboard plugin",
   "main": "./whiteboard.esm.js",
   "module": "./whiteboard.esm.js",
