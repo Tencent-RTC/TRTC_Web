@@ -2,13 +2,15 @@ export interface VoiceChangerStartOptions {
   sdkAppId: number;
   userId: string;
   userSig: string;
-  voiceType: number;
+  voiceType?: number;
   pitch?: number;
+  formantRatio?: number;
 }
 
 export interface VoiceChangerUpdateOptions {
-  voiceType: number;
+  voiceType?: number;
   pitch?: number;
+  formantRatio?: number;
 }
 
 export declare class VoiceChanger {
