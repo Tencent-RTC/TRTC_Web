@@ -40,6 +40,7 @@ export type ExperimentalAPIFunctionMap = {
   'requestFullScreen': RequestFullScreenOptions;
   'switchPlaybackQuality': SwitchPlaybackQualityOptions;
   'preconnect': PreconnectParams;
+  'setLowLatencyModeEnabled': number;
 }
 
 export interface RequestPictureInPictureOptions { enable: boolean }
@@ -48,6 +49,21 @@ export interface RemotePlayerOptions { userId: string, streamType?: TRTCStreamTy
 export interface EnablePreconnectParams { enable: true; userId: string; userSig: string; sdkAppId: number; roomId?: number; strRoomId?: string; }
 export interface ClosePreconnectParams { enable: false; userId?: never; userSig?: never; sdkAppId?: never; roomId?: never; strRoomId?: never; }
 export type PreconnectParams = EnablePreconnectParams | ClosePreconnectParams;
+
+export declare interface VoiceChangerStartOptions {
+  sdkAppId: number;
+  userId: string;
+  userSig: string;
+  voiceType?: number;
+  pitch?: number;
+  formantRatio?: number;
+}
+
+export declare interface VoiceChangerUpdateOptions {
+  voiceType?: number;
+  pitch?: number;
+  formantRatio?: number;
+}
 
 export declare type PluginStartOptionsMap = {
   'AudioMixer': AudioMixerOptions;
@@ -68,6 +84,7 @@ export declare type PluginStartOptionsMap = {
   'LEBPlayer': StartLEBPlayerOption;
   'RealtimeTranscriber': StartRealtimeTranscriberOption;
   'AudioPlayer': AudioPlayerOptions;
+  'VoiceChanger': VoiceChangerStartOptions;
 };
 
 export declare type PluginUpdateOptionsMap = {
@@ -85,6 +102,7 @@ export declare type PluginUpdateOptionsMap = {
   'Chorus': UpdateChorusOption;
   'LEBPlayer': UpdateLEBPlayerOption;
   'AudioPlayer': AudioPlayerUpdateOptions;
+  'VoiceChanger': VoiceChangerUpdateOptions;
 };
 
 export declare type PluginStopOptionsMap = {
@@ -491,6 +509,91 @@ export declare interface UpdateScreenShareConfig extends ScreenShareConfig {
     videoTrack?: MediaStreamTrack;
   };
 }
+/**
+ * Options for the annotation APIs (`startAnnotation` / `updateAnnotation` / `stopAnnotation`).
+ *
+ * `userId` is the only **direction switch**:
+ * - **Omitted = host side**: the board is already started automatically by
+ *   {@link TRTC#startScreenShare startScreenShare()} and is locally read-only. These three APIs
+ *   only switch local interaction on/off or change the appearance; they never create a new session.
+ * - **Provided = guest side**: open the annotation carried in that user's sub stream. Success
+ *   depends on the remote side: the host has not started, is still starting, or the sub stream
+ *   is not subscribed — these reject with error code 5100 (`extraCode` 5110). Before
+ *   `enterRoom()` the guest call is skipped with a warning and resolves.
+ */
+export declare interface AnnotationOptions {
+  /** Required for guests: the host userId whose annotation to open. Omit to act as the host. */
+  userId?: string;
+  option?: {
+    /** Built-in UI theme. Defaults to the plugin's current theme (`'light'`). */
+    theme?: 'dark' | 'light';
+    /**
+     * Whether the local user can draw (host and guest). Only effective in `updateAnnotation`.
+     * For the host, `false` equals `stopAnnotation()` and `true` equals `startAnnotation()`
+     * (while the board is running); for guests, `false` switches to read-only mode without
+     * stopping the plugin. Omit to keep the current value.
+     */
+    interactive?: boolean;
+  };
+}
+/**
+ * Options for the standalone whiteboard APIs (`startWhiteboard` / `updateWhiteboard` / `stopWhiteboard`).
+ *
+ * A `userId` means opening that user's whiteboard as a guest. The host owns its own sub stream, so `view`
+ * and `option.profile` only apply here; guests get the picture from the subscribed sub stream.
+ */
+export declare interface WhiteboardOptions {
+  /** Required for guests: the host userId whose whiteboard to open. Omit to act as the host. */
+  userId?: string;
+  /**
+   * Host only: the whiteboard container. Pass `null` to skip local preview.
+   * Passing the same container to `updateWhiteboard` re-lays out the board when its size changed.
+   */
+  view?: string | HTMLElement | null;
+  option?: WhiteboardOption;
+}
+/** Incremental options shared by `startWhiteboard` / `updateWhiteboard`. */
+export declare interface WhiteboardOption {
+  /** Built-in UI theme. Defaults to the plugin's current theme (`'light'`). */
+  theme?: 'dark' | 'light';
+  /**
+   * Canvas background color (host only). Also used as the composite background.
+   * Defaults to the plugin's `board-bg` theme color.
+   */
+  backgroundColor?: string;
+  /**
+   * Sub stream encoding parameters (host only). Also determines the composite canvas size and
+   * frame rate. A string preset is looked up in the video profile table first, then in the screen
+   * sharing table; presets present in both are resolved by the video table (`'1080p'` is 15fps,
+   * not 5fps). Unknown values fall back to `'1080p'` (1920x1080 / 15fps / 2000kbps).
+   * Ignored for guests.
+   */
+  profile?: keyof typeof videoProfileMap | keyof typeof screenProfileMap | VideoProfile;
+  /**
+   * Whether the local user can draw (host and guest). Only effective in `updateWhiteboard`.
+   * `false` hides the toolbar, page bar, text toolbar and window title bar; content stays visible.
+   * A session always starts with `true`; omit to keep the current value.
+   */
+  interactive?: boolean;
+}
+/** Payload of `whiteboard-state-changed` / `annotation-state-changed`: one outlet for plugin events. */
+export declare interface WhiteboardStateChangedInfo {
+  /** The host userId of the open session; empty on the host side. */
+  userId: string;
+  type: 'available' | 'unavailable' | 'error' | 'undo-state' | 'redo-state' | 'page-state' | 'window-state';
+  /**
+   * Same payload as the plugin event of the same name. Plugin info types evolve independently,
+   * so the SDK does not narrow them here; consumers branch on `type` and read the fields they need.
+   *
+   * For `type: 'error'` there are two shapes:
+   * - `Error` — a session-level failure, including a failed automatic annotation start with
+   *   `startScreenShare` (annotation event only).
+   * - A plain object with `reason` (`'invalid-url' | 'file-too-large' | 'corrupt' |
+   *   'unsupported' | 'network' | 'unknown'`), `contentType`, `winId` and `message` — a
+   *   recoverable content load failure; the window stays open without its background.
+   */
+  payload: Record<string, unknown>;
+}
 export declare interface RemoteVideoConfig {
   view?: string | HTMLElement | HTMLElement[] | null;
   userId: string;
@@ -839,6 +942,7 @@ export declare interface EnableAudioFrameEventOptions {
   sampleRate?: number;
   channelCount?: number;
   port?: MessagePort;
+  timeout?: number;
 }
 
 /**
@@ -885,6 +989,7 @@ export declare interface EnableAudioFrameEventOptions {
  * @property {number=} [sampleRate=48000] Set the sampling rate of pcm data, the default is 48000. Support 8000, 16000, 32000, 44100, 48000
  * @property {number=} [channelCount=1] Set the number of channels of pcm data, the default is 1. Support 1, 2
  * @property {MessagePort=} port Set the MessagePort for the pcm callback
+ * @property {number=} [timeout] The timeout duration in milliseconds for local audio frame anomaly detection, covering both no audio frame callback (error code 5509) and all-zero audio frame data (error code 5510). Detection is disabled by default and only takes effect when timeout is set. Only applies to local microphone, and not available when port is set.
  */
 /**
  * **TRTC Event List**<br>
@@ -1207,6 +1312,34 @@ export declare const TRTCEvent: {
    */
   readonly SCREEN_SHARE_STOPPED: 'screen-share-stopped';
   /**
+   * @description Standalone whiteboard state changes (the `startWhiteboard` / `updateWhiteboard` / `stopWhiteboard` series).
+   * Multiple Whiteboard plugin events are forwarded through this single outlet.
+   * - event.userId: an empty string on the host side; the host userId of the open session on the guest side.
+   * - event.type: `'available' | 'unavailable' | 'error' | 'undo-state' | 'redo-state' | 'page-state' | 'window-state'`
+   * - event.payload: the same payload as the plugin event of the same name.
+   * @default 'whiteboard-state-changed'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.WHITEBOARD_STATE_CHANGED, ({ userId, type, payload }) => {
+   *   if (type === 'unavailable') hideWhiteboardButton();   // the peer closed the whiteboard / the plugin is unavailable
+   * });
+   */
+  readonly WHITEBOARD_STATE_CHANGED: 'whiteboard-state-changed';
+  /**
+   * @description Annotation state changes (the `startAnnotation` / `updateAnnotation` / `stopAnnotation` series,
+   * including the automatic start on the host side with `startScreenShare`). The payload is
+   * **identical** to {@link module:EVENT.WHITEBOARD_STATE_CHANGED WHITEBOARD_STATE_CHANGED}; only the event name differs.
+   * - event.userId: an empty string on the host side; the host userId of the open session on the guest side.
+   * - event.type: `'available' | 'unavailable' | 'error' | 'undo-state' | 'redo-state' | 'page-state' | 'window-state'`
+   * @default 'annotation-state-changed'
+   * @memberof module:EVENT
+   * @example
+   * trtc.on(TRTC.EVENT.ANNOTATION_STATE_CHANGED, ({ userId, type, payload }) => {
+   *   if (type === 'unavailable') collapseAnnotation();   // the peer stopped screen sharing
+   * });
+   */
+  readonly ANNOTATION_STATE_CHANGED: 'annotation-state-changed';
+  /**
    * @description Notification event for device changes such as camera and microphone.
    * - event.device is a [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo) object with properties:
    *    - deviceId: device ID
@@ -1450,6 +1583,8 @@ export declare interface TRTCEventTypes {
     reason: string;
   }];
   [TRTCEvent.SCREEN_SHARE_STOPPED]: [];
+  [TRTCEvent.WHITEBOARD_STATE_CHANGED]: [WhiteboardStateChangedInfo];
+  [TRTCEvent.ANNOTATION_STATE_CHANGED]: [WhiteboardStateChangedInfo];
   [TRTCEvent.DEVICE_CHANGED]: [{
     type: TRTCDeviceType;
     action: TRTCDeviceAction;
@@ -2039,6 +2174,138 @@ export declare class TRTC {
    * await trtc.stopScreenShare();
    */
   stopScreenShare(): Promise<void>;
+  /**
+   * Start annotation (whiteboard over screen sharing).
+   *
+   * - **Host (no `userId`)**: the board is already started automatically by
+   *   {@link TRTC#startScreenShare startScreenShare()}, but locally it is read-only (no toolbar,
+   *   no drawing; guests can still draw). This API switches the local side into drawing mode
+   *   without creating a new session. If screen sharing is running but the board failed to start
+   *   with it, this API starts it in place; there is no need to call `stopScreenShare()` first.
+   * - **Guest (with `userId`)**: open the annotation carried in that user's sub stream.
+   *   Success depends on the remote side: the host has not started, is still starting, or the
+   *   sub stream is not subscribed — these reject. Before `enterRoom()` the guest call is
+   *   skipped with a warning and resolves. Always use `try/catch`.
+   * - Mutually exclusive with screen sharing / standalone whiteboard: call `stopWhiteboard()`
+   *   or `stopScreenShare()` before switching.
+   * - A guest can open annotation for one host at a time (single plugin instance); changing `userId` switches target.
+   * @param {object} [options]
+   * @param {string} [options.userId] - Required for guests: the host userId whose annotation to open. Omit to act as the host.
+   * @param {object} [options.option]
+   * @param {'dark' | 'light'} [options.option.theme] - Built-in UI theme (local side only).
+   * @throws {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
+   * - `extraCode` 5110: annotation failure; see `message` for the reason.
+   * - `extraCode` 5107 / 5108: audience role / `enableSEI` not enabled in `TRTC.create`.
+   * @example
+   * // Guest: subscribe to the sub stream first, then start annotation (may reject).
+   * await trtc.startRemoteVideo({ userId: 'host1', streamType: TRTC.TYPE.STREAM_TYPE_SUB, view: 'remote-1' });
+   * try {
+   *   await trtc.startAnnotation({ userId: 'host1' });
+   * } catch (e) {
+   *   if (e.code === TRTC.ERROR_CODE.INVALID_OPERATION && e.extraCode === 5110) console.warn(e.message);
+   * }
+   * @memberof TRTC
+   */
+  startAnnotation(options?: AnnotationOptions): Promise<void>;
+  /**
+   * Update the annotation configuration (incremental: only the passed-in fields are changed).
+   * @param {object} [options]
+   * @param {string} [options.userId] - Guests only: update or switch the target host. Omit to update the current one.
+   * @param {object} [options.option]
+   * @param {'dark' | 'light'} [options.option.theme] - Built-in UI theme.
+   * @param {boolean} [options.option.interactive] - Whether the local user can draw (host and guest).
+   * Omit to keep the current value. For the host, `false` / `true` behaves like
+   * {@link TRTC#stopAnnotation stopAnnotation()} / {@link TRTC#startAnnotation startAnnotation()};
+   * for a guest, `false` means read-only mode without stopping the plugin (unlike
+   * `stopAnnotation({ userId })`).
+   * @example
+   * // Guest: open in read-only mode, then allow drawing again.
+   * await trtc.updateAnnotation({ userId: 'host', option: { interactive: false } });
+   * await trtc.updateAnnotation({ userId: 'host', option: { interactive: true } });
+   * @memberof TRTC
+   */
+  updateAnnotation(options?: AnnotationOptions): Promise<void>;
+  /**
+   * Stop the annotation.
+   *
+   * - Host = stop local interaction: hide the toolbar and disable drawing. The board stays in the
+   *   composite and the session continues, so guests can still draw. Call
+   *   {@link TRTC#startAnnotation startAnnotation()} to resume, or
+   *   {@link TRTC#stopScreenShare stopScreenShare()} to tear the board down.
+   * - Guest = close annotation (stops the plugin; without `userId` it closes the current one).
+   *   Idempotent. A pending `startAnnotation({ userId })` handshake rejects immediately with
+   *   `OPERATION_ABORT`, and `unavailable` (`reason: 'local-stop'`) is emitted.
+   * @param {object} [options]
+   * @param {string} [options.userId] - Guests only: the host whose annotation to close.
+   * @memberof TRTC
+   */
+  stopAnnotation(options?: AnnotationOptions): Promise<void>;
+  /**
+   * Start a standalone whiteboard (no screen sharing).
+   *
+   * - **Host (no `userId`)**: open a board and publish it on its own sub stream without calling
+   *   {@link TRTC#startScreenShare startScreenShare()}. `view` is the board container.
+   * - **Guest (with `userId`)**: open that user's board, same semantics as
+   *   {@link TRTC#startAnnotation startAnnotation({ userId })} (the two guest APIs are equivalent).
+   * - Mutually exclusive with screen sharing in both directions; call `stopScreenShare()` before switching.
+   * - `stopWhiteboard()` actually stops this sub stream; guests then wind down.
+   * @param {object} options
+   * @param {string|HTMLElement} [options.view] - Host only: board container. Pass `null` to skip local preview.
+   * @param {string} [options.userId] - Required for guests: the host userId whose whiteboard to open. Omit to act as the host.
+   * @param {object} [options.option]
+   * @param {'dark' | 'light'} [options.option.theme] - Built-in UI theme.
+   * @param {string} [options.option.backgroundColor] - Canvas background color (host only, included in the composite).
+   * @param {string|object} [options.option.profile='1080p'] - Sub stream encoding parameters (host only),
+   * default `'1080p'` (1920x1080 / 15fps / 2000kbps). Also determines the composite canvas size and
+   * frame rate. A string preset is resolved against the video profile table first, then the screen
+   * sharing table; unknown values fall back to the default.
+   * @throws {@link module:ERROR_CODE.INVALID_OPERATION INVALID_OPERATION}
+   * - `extraCode` 5110: whiteboard failure; see `message` for the reason.
+   * - `extraCode` 5107 / 5108: audience role / `enableSEI` not enabled in `TRTC.create`.
+   * @example
+   * await trtc.startWhiteboard({ view: 'board', option: { profile: '1080p', backgroundColor: '#fcfcfc' } });
+   * @memberof TRTC
+   */
+  startWhiteboard(options?: WhiteboardOptions): Promise<void>;
+  /**
+   * Update the standalone whiteboard configuration (incremental).
+   * @param {object} options
+   * @param {string} [options.userId] - Guests only: update or switch the target host.
+   * @param {string|HTMLElement|null} [options.view] - Host only: change the board container
+   * (`null` = no preview). Passing the same container makes the SDK check its size again and
+   * re-lay out the board (including PDF / PPT windows) if it changed. Call this after replacing
+   * the container or resizing it. Ignored for guests, whose picture comes from the subscribed sub stream.
+   * @param {object} [options.option]
+   * @param {'dark' | 'light'} [options.option.theme] - Built-in UI theme.
+   * @param {string} [options.option.backgroundColor] - Canvas background color (host only).
+   * @param {boolean} [options.option.interactive] - Whether the local user can draw (host and guest).
+   * A session always starts with `true`; omit to keep the current value. `false` makes the local
+   * side read-only: toolbar, page bar, text toolbar and window title bar are hidden, while the
+   * board content stays in sync with the remote side.
+   * @example
+   * // Host: read-only, then allow drawing again.
+   * await trtc.updateWhiteboard({ option: { interactive: false } });
+   * await trtc.updateWhiteboard({ option: { interactive: true } });
+   * // Guest: read-only mode.
+   * await trtc.updateWhiteboard({ userId: 'host', option: { interactive: false } });
+   * // Host: move the board to a smaller container (or re-pass the same one after a resize).
+   * await trtc.updateWhiteboard({ view: 'small-board' });
+   * @memberof TRTC
+   */
+  updateWhiteboard(options?: WhiteboardOptions): Promise<void>;
+  /**
+   * Stop the standalone whiteboard.
+   *
+   * For the host this fully tears it down: stop publishing, close the internal sub stream, stop
+   * the plugin and release the Mixer (unlike host-side `stopAnnotation()`, which only stops local
+   * interaction). For guests it closes the whiteboard; idempotent. A pending `startWhiteboard({ userId })`
+   * handshake rejects immediately with `OPERATION_ABORT`, and `unavailable`
+   * (`reason: 'local-stop'`) is emitted.
+   * @param {object} [options]
+   * @param {string} [options.userId] - Guests only: the host whose whiteboard to close.
+   * @memberof TRTC
+   */
+  stopWhiteboard(options?: WhiteboardOptions): Promise<void>;
   /**
    * Play remote video
    *
