@@ -1,10 +1,23 @@
 {
-  "sdk": "5.21.0",
+  "sdk": "5.21.1",
   "pdfjs": "5.7.284",
-  "pptSdk": "1.0.0",
+  "pptSdk": "1.0.23",
   "sha256": {
     "pdfjs-5.7.284/pdf.min.js": "93a1c3b8106822070313c9a001623d086be33bc1f7743081eef27353f7266959",
     "pdfjs-5.7.284/pdf.worker.min.js": "cd10f3bdfa9bb5eb7632776675385f5948f4b09afe6b8b563b6199aa99d5da52",
-    "ppt-sdk-1.0.0/ppt-sdk.es.js": "976f79b99c1c0a2d2262333b3db55f1e91f146e9432f9f08651c03311e18ed74"
+    "ppt-sdk-1.0.0/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.11/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.12/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.13/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.14/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.15/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.16/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.17/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.18/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.19/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.20/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.21/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.22/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011",
+    "ppt-sdk-1.0.23/ppt-sdk.es.js": "ea3f8eb6bf2054198f05a897ef2ccae9229031330239262dd8cd96abb6cfa011"
   }
 }

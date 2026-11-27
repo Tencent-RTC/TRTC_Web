@@ -1,0 +1,21 @@
+ppt-sdk
+
+ppt-sdk.es.js is built internally in this repository. It is distributed under
+the repository's primary license (ISC, as declared by the "license" field in
+plugins/whiteboard/package.json); no separate license terms apply to it.
+
+Third-party material bundled in ppt-sdk.es.js:
+- JSZip 3.10.1: dual-licensed under MIT or GPLv3. Its notice is preserved in
+  the bundle header; full text:
+  https://github.com/Stuk/jszip/blob/main/LICENSE.markdown
+- pako (a JSZip dependency): MIT,
+  https://github.com/nodeca/pako/blob/main/LICENSE
+
+Fonts in fonts/:
+- NotoSansMonoCJKsc-ASCII.woff2 and NotoSansMonoCJKsc-Bold-ASCII.woff2 are
+  ASCII subsets of Noto Sans Mono CJK SC, distributed under the SIL Open Font
+  License 1.1. See fonts/OFL.txt.
+
+pdf.js 5.7.284 static assets (including the Liberation Sans standard fonts)
+are shipped separately under assets/whiteboard/pdfjs-5.7.284/, together with
+their own license files.
