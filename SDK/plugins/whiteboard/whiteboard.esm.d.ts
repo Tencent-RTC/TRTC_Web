@@ -374,6 +374,7 @@ export interface WhiteboardUIConfig {
     enable?: boolean;
     colors?: string[];
     placement?: ToolBarPlacement;
+    autoCollapse?: boolean;
     menus?: ToolbarMenusConfig;
   };
 }
